@@ -148,9 +148,8 @@ export default function AreasPage() {
               intro={
                 <p>
                   The vehicle comes to {BRAND.street}, the work happens there,
-                  and it goes home from there. Every photo on this site is a
-                  real job that came through that building. No stock
-                  photography anywhere on it.
+                  and it goes home from there. Every vehicle photographed on
+                  this site is a real job that came through that building.
                 </p>
               }
             />

@@ -348,8 +348,7 @@ export default async function CityPage({
                 <p>
                   A vehicle that comes in from {c.name} is worked on in the same
                   building as every other one, at {BRAND.street}. Every photo on
-                  this site is a real job that came through it. No stock
-                  photography anywhere on it.
+                  this site is a real job that came through it.
                 </p>
               }
             />
