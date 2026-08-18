@@ -553,8 +553,13 @@
        the quiet tone, which clears 3:1 against both the shell and the
        ground while staying well under the pewter outline and the cyan.
        Fallback first, then the plane aware value. */
-    --cov-seam: #6b7477;
-    --cov-seam: color-mix(in srgb, var(--ps-quiet) 65%, var(--ps-panel));
+    /* Seams read as panel divisions, not as features of the car. At 65% they
+       competed with the body outline and the rear half of a coupe looked
+       busier than it is, because the panel set carries divisions a two door
+       body does not physically have. 42% keeps every panel legible while
+       letting the covered region be the thing your eye lands on. */
+    --cov-seam: #4d5457;
+    --cov-seam: color-mix(in srgb, var(--ps-quiet) 42%, var(--ps-panel));
     --cov-edge: var(--ps-quiet);
     --cov-glass: var(--ps-ground);
     --cov-mark: var(--ps-quiet);
