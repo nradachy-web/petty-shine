@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
+<rect width="1200" height="400" fill="#0d0f12"/>
+<defs>
+<clipPath id="bodyClip"><path d="M 82 236
+C 78 206, 96 190, 144 182
+L 244 168
+C 306 158, 356 142, 408 122
+C 474 96, 546 84, 630 84
+C 708 84, 762 94, 800 114
+C 836 132, 860 150, 898 158
+L 1044 180
+C 1106 190, 1138 210, 1144 244
+L 1148 282
+C 1150 298, 1140 306, 1120 306
+L 1024 306
+A 78 78 0 0 0 872 306
+L 396 306
+A 78 78 0 0 0 244 306
+L 108 306
+C 90 306, 82 296, 82 282
+Z"/></clipPath>
+</defs>
+<g stroke="#454c56" fill="#14171b">
+  <circle cx="318" cy="300" r="66" stroke-width="3"/>
+  <circle cx="318" cy="300" r="36" stroke-width="2"/>
+  <circle cx="948" cy="300" r="66" stroke-width="3"/>
+  <circle cx="948" cy="300" r="36" stroke-width="2"/>
+</g>
+<path d="M 82 236
+C 78 206, 96 190, 144 182
+L 244 168
+C 306 158, 356 142, 408 122
+C 474 96, 546 84, 630 84
+C 708 84, 762 94, 800 114
+C 836 132, 860 150, 898 158
+L 1044 180
+C 1106 190, 1138 210, 1144 244
+L 1148 282
+C 1150 298, 1140 306, 1120 306
+L 1024 306
+A 78 78 0 0 0 872 306
+L 396 306
+A 78 78 0 0 0 244 306
+L 108 306
+C 90 306, 82 296, 82 282
+Z" fill="#1b1f24"/>
+<g clip-path="url(#bodyClip)">
+  <polygon data-panel="rear-bumper" points="70,220 176,220 176,320 70,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="trunk" points="176,140 268,140 268,220 176,220" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="rear-quarter" points="268,120 440,120 440,320 268,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="roof" points="440,60 812,60 812,132 440,132" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="rear-door" points="440,132 626,132 626,262 440,262" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="front-door" points="626,132 818,132 818,262 626,262" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="lower-door" points="440,262 818,262 818,320 440,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="rocker" points="396,284 872,284 872,320 396,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="front-fender" points="818,132 1006,132 1006,320 818,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="hood" points="898,150 1090,150 1090,206 898,206" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="front-bumper" points="1090,206 1160,206 1160,320 1090,320" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="headlight" points="1060,192 1128,192 1128,226 1060,226" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon data-panel="fog-light" points="1086,262 1140,262 1140,296 1086,296" fill="#00C1F3" fill-opacity="0.26" stroke="#00C1F3" stroke-width="1.5" stroke-opacity="0.7"/>
+</g>
+<path d="M 82 236
+C 78 206, 96 190, 144 182
+L 244 168
+C 306 158, 356 142, 408 122
+C 474 96, 546 84, 630 84
+C 708 84, 762 94, 800 114
+C 836 132, 860 150, 898 158
+L 1044 180
+C 1106 190, 1138 210, 1144 244
+L 1148 282
+C 1150 298, 1140 306, 1120 306
+L 1024 306
+A 78 78 0 0 0 872 306
+L 396 306
+A 78 78 0 0 0 244 306
+L 108 306
+C 90 306, 82 296, 82 282
+Z" fill="none" stroke="#8b939e" stroke-width="2.5" stroke-linejoin="round"/>
+<path fill="none" stroke="#5b636e" stroke-width="2" d="M 438 138 C 496 108, 562 98, 630 98 C 698 98, 748 108, 780 126 L 800 140 L 470 156 Z"/>
+<line x1="0" y1="366" x2="1200" y2="366" stroke="#2a3038" stroke-width="1"/>
+</svg>

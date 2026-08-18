@@ -131,3 +131,21 @@ no 2200px full-bleed hero from a 960px source.
 - PPF and tint pricing: publish real starting prices or keep quote-only?
 - Web3Forms access key for the quote form.
 - Where the domain is really hosted now, for the DNS cutover.
+
+## Brand presentation, read off his own shop banner (photo `coating-huracan`, 1920px)
+The white-background logo PNG on his website is the odd one out. His real, physical brand is:
+- Wordmark set on BLACK, not white.
+- The swoosh is TWO TONE: a heavy cyan arc with a thinner silver/pewter arc nested inside it.
+- "PETTY SHINE" is an italic condensed grotesk, cyan fill with a fine silver outline.
+- Under it, letterspaced in white caps: RESTORE • PROTECT • RESTYLE • MAINTAIN
+- A thin white hairline rule runs under the tagline, edge to edge.
+- Banner also carries @pettyshine_ , a Facebook mark, the phone ending 9199, and www.pettyshine.com
+
+So the palette is cyan + silver on near-black, and the repeating device is an arc plus a hairline rule.
+That is a real brand, not a template. The new site should look like that banner.
+
+## Phone, resolved as far as it can be without asking
+- 336-653-9199 is on the shop banner, on Yelp, on Nextdoor, and is Judson's own mobile.
+- 336-799-4326 is what his current website publishes on every page.
+Both are real. Which one should ring on the new site is still Judson's call, but default to the number
+his site already publishes (336-799-4326) so nothing regresses, and confirm with him before launch.
