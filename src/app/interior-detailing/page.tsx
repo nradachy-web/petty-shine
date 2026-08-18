@@ -5,6 +5,7 @@ import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import CTABand from "@/components/sections/CTABand";
+import TrustBar from "@/components/sections/TrustBar";
 import {
   Breadcrumbs,
   Button,
@@ -181,6 +182,12 @@ export default function InteriorDetailingPage() {
           </div>
         </div>
       </Section>
+
+      {/* The trust row sits tight under the hero, the way it does on the
+          other service pages and the way the reference site runs it. The
+          negative margin pulls it up out of the section gap, because a
+          full gap above it turns a trust row into a floating band. */}
+      <TrustBar plane="sheet" className="-mt-6 md:-mt-10" />
 
       {/* ---------------------------------------------------------------
           Evidence. Leather and a dashboard, close enough to judge.

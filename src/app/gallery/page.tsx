@@ -263,8 +263,8 @@ export default function GalleryPage() {
               <p>
                 {TOTAL_FRAMES} photographs of ceramic coating, paint protection
                 film, paint correction and detailing done at {BRAND.street} in{" "}
-                {BRAND.city}, {BRAND.stateName}. There is no stock photography
-                anywhere on this site.
+                {BRAND.city}, {BRAND.stateName}. Every vehicle shown is one
+                that came through the shop.
               </p>
               <p>
                 They are grouped by what the work was, so you can go straight

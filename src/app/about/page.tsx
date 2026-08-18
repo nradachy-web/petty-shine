@@ -139,6 +139,12 @@ export default function AboutPage() {
 
   return (
     <>
+      {/* The crumb sits ABOVE the hero, on the shop plane, the way it does
+          on every other photographic hero page. Below the hero it landed
+          between the trust row and the first section as a stray paper
+          strip, and it was the only page on the site that read that way. */}
+      <Breadcrumbs plane="shop" trail={[{ label: "About", href: "/about/" }]} />
+
       {/* ---------------------------------------------------------------
           THE HERO. Same construction as the home hero: full bleed
           photograph, one flat tonal overlay, letterspaced eyebrow, one
@@ -205,8 +211,6 @@ export default function AboutPage() {
 
         <TrustBar plane="none" className="hero__trust" />
       </section>
-
-      <Breadcrumbs plane="sheet" trail={[{ label: "About", href: "/about/" }]} />
 
       {/* ---------------------------------------------------------------
           THE CREDENTIALS. A split panel meeting on a hard vertical edge,

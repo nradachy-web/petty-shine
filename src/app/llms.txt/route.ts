@@ -202,7 +202,7 @@ function body(): string {
     `- [Service area](${url("/areas/")}): sixteen towns with measured road distance and drive time.`,
   );
   lines.push(
-    `- [Our work](${url("/gallery/")}): photographs of vehicles that came through this shop. No stock photography.`,
+    `- [Our work](${url("/gallery/")}): photographs of vehicles that came through this shop.`,
   );
   lines.push(`- [About](${url("/about/")}): how a job is run.`);
   lines.push(`- [Contact](${url("/contact/")}): address, hours and directions.`);

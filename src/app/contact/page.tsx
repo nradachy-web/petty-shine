@@ -113,8 +113,8 @@ export default function ContactPage() {
               title="One building, one address."
               intro={
                 <p>
-                  Every photo on this site is a real job that came through here.
-                  No stock photography anywhere on it.
+                  Every vehicle photographed on this site is a real job that
+                  came through here.
                 </p>
               }
             />

@@ -143,8 +143,8 @@ export default function QuotePage() {
               title="Every car on this site came through this shop."
               intro={
                 <p>
-                  No stock photography. If you want to see the standard before
-                  you send anything, start there.
+                  If you want to see the standard before you send anything,
+                  start there.
                 </p>
               }
             />
