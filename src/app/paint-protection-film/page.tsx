@@ -236,13 +236,13 @@ export default function PaintProtectionFilmPage() {
           intro={
             <>
               <p>
-                Four coverage levels, each one a strict superset of the one
-                below it. Pick a level and the drawing shows exactly which
-                panels get film and which are left bare.
+                Four coverage levels, each one containing everything in the
+                level below it. Every body panel is listed against all four, so
+                you can see what a level covers and what the next one adds.
               </p>
               <p>
-                {DEFAULT_PACKAGE.name} is the level shown first, because it is
-                the most common job the shop does.
+                {DEFAULT_PACKAGE.name} is marked, because it is the most common
+                job the shop does.
               </p>
             </>
           }

@@ -334,9 +334,9 @@ export default function HomePage() {
             <>
               <p>{PPF_FILM.limits[0]}</p>
               <p>
-                Four coverage levels, each one a strict superset of the one
-                below it. Pick a level and the drawing shows which panels get
-                film and which are left bare.
+                Four coverage levels, each one containing everything in the
+                level below it. Every body panel and exactly which levels cover
+                it, on one page.
               </p>
             </>
           }

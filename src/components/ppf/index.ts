@@ -1,10 +1,10 @@
 /**
  * THE COVERAGE PLAN.
  *
- * The flagship. Paint protection film is the largest line in his ad
- * account and the worst converting page on his site, because that page
- * lists four package names in prose and shows no picture of what any of
- * them covers. This answers the question.
+ * Paint protection film is the largest line in his ad account and the worst
+ * converting page on his site, because that page lists four package names in
+ * prose and shows no picture of what any of them covers. This answers the
+ * question.
  *
  * FOR A PAGE BUILDER, this is the whole API:
  *
@@ -18,48 +18,20 @@
  *       <SpecificationPending />
  *     </Section>
  *
- * PpfCoveragePlan takes no props. Every panel, label, tier and default
+ * Both take no props beyond className. Every panel, label, tier and default
  * comes from src/lib/constants.ts.
  *
- * TWO THINGS THE PAGE MUST RESPECT
- *   1. The plan's action bar is a solid cyan button, so it is the one
- *      solid cyan button on that screen. Every other action on the same
- *      screen is tone="ghost".
- *   2. Put SpecificationPending directly under the plan. It is the
- *      honest answer to the film and warranty contradiction on his
- *      current PPF page, and it is only worth anything where the film
- *      question is being asked.
+ * Put SpecificationPending directly under the plan. It is the honest answer to
+ * the film and warranty contradiction on his current PPF page.
  *
- * FOR THE WINDOW TINT PAGE LATER: nothing in CoveragePlanFrame,
- * CoveragePlan, CoverageStack or CoverageDiagram mentions film. Build a
- * CoverageMap of glass panels, define the tint tiers the same way
- * PPF_PACKAGES is defined, and pass them to CoveragePlanFrame.
+ * WHAT USED TO BE HERE. A side profile car drawn in SVG, with a clip path per
+ * panel, an animated fill order, chips, a sticky frame, a reduced motion
+ * branch and a separate no-JS fallback stack. Six components and about 1,300
+ * lines. It went through four redraws and still read as clip art, which is
+ * what a car drawn in code reads as. It is now one server rendered table with
+ * no client JavaScript at all. See the note at the top of CoverageMatrix.tsx.
  */
 
 export { default as PpfCoveragePlan } from "./PpfCoveragePlan";
+export { default as CoverageMatrix } from "./CoverageMatrix";
 export { default as SpecificationPending } from "./SpecificationPending";
-
-export { default as CoveragePlanFrame } from "./CoveragePlanFrame";
-export type { CoveragePlanFrameProps } from "./CoveragePlanFrame";
-
-export { default as CoveragePlan } from "./CoveragePlan";
-export type { CoveragePlanProps } from "./CoveragePlan";
-
-export { default as CoverageStack } from "./CoverageStack";
-export type { CoverageStackProps } from "./CoverageStack";
-
-export { default as CoverageLegend } from "./CoverageLegend";
-
-export { default as CoverageDiagram } from "./CoverageDiagram";
-export type { CoverageDiagramProps } from "./CoverageDiagram";
-
-export { default as CAR_SIDE_MAP } from "./carSideMap";
-
-export type {
-  CoverageLayer,
-  CoverageMap,
-  CoveragePackage,
-  CoveragePanelShape,
-  CoverageDecor,
-  CoverageWheel,
-} from "./types";

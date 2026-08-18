@@ -1,833 +1,280 @@
 /* ============================================================
-   THE COVERAGE PLAN, styles.
+   THE COVERAGE MATRIX, styles.
 
-   Owned by the PPF agent. Imported by the components in
-   src/components/ppf/ and by nothing else. Every class is prefixed
-   `cov-` so it can never collide with globals.css or with the
-   primitives file.
+   Replaces the styles for a drawn car. See the note at the top of
+   CoverageMatrix.tsx for why the drawing is gone.
 
-   THE TAILWIND v4 LAYER TRAP
-   In Tailwind v4 utilities live in @layer utilities, and unlayered CSS
-   beats a layered rule no matter the specificity. So every colour and
-   alignment default below sits inside @layer components, and only
-   structural properties are left unlayered. A page can therefore still
-   put a Tailwind utility on any of these elements and win.
+   Every class is prefixed `cov-` so it cannot collide with globals.css
+   or with the primitives file.
 
-   The two display rules that decide which of the two renderings is on
-   screen are deliberately left UNLAYERED, because the <noscript>
-   override has to beat them from the document body and layer order
-   would make that a coin toss.
+   THE TAILWIND v4 LAYER TRAP. Utilities live in @layer utilities, and an
+   unlayered rule beats a layered one no matter the specificity. So every
+   colour and alignment default below sits inside @layer components, and
+   only structural properties are left unlayered.
 
-   HOW STATE REACHES THE SVG
-   Three independent paths, and they cannot disagree because React drives
-   both of the first two off one piece of state:
-
-     1. `data-active="<tier index>"` on the root. Set on the SERVER at the
-        default tier, then updated by React. This is the path that runs
-        for a normal visitor, and it works before hydration.
-     2. `:has(.cov-radio[value="n"]:checked)`. The chips are real radio
-        inputs, so the control keeps working if the script never arrives.
-     3. `data-lit="1"` straight on a panel, for the four fully drawn
-        diagrams in the static stack, which carry no controls at all.
-
-   COLOUR
-   Nothing here is a literal. Everything reads the plane variables that
-   src/components/ui/primitives.css publishes, so the same diagram is
-   warm specular white on near black inside a .plane-shop section and
-   ink on paper inside a .plane-sheet one.
+   COLOUR. Nothing here is a literal. Everything reads the plane variables
+   that primitives.css publishes, so the same table is warm specular white
+   on near black inside a .plane-shop section and ink on paper inside a
+   .plane-sheet one.
    ============================================================ */
 
 @layer theme, base, components, utilities;
 
-/* ------------------------------------------------------------------
-   WHICH RENDERING IS ON SCREEN
-
-   Resting state, in the static HTML, is the interactive plan showing the
-   default package fully drawn. The static stack of all four packages is
-   the fallback, and it takes over under reduced motion and with
-   JavaScript off. Both are server rendered, so no content anywhere in
-   this component depends on a script running.
-   ------------------------------------------------------------------ */
-.cov-static {
-  display: none;
+.cov-matrix {
+  min-width: 0;
 }
-.cov-live {
+
+/* The table is wide. It gets its own scroll container, and the container
+   carries min-width: 0 because a grid or flex child defaults to
+   min-width: auto and would inflate the page instead of scrolling. */
+.cov-matrix__scroll {
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cov-table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* ---- header ---- */
+.cov-table__corner {
+  width: 30%;
+  padding: 0 1rem 0.9rem 0;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+
+.cov-table__pkg {
+  padding: 0 0.75rem 0.9rem;
+  font-weight: 400;
+  vertical-align: bottom;
+}
+.cov-table__pkgIndex {
   display: block;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
 }
-@media (prefers-reduced-motion: reduce) {
-  .cov-static {
-    display: block;
-  }
-  .cov-live {
-    display: none;
-  }
+.cov-table__pkgName {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--ps-font-display);
+  font-size: 0.9375rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
-
-/* ------------------------------------------------------------------
-   SHELL
-   ------------------------------------------------------------------ */
-.cov {
-  position: relative;
-  min-width: 0;
-}
-
-/* THREE BANDS, and this is the fix for the dead column.
-
-   The first pass ran the drawing down a sticky left column beside a
-   fifteen row record. The record is about twice the height of anything
-   that can sit on the left, so the layout opened with a column of empty
-   space and only a real scroll rescued it. The record cannot be made
-   shorter: naming all fifteen panels, covered and bare alike, is the
-   whole point of the component.
-
-   So the drawing takes the full width, which is what a 3.3 to 1 side
-   profile wants anyway, and under it two columns of roughly equal
-   height: the tier and the way to buy it on the left, the record on the
-   right in two ruled columns. Nothing is sticky, so the static stack can
-   use exactly the same three bands and balance for the same reason. */
-.cov__stage {
-  min-width: 0;
-  margin-top: 1.75rem;
+.cov-table__pkgNote {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.cov__cols {
-  display: grid;
-  gap: 2rem;
-  min-width: 0;
-  align-items: start;
-  margin-top: 2rem;
+/* ---- body ---- */
+.cov-table__area {
+  padding: 0.85rem 1rem 0.85rem 0;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  vertical-align: baseline;
 }
-/* 80rem, not 64rem, and the extra 16rem is the reason the record can be
-   two columns. The record needs about 340px per column before
-   "Covered, added here" wraps and the two columns stop lining up row for
-   row. Below 80rem the sell block sits above a full width record instead,
-   which is taller but has no dead space in it either. */
-@media (min-width: 80rem) {
-  .cov__cols {
-    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-    gap: 3rem;
-  }
-}
-.cov__sell,
-.cov__record {
-  min-width: 0;
-}
-/* Below 80rem the sell block is the full width of the component, and a
-   full width sentence and a full width solid cyan button are both too
-   much of a good thing. It has no effect at 80rem and up, where the
-   column is already about 400px. */
-.cov__sell {
-  max-width: 46rem;
+.cov-table__hit {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-/* The record in two columns. Fifteen rows in one column is 700px of
-   table beside a 470px column and nothing can close that gap; eight and
-   seven rows stand level with it. Below 64rem they stack, and because
-   the split is taken in installation order the two columns read as one
-   continuous list. */
-.cov-record__split {
-  display: grid;
-  gap: 0 2rem;
-  min-width: 0;
-}
-@media (min-width: 48rem) {
-  .cov-record__split {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-}
-/* On the widest layout the record shares the row with the sell block, so
-   it is narrower than it was at 64rem and needs the wider gutter back. */
-@media (min-width: 80rem) {
-  .cov-record__split {
-    gap: 0 2.5rem;
-  }
+.cov-table__cell {
+  padding: 0.85rem 0.75rem;
+  vertical-align: middle;
 }
 
-/* THE HAIRLINE UNDER THE DRAWING. */
-/* No rule of its own. The map's ground line sits at the foot of the SVG
-   and is the same width, so the drawing already ends on a hairline and a
-   second one 20px under it would just be a doubled rule. */
-.cov-legend {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem 2rem;
-  min-width: 0;
-  margin-top: 0.9rem;
+/* The mark. Coverage is carried by three independent channels and never
+   by colour alone: a filled box against an empty rule, the column it sits
+   in, and the visually hidden word beside it that a screen reader gets. */
+.cov-mark {
+  display: block;
+  width: 100%;
 }
-.cov-legend__keys {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.cov-mark__box {
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
 }
-.cov-legend__item {
+.cov-mark__bar {
+  display: block;
+  width: 0.85rem;
+  height: 1px;
+}
+
+/* ---- footer ---- */
+.cov-table__cta {
+  padding: 1.1rem 0.75rem 0;
+}
+.cov-table__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  min-height: 44px;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-underline-offset: 4px;
+}
+.cov-table__link:hover {
+  text-decoration: underline;
+}
+
+.cov-matrix__note {
+  margin-top: 1.5rem;
+  max-width: 46rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   COLOUR AND ALIGNMENT, layered so a Tailwind utility still wins.
+   ============================================================ */
+@layer components {
+  .cov-table__corner,
+  .cov-table__pkgIndex,
+  .cov-table__pkgNote,
+  .cov-table__hit {
+    color: var(--ps-key);
+  }
+  .cov-table__pkgName {
+    color: var(--ps-heading);
+  }
+  .cov-table__area {
+    color: var(--ps-body);
+  }
+  .cov-matrix__note {
+    color: var(--ps-key);
+  }
+
+  /* Every row sits on a hairline, which is the site's own rule. */
+  .cov-table tbody tr {
+    border-bottom: 1px solid var(--ps-rule);
+  }
+  .cov-table thead tr {
+    border-bottom: 1px solid var(--ps-rule);
+  }
+
+  /* The lead column, the package he actually sells most of. A single
+     tint, no border, so it reads as emphasis rather than as a box. */
+  .cov-table__pkg.is-lead,
+  .cov-table__cell.is-lead,
+  .cov-table__cta.is-lead {
+    background-color: var(--ps-panel);
+  }
+  .cov-table__pkg.is-lead .cov-table__pkgNote {
+    color: var(--ps-accent);
+  }
+
+  .cov-mark__box {
+    background-color: var(--ps-accent);
+  }
+  .cov-mark--added .cov-mark__box {
+    /* first tier that adds this area: hollow, so the eye can see where a
+       package starts earning its money rather than only that it covers */
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--ps-accent);
+  }
+  .cov-mark--off .cov-mark__bar {
+    background-color: var(--ps-rule);
+  }
+
+  .cov-table__cell {
+    text-align: center;
+  }
+  .cov-table__cell .cov-mark {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cov-table__link {
+    color: var(--ps-link);
+  }
+}
+
+/* On paper the accent has to drop to the link colour, exactly as it does
+   everywhere else on this site: cyan-500 is 2.2:1 on the sheet. */
+@layer components {
+  .plane-sheet .cov-mark__box {
+    background-color: var(--ps-link);
+  }
+  .plane-sheet .cov-mark--added .cov-mark__box {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--ps-link);
+  }
+}
+
+/* ---- legend ---- */
+.cov-matrix__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  margin-top: 1.5rem;
   font-family: var(--ps-font-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.cov-legend__note {
-  font-family: var(--ps-font-body);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  max-width: 34rem;
-}
-.cov-swatch {
-  flex: none;
-  display: block;
-  width: 1.125rem;
-  height: 0.6875rem;
-  border-width: 1px;
-  border-style: solid;
-}
-.cov-swatch--on {
-  border-width: 2px;
-}
-.cov-swatch--hit {
-  background-size: 5px 5px;
-}
-
-/* ------------------------------------------------------------------
-   CHIPS. A first class control, always present, and the only control.
-   There is no scroll driven package switching anywhere in this
-   component, so chip state and scroll state cannot disagree.
-   ------------------------------------------------------------------ */
-.cov-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.cov-chips__legend {
-  padding: 0;
-  margin-bottom: 0.75rem;
-  font-family: var(--ps-font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.cov-chip {
+.cov-matrix__key {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  min-height: 2.75rem;
-  padding: 0.5rem 0.9rem;
-  border-width: 1px;
-  border-style: solid;
-  font-family: var(--ps-font-mono);
-  font-size: 0.75rem;
-  line-height: 1.2;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 0.18s var(--ps-ease), color 0.18s var(--ps-ease),
-    background-color 0.18s var(--ps-ease);
+  gap: 0.5rem;
 }
-/* The radio is the visible mark, not a hidden input behind a fake one,
-   so the checked state survives even where :has() does not. */
-.cov-chip__mark {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: none;
-  width: 0.7rem;
-  height: 0.7rem;
-  margin: 0;
-  border-width: 1px;
-  border-style: solid;
-  cursor: pointer;
+.cov-matrix__dot {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
 }
-.cov-chip:focus-within {
-  outline-width: 2px;
-  outline-style: solid;
-  outline-offset: 2px;
-}
-.cov-chip__mark:focus-visible {
-  outline: none;
-}
-
-/* ------------------------------------------------------------------
-   IMPACT TOGGLE
-   ------------------------------------------------------------------ */
-/* ------------------------------------------------------------------
-   THE IMPACT BLOCK
-
-   Loss aversion, told honestly. Film is a sacrificial layer, so the
-   argument that actually sells it is what the front of the car looks
-   like after thirty thousand miles without it. In the first pass this
-   was a bare checkbox under the drawing and nobody was going to find
-   it. It is a bordered block now, with the reason stated above the
-   switch, and it is one of the two things holding the left column up.
-   ------------------------------------------------------------------ */
-.cov-impact {
-  margin-top: 1.75rem;
-  padding: 1.125rem 1.25rem 1.25rem;
-  border-width: 1px;
-  border-style: solid;
-  min-width: 0;
-}
-.cov-impact__head {
-  font-family: var(--ps-font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.cov-impact__body {
-  margin-top: 0.6rem;
-  font-family: var(--ps-font-body);
-  font-size: 0.875rem;
-  line-height: 1.55;
-}
-
-.cov-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 2.75rem;
-  margin-top: 0.9rem;
-  font-family: var(--ps-font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-/* A hard edged switch. No radius anywhere on this site, so the track is
-   a rectangle and the knob is a smaller rectangle that slides. The input
-   itself is the switch rather than a hidden input behind a fake one, so
-   the state survives everywhere. */
-.cov-toggle__mark {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  flex: none;
-  width: 2.75rem;
-  height: 1.5rem;
-  margin: 0;
-  border-width: 1px;
-  border-style: solid;
-  cursor: pointer;
-}
-.cov-toggle__mark::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: 1.0625rem;
-  transition: transform 0.18s var(--ps-ease);
-}
-.cov-toggle__mark:checked::after {
-  transform: translateX(1.4375rem);
-}
-.cov-toggle__text {
-  min-width: 0;
-}
-.cov-toggle:focus-within {
-  outline-width: 2px;
-  outline-style: solid;
-  outline-offset: 3px;
-}
-.cov-toggle__mark:focus-visible {
-  outline: none;
-}
-
-/* ------------------------------------------------------------------
-   THE DIAGRAM
-   ------------------------------------------------------------------ */
-.cov-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.cov-panel {
-  stroke-linejoin: round;
-  transition: fill 0.28s var(--ps-ease), stroke 0.28s var(--ps-ease),
-    stroke-width 0.28s var(--ps-ease);
-}
-.cov-stipple {
-  opacity: 0;
-  transition: opacity 0.24s var(--ps-ease);
-  pointer-events: none;
-}
-/* UNLAYERED ON PURPOSE. `opacity: 0` above is unlayered, and in Tailwind
-   v4 an unlayered rule beats a layered one no matter the specificity, so
-   a switched on state that lives in @layer components can never win
-   against it. This pair has to sit on the same side of the layer fence
-   as the rule it is overriding. That is the trap the build contract
-   warns about, and it bit this file once already. */
-.cov[data-impact="true"] .cov-stipple,
-.cov:has(.cov-check:checked) .cov-stipple,
-.cov-static__item:has(.cov-check:checked) .cov-stipple {
-  opacity: 1;
-}
-
-/* The caption that explains the overlay rides on the same two switches,
-   so it can never be on screen while the stipple is off, or the other
-   way round, in any of the paths above. */
-.cov-impact-note {
-  display: none;
-}
-.cov[data-impact="true"] .cov-impact-note,
-.cov:has(.cov-check:checked) .cov-impact-note,
-.cov-static__item:has(.cov-check:checked) .cov-impact-note {
-  display: block;
-}
-
-/* Archivo, not mono, and not uppercase. Both captions are sentences, and
-   on this site mono means a sourced fact: a price, a coverage key, a
-   spec value, a warranty term. It never sets a paragraph. */
-.cov-caption {
-  margin-top: 0.75rem;
-  font-family: var(--ps-font-body);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-}
-
-.cov-action {
-  margin-top: 1.75rem;
-  display: grid;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.cov-tier {
-  display: none;
-}
-.cov-tier[data-default="true"] {
-  display: block;
-}
-
-/* TIER SWITCHING, unlayered for the same reason as the stipple above.
-
-   Resting state, with no script and no :has support, is the default tier
-   on screen and nothing else. Then either mechanism can take over, and
-   both hide the others only in the same rule set that puts a replacement
-   up, so there is no state in which the record is simply blank.
-
-   The :has() rules outrank the data-active rules. That is deliberate:
-   the radio is what the visitor actually touched, and it is also the
-   only one of the two that works before hydration. React writes both
-   from one piece of state, so in practice they cannot disagree. */
-.cov[data-active] .cov-tier {
-  display: none;
-}
-.cov[data-active="0"] .cov-tier[data-tier="0"],
-.cov[data-active="1"] .cov-tier[data-tier="1"],
-.cov[data-active="2"] .cov-tier[data-tier="2"],
-.cov[data-active="3"] .cov-tier[data-tier="3"],
-.cov[data-active="4"] .cov-tier[data-tier="4"],
-.cov[data-active="5"] .cov-tier[data-tier="5"] {
-  display: block;
-}
-.cov:has(.cov-radio:checked) .cov-tier {
-  display: none;
-}
-.cov:has(.cov-radio[value="0"]:checked) .cov-tier[data-tier="0"],
-.cov:has(.cov-radio[value="1"]:checked) .cov-tier[data-tier="1"],
-.cov:has(.cov-radio[value="2"]:checked) .cov-tier[data-tier="2"],
-.cov:has(.cov-radio[value="3"]:checked) .cov-tier[data-tier="3"],
-.cov:has(.cov-radio[value="4"]:checked) .cov-tier[data-tier="4"],
-.cov:has(.cov-radio[value="5"]:checked) .cov-tier[data-tier="5"] {
-  display: block;
-}
-
-.cov-summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding-bottom: 0.85rem;
-}
-.cov-summary__name {
-  font-family: var(--ps-font-display);
-  font-weight: 600;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
-}
-.cov-summary__count {
-  font-family: var(--ps-font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-}
-.cov-note {
-  margin-top: 0.9rem;
-  font-family: var(--ps-font-body);
-  font-size: 0.875rem;
-  line-height: 1.55;
-}
-.cov-subhead {
-  margin: 1.75rem 0 0.5rem;
-  font-family: var(--ps-font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.cov-row {
-  cursor: default;
-}
-
-/* The four stacked packages in the fallback. */
-.cov-static__item + .cov-static__item {
-  margin-top: 3rem;
-  padding-top: 3rem;
-  border-top-width: 1px;
-  border-top-style: solid;
-}
-
-/* The stack uses the same three bands as the plan and needs no layout of
-   its own. It used to get one, because the plan's sticky column left it
-   with the same dead space four times down the page. The plan is not
-   sticky any more and both balance the same way. */
-.cov-static .cov__stage {
+/* The impact marker rides beside the area name, never on its own line. */
+.cov-table__hit {
+  display: inline-block;
   margin-top: 0;
+  margin-left: 0.5rem;
+  font-size: 0.5rem;
+  vertical-align: middle;
+  letter-spacing: 0;
 }
 
-/* Specification pending. */
-.cov-pending {
-  padding: 1.5rem;
-  border-width: 1px;
-  border-style: solid;
-  min-width: 0;
-}
-.cov-pending__head {
-  font-family: var(--ps-font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-.cov-pending__note {
-  margin-top: 1rem;
-  font-family: var(--ps-font-body);
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
-/* ==================================================================
-   COLOUR AND ALIGNMENT, layered so a Tailwind utility still wins.
-   ================================================================== */
 @layer components {
-  /* BOTH roots. The static stack is not a .cov, and leaving it out of
-     this block once left every fallback diagram drawing itself in the
-     initial values: no outline, no seams, black fills. */
-  .cov,
-  .cov-static {
-    /* Fallback first, then the plane aware value. A browser without
-       color-mix keeps the shop plane blend, which is where the flagship
-       lives. The covered fill is OPAQUE on purpose: two overlapping
-       covered panels must never composite to a third shade. */
-    --cov-covered: #123a47;
-    --cov-covered: color-mix(in srgb, var(--cov-on) 26%, var(--ps-panel));
-    /* THE BARE CAR HAS TO READ.
-       This was --ps-panel, the same near black the section behind it is
-       built from, which measured 1.06 to 1 against the ground. The
-       covered panels were tuned against it and read fine; the thing they
-       are being compared against did not read at all, so the diagram
-       said "some cyan shapes" rather than "this much of the car".
-       Lifted to a small fraction of the quiet tone, which clears about
-       1.4 to 1 against the ground while staying clearly under the
-       covered fill, so the two are still separable by value on top of
-       the cyan stroke and the words in the record. Fallback first, then
-       the plane aware value. */
-    --cov-shell: #282c29;
-    --cov-shell: color-mix(in srgb, var(--ps-quiet) 16%, var(--ps-panel));
-    /* THE SEAM IS NOT A HAIRLINE.
-       It was --ps-rule, the 1px table rule, which measured 1.4:1 against
-       the shell. That is fine for a rule between two rows of type and
-       useless for the only thing describing the shape of the car: door
-       cuts, glass, wheels and the panel divisions on everything the film
-       does not cover. If the bare car cannot be read there is nothing for
-       the covered panels to be compared against. Lifted to a fraction of
-       the quiet tone, which clears 3:1 against both the shell and the
-       ground while staying well under the pewter outline and the cyan.
-       Fallback first, then the plane aware value. */
-    /* Seams read as panel divisions, not as features of the car. At 65% they
-       competed with the body outline and the rear half of a coupe looked
-       busier than it is, because the panel set carries divisions a two door
-       body does not physically have. 42% keeps every panel legible while
-       letting the covered region be the thing your eye lands on. */
-    --cov-seam: #4d5457;
-    --cov-seam: color-mix(in srgb, var(--ps-quiet) 42%, var(--ps-panel));
-    --cov-edge: var(--ps-quiet);
-    --cov-glass: var(--ps-ground);
-    --cov-mark: var(--ps-quiet);
-    --cov-on: var(--ps-accent);
-  }
-  /* cyan-500 is 2.2:1 on the sheet and fails outright, so on paper the
-     covered stroke drops to cyan-ink the same way a link does. */
-  .plane-sheet .cov,
-  .plane-sheet .cov-static {
-    --cov-on: var(--ps-link);
-    /* On paper the ground is already light, so the shell goes the other
-       way: a touch darker than the panel rather than lighter. */
-    --cov-shell: color-mix(in srgb, var(--ps-quiet) 14%, var(--ps-panel));
-    /* On paper the quiet tone is already a mid grey, so the seam takes it
-       whole. Mixed toward the panel the way the dark plane does it, it
-       lands at 2.6:1 and the drawing goes soft again. */
-    --cov-seam: var(--ps-quiet);
-  }
-
-  .cov-chips__legend {
+  .cov-matrix__legend {
     color: var(--ps-key);
   }
-  .cov-chip {
-    color: var(--ps-body);
-    border-color: var(--ps-rule);
+  .cov-mark__box--hollow {
     background-color: transparent;
-    text-align: left;
+    box-shadow: inset 0 0 0 2px var(--ps-accent);
   }
-  .cov-chip__mark {
-    border-color: var(--ps-rule);
+  .cov-matrix__dot,
+  .cov-table__hit {
+    color: var(--ps-accent);
+    background-color: currentColor;
+  }
+  .cov-table__hit {
     background-color: transparent;
   }
-  .cov-chip__mark:checked {
-    border-color: var(--cov-on);
-    background-color: var(--cov-on);
+  .plane-sheet .cov-mark__box--hollow {
+    box-shadow: inset 0 0 0 2px var(--ps-link);
   }
-  .cov-chip:hover {
-    border-color: var(--ps-quiet);
-    color: var(--ps-heading);
-  }
-  /* The chip's active look follows the radio and only the radio, so the
-     control can never look like it is on one tier while the diagram is
-     on another. Without :has() the filled radio mark still carries the
-     state on its own. */
-  .cov-chip:has(.cov-chip__mark:checked) {
-    color: var(--ps-heading);
-    border-color: var(--cov-on);
-    background-color: var(--ps-band);
-  }
-  .cov-chip:focus-within {
-    outline-color: var(--cov-on);
-  }
-
-  .cov-impact {
-    border-color: var(--ps-rule);
-    background-color: var(--ps-band);
-  }
-  /* The block itself answers the switch, so the state is never carried
-     by the knob alone. */
-  .cov[data-impact="true"] .cov-impact,
-  .cov:has(.cov-check:checked) .cov-impact,
-  .cov-static__item:has(.cov-check:checked) .cov-impact {
-    border-color: var(--cov-mark);
-  }
-  .cov-impact__head {
-    color: var(--ps-heading);
-  }
-  .cov-impact__body {
-    color: var(--ps-body);
-  }
-
-  .cov-toggle {
-    color: var(--ps-key);
-  }
-  .cov-toggle__mark {
-    border-color: var(--ps-rule);
-    background-color: transparent;
-  }
-  .cov-toggle__mark::after {
-    background-color: var(--ps-quiet);
-  }
-  /* Pewter, not cyan, because pewter is what the overlay itself paints
-     and because the one solid cyan on this screen is the action button. */
-  .cov-toggle__mark:checked {
-    border-color: var(--cov-mark);
-  }
-  .cov-toggle:has(.cov-toggle__mark:checked) {
-    color: var(--ps-heading);
-  }
-  .cov-toggle:focus-within {
-    outline-color: var(--cov-on);
-  }
-
-  .cov-legend__item {
-    color: var(--ps-key);
-  }
-  .cov-legend__note {
-    color: var(--ps-quiet);
-  }
-  .cov-swatch--on {
-    background-color: var(--cov-covered);
-    border-color: var(--cov-on);
-  }
-  .cov-swatch--off {
-    background-color: var(--cov-shell);
-    border-color: var(--cov-seam);
-  }
-  .cov-swatch--hit {
-    background-color: var(--cov-shell);
-    border-color: var(--cov-seam);
-    background-image: radial-gradient(
-      var(--cov-mark) 0.9px,
-      transparent 1.1px
-    );
-  }
-
-  .cov-shell-fill {
-    fill: var(--cov-shell);
-  }
-  .cov-glass-fill {
-    fill: var(--cov-glass);
-    stroke: var(--cov-seam);
-  }
-  .cov-line {
-    fill: none;
-    stroke: var(--cov-seam);
-  }
-  .cov-wheel {
-    fill: var(--cov-glass);
-    stroke: var(--cov-seam);
-  }
-  .cov-wheel--open {
-    fill: none;
-    stroke: var(--cov-seam);
-  }
-  .cov-edge {
-    fill: none;
-    stroke: var(--cov-edge);
-  }
-
-  /* ---- panels: the uncovered resting state ---- */
-  .cov-panel {
-    fill: transparent;
-    stroke: var(--cov-seam);
-    stroke-width: 1;
-  }
-  .cov-panel[data-solid="true"] {
-    fill: var(--cov-shell);
-  }
-
-  /* ---- panels: covered, path 1, the JS attribute ----
-     Three independent channels carry coverage, never colour alone:
-     the fill lifts, the stroke goes cyan and thickens, and the record
-     beside the diagram names the panel in words.
-     Specificity (0,4,0). */
-  .cov[data-active="0"] .cov-panel[data-in~="0"],
-  .cov[data-active="1"] .cov-panel[data-in~="1"],
-  .cov[data-active="2"] .cov-panel[data-in~="2"],
-  .cov[data-active="3"] .cov-panel[data-in~="3"],
-  .cov[data-active="4"] .cov-panel[data-in~="4"],
-  .cov[data-active="5"] .cov-panel[data-in~="5"] {
-    fill: var(--cov-covered);
-    stroke: var(--cov-on);
-    stroke-width: 2.4;
-  }
-
-  /* ---- panels: the reset that hands control to the radio ----
-     Before hydration, data-active still holds the tier the server wrote
-     while the radio holds the one the visitor just clicked. Stepping UP
-     the ladder the two agree, because the tiers are strict supersets.
-     Stepping DOWN they would union into the wrong answer. So the moment
-     any radio is checked the diagram is wiped back to uncovered and
-     relit from the radio alone.
-     Specificity (0,4,0) and (0,5,0), declared after path 1, so it wins
-     the tie. A browser with no :has() support drops this and the block
-     below together and keeps the data-active answer, which is the
-     correct degradation rather than a broken one. */
-  .cov:has(.cov-radio:checked) .cov-panel {
-    fill: transparent;
-    stroke: var(--cov-seam);
-    stroke-width: 1;
-  }
-  .cov:has(.cov-radio:checked) .cov-panel[data-solid="true"] {
-    fill: var(--cov-shell);
-  }
-
-  /* ---- panels: covered, path 2, the radio itself. (0,6,0). ---- */
-  .cov:has(.cov-radio[value="0"]:checked) .cov-panel[data-in~="0"],
-  .cov:has(.cov-radio[value="1"]:checked) .cov-panel[data-in~="1"],
-  .cov:has(.cov-radio[value="2"]:checked) .cov-panel[data-in~="2"],
-  .cov:has(.cov-radio[value="3"]:checked) .cov-panel[data-in~="3"],
-  .cov:has(.cov-radio[value="4"]:checked) .cov-panel[data-in~="4"],
-  .cov:has(.cov-radio[value="5"]:checked) .cov-panel[data-in~="5"] {
-    fill: var(--cov-covered);
-    stroke: var(--cov-on);
-    stroke-width: 2.4;
-  }
-
-  /* ---- panels: covered, path 3, the static stack, which has no
-     controls at all. (0,2,0), declared after [data-solid] so it wins
-     that tie for a headlight or a mirror. ---- */
-  .cov-panel[data-lit="true"] {
-    fill: var(--cov-covered);
-    stroke: var(--cov-on);
-    stroke-width: 2.4;
-  }
-
-  /* Pointing at a row in the record lifts its panel in the drawing.
-     Drawn as its own overlay path rather than as a state on the panel,
-     because the covered rules above are deliberately specific and a
-     highlight should never have to win a specificity argument. */
-  .cov-hi {
-    fill: none;
-    stroke: var(--cov-on);
-    stroke-width: 3.6;
-    stroke-linejoin: round;
-    pointer-events: none;
-  }
-  /* Pointing at a row for a panel this tier does NOT cover cannot answer
-     in cyan, because cyan is the one thing on this drawing that means
-     film. It answers in the outline tone instead. */
-  .cov-hi--quiet {
-    stroke: var(--cov-edge);
-  }
-
-  .cov-datum {
-    stroke: var(--cov-seam);
-  }
-  .cov-datum--lead {
-    stroke: var(--cov-on);
-  }
-
-  /* Pattern content is painted in its own context, so the dots carry
-     their own fill. Custom properties still inherit down to them. */
-  .cov-stipple-dot {
-    fill: var(--cov-mark);
-  }
-  .cov-caption {
-    color: var(--ps-key);
-  }
-  .cov-summary {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: var(--ps-rule);
-  }
-  .cov-summary__name {
-    color: var(--ps-heading);
-  }
-  .cov-summary__count {
-    color: var(--ps-quiet);
-  }
-  .cov-note {
-    color: var(--ps-body);
-  }
-  .cov-subhead {
-    color: var(--ps-key);
-  }
-  .cov-static__item + .cov-static__item {
-    border-top-color: var(--ps-rule);
-  }
-  .cov-pending {
-    border-color: var(--ps-rule);
-    background-color: var(--ps-panel);
-  }
-  .cov-pending__head {
-    color: var(--ps-quiet);
-  }
-  .cov-pending__note {
-    color: var(--ps-body);
+  .plane-sheet .cov-matrix__dot,
+  .plane-sheet .cov-table__hit {
+    color: var(--ps-link);
   }
 }

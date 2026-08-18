@@ -1,23 +1,11 @@
-"use client";
-
-import {
-  IMPACT_PANELS,
-  PANEL_LABELS,
-  PANEL_ORDER,
-  PPF_DEFAULT_PACKAGE,
-  PPF_PACKAGES,
-  type PanelId,
-} from "@/lib/constants";
-import CoveragePlanFrame from "./CoveragePlanFrame";
-import { CAR_SIDE_MAP } from "./carSideMap";
+import CoverageMatrix from "./CoverageMatrix";
 
 /**
  * The Coverage Plan, wired to Petty Shine's four published PPF packages.
  *
- * Every panel id, every label, the installation order, the impact set
- * and the default tier come out of src/lib/constants.ts. Nothing on this
- * page is typed in, so the diagram and the words beside it cannot drift
- * apart and cannot drift from the four packages he actually sells.
+ * Every panel id, every label, the installation order, the impact set and the
+ * default tier come out of src/lib/constants.ts. Nothing here is typed in, so
+ * what the visitor reads cannot drift from the four packages he actually sells.
  *
  * Drop it on a page with no props:
  *
@@ -25,28 +13,22 @@ import { CAR_SIDE_MAP } from "./carSideMap";
  *       <PpfCoveragePlan />
  *     </Section>
  *
- * The map and the constants are imported here rather than passed in, so
- * none of the geometry crosses the server to client boundary as props.
+ * THIS USED TO BE A DRAWING. Four versions of a side profile car in SVG, and
+ * the verdict on the last one was that it looked like a high school project.
+ * A car drawn in code reads as clip art however the fills are tuned, and the
+ * three sites this work is measured against carry no illustrations at all.
+ * See the note at the top of CoverageMatrix.tsx.
+ *
+ * It is now a server component with no state and no client JavaScript, so
+ * there is no hydration, no reduced motion branch and no separate no-JS
+ * fallback to keep in sync. All four packages are on screen at once.
  */
 export default function PpfCoveragePlan({
   className,
 }: {
   className?: string;
 }) {
-  return (
-    <CoveragePlanFrame<PanelId>
-      map={CAR_SIDE_MAP}
-      packages={PPF_PACKAGES}
-      order={PANEL_ORDER}
-      labels={PANEL_LABELS}
-      impactPanels={IMPACT_PANELS}
-      defaultPackageId={PPF_DEFAULT_PACKAGE}
-      service="ppf"
-      uid="ppf-coverage"
-      legend="Coverage level"
-      className={className}
-    />
-  );
+  return <CoverageMatrix className={className} />;
 }
 
 export { PpfCoveragePlan };
