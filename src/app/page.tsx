@@ -206,8 +206,8 @@ export default function HomePage() {
           title="What it costs, before you call."
           intro={
             <p>
-              Every figure on this site is a starting price. The size of the
-              vehicle and the shape the paint is in decide the rest.
+              Every figure on this site is a starting price. Size of the vehicle
+              and condition of the paint decide the rest.
             </p>
           }
         />

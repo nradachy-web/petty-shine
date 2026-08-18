@@ -65,7 +65,7 @@ export default function AboutPage() {
               <p>
                 {BRAND.name} works out of one building at {BRAND.street} in{" "}
                 {BRAND.city}. It is open {BRAND.hours[0].days},{" "}
-                {BRAND.hours[0].time}, and closed at the weekend.
+                {BRAND.hours[0].time}, and closed Saturday and Sunday.
               </p>
               <p>
                 The banner hanging in the shop says{" "}
