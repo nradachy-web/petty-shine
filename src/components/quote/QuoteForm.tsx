@@ -53,6 +53,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
+  BODY_TYPES,
   BRAND,
   COATINGS,
   PPF_PACKAGES,
@@ -60,6 +61,7 @@ import {
   WEB3FORMS_KEY,
 } from "@/lib/constants";
 import { trackQuoteSubmit } from "@/lib/gtag";
+import VehicleSelect, { type VehicleValue } from "./VehicleSelect";
 
 /* ------------------------------------------------------------------ */
 /* helpers                                                             */
@@ -163,6 +165,8 @@ interface FormValues {
   year: string;
   make: string;
   model: string;
+  /** body type id, set by the picker's classifier or by the visitor */
+  bodyType: string;
   service: string;
   pkg: string;
   name: string;
@@ -176,6 +180,7 @@ const EMPTY: FormValues = {
   year: "",
   make: "",
   model: "",
+  bodyType: "",
   service: "",
   pkg: "",
   name: "",
@@ -406,6 +411,12 @@ export default function QuoteForm({
     .filter(Boolean)
     .join(" ");
 
+  /* The body type in words, because "suv-full" means nothing in an inbox.
+     This is the whole reason the picker classifies: the lead should already
+     say what size the vehicle is, since every quote he gives depends on it. */
+  const bodyTypeLabel =
+    BODY_TYPES.find((b) => b.id === values.bodyType)?.label ?? "";
+
   function buildPayload() {
     const params =
       typeof window !== "undefined"
@@ -426,6 +437,7 @@ export default function QuoteForm({
 
     const lines = [
       `${subj.label}: ${vehicleString || "not given"}`,
+      bodyTypeLabel ? `Body style: ${bodyTypeLabel}` : "",
       `Service: ${chosenService}`,
       chosenPackage && group ? `${group.lead}: ${chosenPackage}` : "",
       "",
@@ -450,6 +462,7 @@ export default function QuoteForm({
       name: values.name.trim(),
       phone: values.phone.trim(),
       vehicle: vehicleString,
+      body_style: bodyTypeLabel,
       service: chosenService,
       message: lines.join("\n"),
       botcheck: false,
@@ -626,73 +639,105 @@ export default function QuoteForm({
           {subj.legend}
         </legend>
 
-        <div className="mt-4 grid min-w-0 grid-cols-2 gap-4 sm:grid-cols-4">
-          <div className="min-w-0">
-            <label className={LABEL_CLS} htmlFor={fid("year")}>
-              Year <span className="text-ink-400">optional</span>
-            </label>
-            <input
-              id={fid("year")}
-              ref={(el) => {
-                controls.current.year = el;
-              }}
-              name="year"
-              inputMode="numeric"
-              autoComplete="off"
-              maxLength={4}
-              placeholder={subj.year}
-              className={controlCls(Boolean(errors.year))}
-              value={values.year}
-              onChange={(e) => set("year", e.target.value)}
-              aria-invalid={errors.year ? true : undefined}
-              aria-describedby={errors.year ? fid("year-error") : undefined}
-            />
-            <FieldError id={fid("year-error")} message={errors.year} />
-          </div>
+        {/* A boat has no EPA record, so the picker only serves vehicles.
+            The marine page keeps plain fields, which is the same markup the
+            picker itself falls back to with JavaScript off. */}
+        <div className="mt-4">
+          {subject === "boat" ? (
+            <div className="grid min-w-0 grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="min-w-0">
+                <label className={LABEL_CLS} htmlFor={fid("year")}>
+                  Year <span className="text-ink-400">optional</span>
+                </label>
+                <input
+                  id={fid("year")}
+                  ref={(el) => {
+                    controls.current.year = el;
+                  }}
+                  name="year"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={4}
+                  placeholder={subj.year}
+                  className={controlCls(Boolean(errors.year))}
+                  value={values.year}
+                  onChange={(e) => set("year", e.target.value)}
+                  aria-invalid={errors.year ? true : undefined}
+                  aria-describedby={errors.year ? fid("year-error") : undefined}
+                />
+                <FieldError id={fid("year-error")} message={errors.year} />
+              </div>
 
-          <div className="min-w-0">
-            <label className={LABEL_CLS} htmlFor={fid("make")}>
-              Make
-            </label>
-            <input
-              id={fid("make")}
-              ref={(el) => {
-                controls.current.make = el;
-              }}
-              name="make"
-              required
-              autoComplete="off"
-              placeholder={subj.make}
-              className={controlCls(Boolean(errors.make))}
-              value={values.make}
-              onChange={(e) => set("make", e.target.value)}
-              aria-invalid={errors.make ? true : undefined}
-              aria-describedby={errors.make ? fid("make-error") : undefined}
-            />
-            <FieldError id={fid("make-error")} message={errors.make} />
-          </div>
+              <div className="min-w-0">
+                <label className={LABEL_CLS} htmlFor={fid("make")}>
+                  Make
+                </label>
+                <input
+                  id={fid("make")}
+                  ref={(el) => {
+                    controls.current.make = el;
+                  }}
+                  name="make"
+                  required
+                  autoComplete="off"
+                  placeholder={subj.make}
+                  className={controlCls(Boolean(errors.make))}
+                  value={values.make}
+                  onChange={(e) => set("make", e.target.value)}
+                  aria-invalid={errors.make ? true : undefined}
+                  aria-describedby={errors.make ? fid("make-error") : undefined}
+                />
+                <FieldError id={fid("make-error")} message={errors.make} />
+              </div>
 
-          <div className="col-span-2 min-w-0">
-            <label className={LABEL_CLS} htmlFor={fid("model")}>
-              Model
-            </label>
-            <input
-              id={fid("model")}
-              ref={(el) => {
-                controls.current.model = el;
+              <div className="col-span-2 min-w-0">
+                <label className={LABEL_CLS} htmlFor={fid("model")}>
+                  Model
+                </label>
+                <input
+                  id={fid("model")}
+                  ref={(el) => {
+                    controls.current.model = el;
+                  }}
+                  name="model"
+                  required
+                  autoComplete="off"
+                  placeholder={subj.model}
+                  className={controlCls(Boolean(errors.model))}
+                  value={values.model}
+                  onChange={(e) => set("model", e.target.value)}
+                  aria-invalid={errors.model ? true : undefined}
+                  aria-describedby={errors.model ? fid("model-error") : undefined}
+                />
+                <FieldError id={fid("model-error")} message={errors.model} />
+              </div>
+            </div>
+          ) : (
+            <VehicleSelect
+              value={{
+                year: values.year,
+                make: values.make,
+                model: values.model,
+                bodyType: values.bodyType,
               }}
-              name="model"
-              required
-              autoComplete="off"
-              placeholder={subj.model}
-              className={controlCls(Boolean(errors.model))}
-              value={values.model}
-              onChange={(e) => set("model", e.target.value)}
-              aria-invalid={errors.model ? true : undefined}
-              aria-describedby={errors.model ? fid("model-error") : undefined}
+              onChange={(patch: Partial<VehicleValue>) =>
+                setValues((v) => {
+                  const next = { ...v, ...patch };
+                  return next;
+                })
+              }
+              idFor={fid}
+              controlClass={(n: "year" | "make" | "model") =>
+                controlCls(Boolean(errors[n]))
+              }
+              registerRef={(n: "year" | "make" | "model", el: HTMLElement | null) => {
+                controls.current[n] = el as HTMLInputElement | null;
+              }}
+              renderError={(n: "year" | "make" | "model") => (
+                <FieldError id={fid(`${n}-error`)} message={errors[n]} />
+              )}
             />
-            <FieldError id={fid("model-error")} message={errors.model} />
-          </div>
+          )}
         </div>
       </fieldset>
 

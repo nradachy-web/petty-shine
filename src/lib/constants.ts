@@ -555,6 +555,50 @@ export const MARINE_EXTRAS = [
 ] as const;
 
 /* ============================================================
+   VEHICLE BODY TYPES
+
+   Not a price table. Petty Shine does not publish prices, and in
+   private pricing mode nothing here renders a figure.
+
+   This exists because every quote he gives depends on the size of
+   the vehicle, and his own published copy says so: "what a vehicle
+   costs depends on its size and on what the paint needs". So the
+   quote form asks for year, make and model, classifies the vehicle
+   against the EPA's own data, and carries the body type into the
+   lead. Judson opens an email that already says "full-size SUV"
+   instead of one that says "Tahoe" and needs a reply to find out.
+
+   The classification is always shown back to the visitor and is
+   always overridable, because an EPA class cannot tell a regular
+   cab from a crew cab. See src/lib/vehicle.ts.
+   ============================================================ */
+
+export type BodyTypeId =
+  | "coupe"
+  | "sedan"
+  | "pickup-2door"
+  | "pickup-4door"
+  | "suv-small"
+  | "suv-full"
+  | "minivan";
+
+export interface BodyType {
+  id: BodyTypeId;
+  label: string;
+  examples: string;
+}
+
+export const BODY_TYPES: BodyType[] = [
+  { id: "coupe", label: "2-door coupe", examples: "Corvette, Mustang, Challenger, 911" },
+  { id: "sedan", label: "4-door sedan", examples: "Accord, Charger, 3 Series, Model 3" },
+  { id: "pickup-2door", label: "2-door pickup", examples: "Regular cab F-150, Silverado, Ram" },
+  { id: "pickup-4door", label: "4-door pickup", examples: "Crew cab F-250, Silverado, Tacoma" },
+  { id: "suv-small", label: "Small or midsize SUV", examples: "RAV4, Equinox, Wrangler, Explorer" },
+  { id: "suv-full", label: "Full-size SUV", examples: "Tahoe, Suburban, Yukon, G-Class" },
+  { id: "minivan", label: "Minivan", examples: "Odyssey, Sienna, Pacifica, Carnival" },
+];
+
+/* ============================================================
    PAINT PROTECTION FILM
 
    His four published packages, verbatim. NO PRICES: he publishes none

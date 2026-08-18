@@ -116,10 +116,20 @@ export function SectionHead({
   );
 
   if (align === "split") {
+    /* items-start, not items-end. Bottom aligning the two columns sinks the
+       heading whenever the intro beside it runs longer, which opened a 50 to
+       100px hole between the section's datum rule and its own heading on
+       seven sections of the gallery alone, and read as the intro floating
+       above the thing it introduces. Both columns now start on the same line
+       and the heading sits directly under the rule. The intro is nudged down
+       by the difference between the display cap height and the body line, so
+       the two first lines optically align rather than boxing align. */
     return (
-      <div className={cn("grid gap-7 md:grid-cols-12 md:items-end", className)}>
+      <div className={cn("grid gap-7 md:grid-cols-12 md:items-start", className)}>
         <div className="md:col-span-7">{heading}</div>
-        {intro ? <div className="ps-prose md:col-span-5">{intro}</div> : null}
+        {intro ? (
+          <div className="ps-prose md:col-span-5 md:pt-2">{intro}</div>
+        ) : null}
       </div>
     );
   }

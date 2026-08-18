@@ -265,9 +265,21 @@ export default async function CityPage({
               <p>{rankSentence(c)}</p>
             </div>
 
+            {/* The primary action, and it was missing on all sixteen of
+                these. They are indexed and in the sitemap, so a visitor who
+                searched a town name landed on a page whose only action was
+                the phone panel and whose form sat two thirds of the way
+                down. This is the same solid action every service page runs,
+                pointed at the form on this page. */}
+            <div className="mt-8">
+              <Button href="#quote" tone="cyan">
+                Get a price on your vehicle
+              </Button>
+            </div>
+
             <PhoneLink
               placement={`city-${c.slug}`}
-              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
+              className="mt-6 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
             >
               <span className="min-w-0">
                 <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
@@ -450,7 +462,7 @@ export default async function CityPage({
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get a price" rhythm="snug">
+      <Section plane="sheet" label="Get a price" rhythm="snug" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-display ps-display-md">

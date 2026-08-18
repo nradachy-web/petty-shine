@@ -254,6 +254,13 @@ export default function PricingPage() {
             </KeyValueList>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
+              {/* The primary action, and it was missing. With no published
+                  price this page is the whole pricing conversation, so the
+                  thing it asks for has to be solid and it has to be the
+                  vehicle. Everything else here is a ghost. */}
+              <Button href="#quote" tone="cyan">
+                Get a price on your vehicle
+              </Button>
               <Button href="#walkthrough" tone="ghost">
                 How the quote happens
               </Button>

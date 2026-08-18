@@ -140,7 +140,7 @@ function body(): string {
   lines.push("## Service area");
   lines.push("");
   lines.push(
-    `There is one shop and there is no mobile service. Vehicles come to ${BRAND.street} in ${BRAND.city}. Every distance below is road distance and every time is drive time, measured along the route people actually take, and none of it is straight line mileage. Each town has its own page with its route and its county.`,
+    `There is one shop and the work is done at it. Vehicles come to ${BRAND.street} in ${BRAND.city}. Every distance below is road distance and every time is drive time, measured along the route people actually take, and none of it is straight line mileage. Each town has its own page with its route and its county.`,
   );
   lines.push("");
   for (const c of CITIES) {
