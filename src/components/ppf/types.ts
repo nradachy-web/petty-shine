@@ -58,6 +58,13 @@ export interface CoverageMap<Id extends string = string> {
   outline: string;
   decor?: CoverageDecor[];
   wheels?: CoverageWheel[];
+  /**
+   * y of the ground the subject stands on, in the map's own viewBox.
+   * Drawn as the site's datum rule so the drawing sits on something
+   * instead of floating, which is most of what makes an unfilmed body
+   * read at all against a near black plane.
+   */
+  ground?: number;
   panels: CoveragePanelShape<Id>[];
   /** for the SVG title, for example "a car in side profile" */
   subject: string;

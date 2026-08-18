@@ -35,11 +35,19 @@ export default function CoveragePlanFrame<Id extends string>(
     packages,
     order,
     labels,
+    impactPanels,
     defaultPackageId,
     service,
     uid,
     coveredLabel,
     uncoveredLabel,
+    impactHead,
+    impactBody,
+    impactLabel,
+    impactNote,
+    impactSwatchLabel,
+    recordLabel,
+    subjectNote,
     actionNote,
   } = props;
 
@@ -58,11 +66,19 @@ export default function CoveragePlanFrame<Id extends string>(
         packages={packages}
         order={order}
         labels={labels}
+        impactPanels={impactPanels}
         defaultPackageId={defaultPackageId}
         service={service}
         uid={uid ? `${uid}-static` : undefined}
         coveredLabel={coveredLabel}
         uncoveredLabel={uncoveredLabel}
+        impactHead={impactHead}
+        impactBody={impactBody}
+        impactLabel={impactLabel}
+        impactNote={impactNote}
+        impactSwatchLabel={impactSwatchLabel}
+        recordLabel={recordLabel}
+        subjectNote={subjectNote}
         actionNote={actionNote}
       />
     </>

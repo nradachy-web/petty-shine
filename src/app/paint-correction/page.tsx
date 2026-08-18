@@ -1,6 +1,9 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import CTABand from "@/components/sections/CTABand";
+import TrustBar from "@/components/sections/TrustBar";
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
@@ -8,12 +11,20 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
 import DatumRule from "@/components/ui/DatumRule";
 import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
-import Plate from "@/components/ui/Plate";
-import PriceFigure from "@/components/ui/PriceFigure";
-import QuoteLink from "@/components/ui/QuoteLink";
-import Section, { SectionHead } from "@/components/ui/Section";
-import { BRAND, COATINGS, DETAIL_PACKAGES, SERVICES } from "@/lib/constants";
-import { money } from "@/lib/utils";
+import Plate, { isBleedCleared } from "@/components/ui/Plate";
+import { PriceOrQuote } from "@/components/ui/PriceFigure";
+import RuleLabel from "@/components/ui/RuleLabel";
+import Section, { PlanePanel, SectionHead } from "@/components/ui/Section";
+import { asset } from "@/lib/asset";
+import { PHOTOS } from "@/lib/photos";
+import {
+  BRAND,
+  CITIES,
+  COATINGS,
+  DETAIL_PACKAGES,
+  REVIEWS,
+  SERVICES,
+} from "@/lib/constants";
 
 const SERVICE = SERVICES.find((s) => s.id === "paint-correction")!;
 
@@ -36,13 +47,21 @@ const NINE = COATINGS.find((c) => c.id === "petty-shine-nine") as Extract<
   { id: "petty-shine-nine" }
 >;
 
-const TIERS = [LEVEL_2, LEVEL_3];
+/* The one review that describes a finish rather than a coating. Selected on
+   the review's own service field so it cannot end up quoting the wrong job. */
+const FINISH_REVIEW =
+  REVIEWS.find((r) => r.service === "Detailing" && r.text.length > 120) ??
+  REVIEWS[0];
 
-const DESCRIPTION = `Paint correction and machine buffing in ${BRAND.city}, ${BRAND.stateName}. Enhancement from ${money(
-  LEVEL_2.fromPrice
-)}, true correction from ${money(
-  LEVEL_3.fromPrice
-)}, on swirls, water spots and oxidation.`;
+/* The towns in his own paid search terms, nearest first, every figure
+   measured. Each one links to that town's page with a real anchor. */
+const NEAR_TOWNS = ["greensboro-nc", "high-point-nc", "asheboro-nc", "randleman-nc"]
+  .map((slug) => CITIES.find((c) => c.slug === slug)!)
+  .sort((a, b) => a.minutes - b.minutes);
+
+/* 159 characters, and no dollar figure. PRICING_MODE is private, and a meta
+   description is one of the three places the audit checks for a leak. */
+const DESCRIPTION = `Paint correction and machine buffing in ${BRAND.city}, ${BRAND.stateName}. Two levels. Swirls, scratches, water spots and oxidation cut out of the clear coat for good.`;
 
 export const metadata: Metadata = {
   title: `${SERVICE.name} in ${BRAND.city}, ${BRAND.state}`,
@@ -59,92 +78,223 @@ const LIMITS = [
   "Correction fixes what is on the car today. It does not stop the next round of swirls, which is what a coating and a proper wash routine are for.",
 ];
 
+/* ---------------------------------------------------------------------------
+   THE HERO
+
+   The shared .hero block from globals.css, on this page's own photograph, so
+   a service page opens the way the home page opens: full bleed frame, one
+   flat tonal overlay, letterspaced eyebrow, one display heading, one solid
+   action and one outline action, trust row on the bottom edge.
+
+   THE PHOTOGRAPH is the black F-250 standing in the shop after correction,
+   which is the argument this page makes: black paint is where a polish
+   either holds a reflection or does not. It is cleared for full bleed in
+   Plate.tsx. --hero-focus keeps the cab and the reflection in the crop.
+   ------------------------------------------------------------------------- */
+const HERO_PHOTO = "detail-f250-black" as const;
+
+if (process.env.NODE_ENV !== "production" && !isBleedCleared(HERO_PHOTO)) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[paint-correction] ${HERO_PHOTO} is not in BLEED_CLEARED and must not run full bleed.`
+  );
+}
+
+function Hero() {
+  const meta = PHOTOS[HERO_PHOTO];
+  const widest = meta.sizes[meta.sizes.length - 1];
+  const srcSet = (ext: "avif" | "webp") =>
+    meta.sizes
+      .map((w) => `${asset(`/photos/${HERO_PHOTO}-${w}.${ext}`)} ${w}w`)
+      .join(", ");
+
+  return (
+    <section
+      className="hero plane-shop"
+      style={{ "--hero-focus": "56% 50%" } as CSSProperties}
+      aria-label={`${SERVICE.name} at ${BRAND.name}, ${BRAND.city}, ${BRAND.stateName}`}
+    >
+      <picture className="hero__media">
+        <source type="image/avif" srcSet={srcSet("avif")} sizes="100vw" />
+        <source type="image/webp" srcSet={srcSet("webp")} sizes="100vw" />
+        {/* alt is empty on purpose: the photograph is the hero's ground and
+            the heading beside it already says what this page is. */}
+        <img
+          src={asset(`/photos/${HERO_PHOTO}-${widest}.webp`)}
+          width={meta.w}
+          height={meta.h}
+          alt=""
+          loading="eager"
+          decoding="sync"
+          fetchPriority="high"
+        />
+      </picture>
+      <div className="hero__scrim" aria-hidden="true" />
+
+      <div className="hero__body container-site">
+        <div className="hero__copy">
+          {/* The town, not the state name: at 390 the long form wraps and
+              orphans "Carolina" onto its own line. The full state name is in
+              the first sentence of the paragraph below. */}
+          <p className="hero__eyebrow">
+            {SERVICE.name} · {BRAND.city}, {BRAND.state}
+          </p>
+
+          <h1 className="ps-display ps-display-lg hero__title">
+            Paint correction. Most people call it buffing.
+          </h1>
+
+          <div className="hero__prose">
+            <p>
+              Paint correction in {BRAND.city}, {BRAND.stateName}. Swirls,
+              scratches, water spots and oxidation sit in the clear coat. A
+              machine polish cuts that clear coat back until the damage is level
+              with it, then refines the surface until the gloss comes back up.
+            </p>
+            <p>
+              It is also the step that decides what everything else is worth. A
+              coating locks in whatever the paint looks like on the day it goes
+              on, so the paint gets fixed first and protected second.
+            </p>
+          </div>
+
+          <div className="hero__actions">
+            {/* The one solid action on this screen. Describing the paint is a
+                smaller step than booking a job. */}
+            <Button href="#quote" tone="cyan">
+              Get a price on your vehicle
+            </Button>
+            <PhoneLink
+              placement="correction-hero"
+              className="ps-btn ps-btn--ghost"
+            >
+              Call {BRAND.phoneDisplay}
+            </PhoneLink>
+          </div>
+        </div>
+      </div>
+
+      <TrustBar plane="none" className="hero__trust" />
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   THE TWO LEVELS, as a split panel.
+
+   DIRECTION-V2 section 3: split panels meeting on a hard vertical edge, one
+   light and one dark, each carrying one idea. This page is the one place on
+   the site where that device is the content rather than a decoration, because
+   the whole decision is binary: an enhancement pass, or a true correction.
+
+   The plane inversion is side by side rather than stacked, so the rule about
+   never changing plane twice in one screen height still holds vertically.
+   ------------------------------------------------------------------------- */
+function LevelPanel({
+  plane,
+  tier,
+  index,
+  body,
+}: {
+  plane: "sheet" | "shop";
+  /* The two tiers that carry a subtitle. Typed as the two members rather
+     than as the union, because Maintenance Detail has no subtitle and the
+     panel's heading is the subtitle. */
+  tier: typeof LEVEL_2 | typeof LEVEL_3;
+  index: number;
+  body: string;
+}) {
+  return (
+    <PlanePanel
+      plane={plane}
+      className="px-5 py-12 md:px-9 md:py-14 lg:px-12 lg:py-16"
+    >
+      <DatumRule label={`Level ${String(index).padStart(2, "0")}`} />
+
+      <h3 className="ps-display ps-display-md mt-7">{tier.subtitle}</h3>
+
+      <div className="ps-prose mt-4">
+        <p>{tier.blurb}</p>
+        <p>{body}</p>
+      </div>
+
+      <KeyValueList className="mt-7" label={`${tier.name} specification`}>
+        <KeyValueRow k="Package" v={tier.name} />
+        <KeyValueRow k="Quoted on" v="Vehicle size and paint condition" />
+      </KeyValueList>
+
+      <div className="mt-7">
+        {/* No package key: the quote form ladders film coverage and coating
+            tiers, and correction is not one of them, so a package param here
+            would ride into a field that does not exist. */}
+        <PriceOrQuote
+          service={SERVICE.quoteKey}
+          value={tier.fromPrice}
+          size="lg"
+        />
+      </div>
+    </PlanePanel>
+  );
+}
+
 export default function PaintCorrectionPage() {
   return (
     <>
+      {/* No `price` prop while PRICING_MODE is private: a number in an Offer
+          node is a published price like any other. */}
       <ServiceSchema
         name={SERVICE.name}
         description={DESCRIPTION}
         url="/paint-correction/"
-        price={LEVEL_2.fromPrice}
         serviceType="Automotive paint correction and machine polishing"
       />
 
       <Breadcrumbs
-        plane="sheet"
+        plane="shop"
         trail={[{ label: SERVICE.name, href: SERVICE.href }]}
       />
 
-      <Section plane="sheet" label={`${SERVICE.index} ${SERVICE.name}`}>
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="min-w-0 lg:col-span-6">
-            <h1 className="ps-display ps-display-lg">
-              Paint correction. Most people call it buffing.
-            </h1>
+      <Hero />
 
-            <div className="ps-prose mt-6">
+      {/* The header rides inside the full width band rather than in a
+          section of its own, so the intro sits directly above the panels
+          instead of leaving a dead strip between two sections. */}
+      <Section plane="sheet" width="full" rhythm="flush">
+        <div className="container-site pt-14 pb-6 md:pt-20 md:pb-8">
+          <DatumRule label="Two levels" className="mb-8 md:mb-11" />
+          <SectionHead
+            title="How far do you want it taken."
+            intro={
               <p>
-                Swirls, scratches, water spots and oxidation sit in the clear
-                coat. A machine polish cuts that clear coat back until the
-                damage is level with it, then refines the surface until the
-                gloss comes back up.
+                Both levels are machine polishing on the same paint. What
+                changes is how many stages it takes, how much clear coat comes
+                off, and how much of the damage goes with it.
               </p>
-              <p>
-                Two levels come out of that. An enhancement pass lifts the
-                gloss and takes out the light to moderate defects. A true
-                correction goes after the medium and heavy ones and removes
-                them for good.
-              </p>
-              <p>
-                It is also the step that decides what everything else is worth.
-                A coating locks in whatever the paint looks like on the day it
-                goes on, so the paint gets fixed first and protected second.
-              </p>
-            </div>
+            }
+          />
+        </div>
 
-            <div className="mt-8">
-              <Button href="#quote" tone="ghost">
-                Tell us about the paint
-              </Button>
-            </div>
-          </div>
-
-          <div className="min-w-0 lg:col-span-6">
-            <KeyValueList label="Paint correction prices">
-              {TIERS.map((tier) => (
-                <KeyValueRow
-                  key={tier.id}
-                  k={`${tier.name}, ${tier.subtitle}`}
-                  v={<PriceFigure value={tier.fromPrice} from />}
-                />
-              ))}
-              <KeyValueRow k="Shop" v={BRAND.addressLine} />
-              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
-            </KeyValueList>
-
-            <div className="mt-8">
-              <PhoneLink
-                placement="correction-hero"
-                className="ps-btn ps-btn--ghost"
-              >
-                Call {BRAND.phoneDisplay}
-              </PhoneLink>
-            </div>
-          </div>
+        <div className="grid min-w-0 lg:grid-cols-2">
+          <LevelPanel
+            plane="sheet"
+            tier={LEVEL_2}
+            index={2}
+            body="One polishing stage. The gloss comes up and the light defects go, which on most daily driven paint is the visible difference people are actually asking for."
+          />
+          <LevelPanel
+            plane="shop"
+            tier={LEVEL_3}
+            index={3}
+            body="It takes more than one stage, and it removes the defect rather than filling or hiding it. It is also what the nine year coating starts with."
+          />
         </div>
       </Section>
 
-      <Section plane="shop" label="The proof" className="plane-arc">
-        <Plate
-          id="detail-f250-black"
-          bleed
-          priority
-          caption="F-250 Super Duty, after correction"
-        />
-
-        <div className="mt-12 grid min-w-0 gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-14">
+      <Section plane="sheet" label="The test">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
+              size="md"
               title="Look at the edge of the reflection."
               intro={
                 <p>
@@ -157,16 +307,16 @@ export default function PaintCorrectionPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                Every photograph on this page is a job that came through the
-                shop. Do it yourself on your own car. Find a straight line in
-                the reflection, a door frame or a light bar, and see whether it
-                stays crisp or falls apart at the edge.
+                Do it yourself on your own car before you call anyone. Find a
+                straight line in the reflection, a door frame or a light bar,
+                and see whether it stays crisp or falls apart. Every photograph
+                on this page is a vehicle that came through the shop.
               </p>
             </div>
 
             <div className="mt-7">
-              <Button href="/gallery/" tone="ghost">
-                See more of the work
+              <Button href="/gallery/" tone="ghost" size="sm">
+                More of the work, by vehicle
               </Button>
             </div>
           </div>
@@ -184,86 +334,26 @@ export default function PaintCorrectionPage() {
                 sizes="(min-width: 1024px) 20rem, (min-width: 640px) 45vw, 100vw"
               />
             </div>
-          </div>
-        </div>
-      </Section>
 
-      <Section plane="sheet" label="Two levels" className="plane-arc">
-        <SectionHead
-          title="What each level costs."
-          intro={
-            <p>
-              Both are published starting prices off the detailing ladder. The
-              difference between them is how far the polishing goes and how
-              much of the damage comes out. What your vehicle costs depends on
-              its size and on the state of its paint.
-            </p>
-          }
-        />
-
-        <div className="mt-12">
-          {TIERS.map((tier) => (
-            <div key={tier.id} className="mt-16 min-w-0 first:mt-0">
-              <DatumRule label={tier.subtitle} />
-
-              <div className="mt-8 grid min-w-0 gap-9 lg:grid-cols-12 lg:gap-14">
-                <div className="min-w-0 lg:col-span-5">
-                  <h3 className="ps-display ps-display-md">{tier.name}</h3>
-
-                  <div className="mt-5">
-                    <PriceFigure value={tier.fromPrice} from size="lg" />
-                  </div>
-
-                  <div className="mt-6">
-                    <QuoteLink service={SERVICE.quoteKey}>
-                      Price this one on my vehicle
-                    </QuoteLink>
-                  </div>
-                </div>
-
-                <div className="min-w-0 lg:col-span-7">
-                  <p className="ps-prose">{tier.blurb}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <DatumRule label="Where correction shows up again" className="mt-16 mb-8" />
-
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="min-w-0 lg:col-span-5">
-            <SectionHead
-              size="md"
-              title="The nine year coating starts here."
-              intro={
-                <p>
-                  {NINE.name} is the only coating tier that begins with a full
-                  correction, which is why it costs what it costs and why it
-                  carries a {NINE.guarantee} guarantee.
-                </p>
-              }
-            />
-            <div className="mt-7">
-              <Button href="/ceramic-coating/" tone="ghost" size="sm">
-                The three ceramic coatings
-              </Button>
-            </div>
-          </div>
-
-          <div className="min-w-0 lg:col-span-7">
-            <KeyValueList label={`${NINE.name} prep`}>
-              <KeyValueRow
-                k="Coating"
-                v={`${NINE.name}, ${NINE.subtitle}`}
-              />
-              <KeyValueRow
-                k="Starting price"
-                v={<PriceFigure value={NINE.fromPrice} from />}
-              />
-              <KeyValueRow k="Prep" v={NINE.includes[1]} mono={false} />
-              <KeyValueRow k="Base coat" v={NINE.base} />
-            </KeyValueList>
+            {/* Social proof at the decision point, verbatim and attributed. */}
+            <blockquote className="mt-9 min-w-0 border-t border-rule-light pt-7">
+              <span aria-hidden className="block h-px w-6 bg-cyan-500" />
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-ink-900">
+                {FINISH_REVIEW.text}
+              </p>
+              <footer className="mt-5 flex flex-wrap items-baseline gap-x-6 gap-y-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em]">
+                <span className="text-ink-900">{FINISH_REVIEW.name}</span>
+                <span className="text-ink-400">{FINISH_REVIEW.service}</span>
+                <a
+                  href={BRAND.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-24 text-cyan-ink underline underline-offset-4"
+                >
+                  Read it on Google
+                </a>
+              </footer>
+            </blockquote>
           </div>
         </div>
 
@@ -271,12 +361,12 @@ export default function PaintCorrectionPage() {
           variant="line"
           service={SERVICE.quoteKey}
           ctaLabel="Get a price"
-          body="Send the year, make and model with a note on what the paint looks like and we will come back with a number."
-          className="mt-16"
+          body="Send the year, make and model with a note on what you can see in the paint in direct sun, and we will come back with a number in writing."
+          className="mt-12"
         />
       </Section>
 
-      <Section plane="shop" label="The limits" className="plane-arc">
+      <Section plane="shop" label="The limits">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -319,9 +409,47 @@ export default function PaintCorrectionPage() {
             </ul>
           </div>
         </div>
+
+        {/* The handoff to the coating page is its own ruled row rather than a
+            tail on the left column, which is what left a third of this band
+            empty on the first pass. */}
+        <DatumRule label="After the correction" className="mt-14 mb-8" />
+
+        <div className="grid min-w-0 gap-9 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <h3 className="ps-display ps-display-md">
+              The nine year coating starts here.
+            </h3>
+
+            <div className="ps-prose mt-4">
+              <p>
+                {NINE.name} is the only coating tier that begins with a full
+                correction, which is why it is the one that carries a{" "}
+                {NINE.guarantee} guarantee from Gtechniq. Correcting the paint
+                and then leaving it unprotected is the version of this that
+                costs you twice.
+              </p>
+            </div>
+
+            <div className="mt-7">
+              <Button href="/ceramic-coating/" tone="ghost" size="sm">
+                The three ceramic coatings
+              </Button>
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:col-span-7">
+            <KeyValueList label={`${NINE.name} prep`}>
+              <KeyValueRow k="Coating" v={`${NINE.name}, ${NINE.subtitle}`} />
+              <KeyValueRow k="Prep" v={NINE.includes[1]} mono={false} />
+              <KeyValueRow k="Base coat" v={NINE.base} />
+              <KeyValueRow k="Guarantee" v={`${NINE.guarantee}, issued by Gtechniq`} />
+            </KeyValueList>
+          </div>
+        </div>
       </Section>
 
-      <Section plane="sheet" label="Get a price" id="quote" className="plane-arc">
+      <Section plane="sheet" label="Get a price" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -331,7 +459,8 @@ export default function PaintCorrectionPage() {
                 <p>
                   Color, age, whether it lives outside, and what you can see in
                   it in direct sun. That is usually enough to say which level it
-                  needs before the car is here.
+                  needs before the car is here. You get the number in writing
+                  before anything is scheduled.
                 </p>
               }
             />
@@ -355,6 +484,24 @@ export default function PaintCorrectionPage() {
               <KeyValueRow k="Address" v={BRAND.addressLine} />
               {BRAND.hours.map((h) => (
                 <KeyValueRow key={h.days} k={h.days} v={h.time} />
+              ))}
+            </KeyValueList>
+
+            <p className="mt-9">
+              <RuleLabel>Where the cars come from</RuleLabel>
+            </p>
+
+            <KeyValueList className="mt-3" label="Drive times to the shop">
+              {NEAR_TOWNS.map((town) => (
+                <KeyValueRow
+                  key={town.slug}
+                  k={
+                    <Link href={`/areas/${town.slug}/`} className="link-inline">
+                      Paint correction in {town.name}
+                    </Link>
+                  }
+                  v={`${town.minutes} min via ${town.route}`}
+                />
               ))}
             </KeyValueList>
           </div>

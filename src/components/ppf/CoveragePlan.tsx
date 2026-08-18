@@ -11,6 +11,7 @@ import {
 import Button from "@/components/ui/Button";
 import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import CoverageDiagram from "./CoverageDiagram";
+import CoverageLegend from "./CoverageLegend";
 import type { CoverageMap, CoveragePackage } from "./types";
 import "./coverage.css";
 
@@ -27,6 +28,21 @@ import "./coverage.css";
  * This is the answer. Four tiers, each a strict superset of the one
  * below, drawn on a real car, with the panel list in words beside it.
  *
+ * THE LAYOUT, and why it is three bands rather than two columns.
+ *
+ * The first pass put the drawing in a sticky left column beside a
+ * fifteen row record, and the record is roughly twice the height of
+ * everything on the left. Sticky rescued it on a real scroll and it
+ * still opened with a column of dead space, which is exactly what a
+ * screenshot catches. The record is not compressible: fifteen panels
+ * named honestly is the point of the component.
+ *
+ * So the drawing takes the full width, which is what a 3.3 to 1 side
+ * profile wants anyway, and under it two columns carry roughly equal
+ * height: what this tier is and how to buy it on the left, the record
+ * on the right in two ruled columns of eight and seven rows. Nothing is
+ * sticky, because the whole component is now about one screen tall.
+ *
  * WHAT IS DELIBERATE HERE
  *
  * Chips are the only control. There is no scroll driven tier switching
@@ -37,8 +53,10 @@ import "./coverage.css";
  *
  * Coverage is signalled three ways, never by colour alone: the panel
  * fill lifts, its stroke goes cyan and thickens, and the record names it
- * in words. Everything not covered is named too, in pewter, because the
- * honest negative is the reason this component earns trust.
+ * in words. Every panel is listed every time, in installation order, so
+ * the rows never reshuffle when a tier changes and the eye can follow
+ * exactly which ones flipped. What is not covered is named too, in
+ * pewter, because the honest negative is what earns the trust.
  *
  * Only the panels a tier ADDS animate, and they fill in PANEL_ORDER,
  * the real installation order, so the diagram reads as film being laid
@@ -69,10 +87,15 @@ export interface CoveragePlanProps<Id extends string> {
   uid?: string;
   /** copy */
   legend?: string;
+  impactHead?: string;
+  impactBody?: string;
   impactLabel?: string;
   impactNote?: string;
+  impactSwatchLabel?: string;
   coveredLabel?: string;
   uncoveredLabel?: string;
+  recordLabel?: string;
+  subjectNote?: string;
   actionNote?: string;
   className?: string;
 }
@@ -97,10 +120,15 @@ export default function CoveragePlan<Id extends string>({
   service,
   uid: uidProp,
   legend = "Coverage level",
+  impactHead = "At highway speed",
+  impactBody = "Film is the layer that takes the damage instead of the paint. Rocks and road grit land on the front of the car first.",
   impactLabel = "Show what gets hit at highway speed",
   impactNote = "Pewter marks the panels that take stone chips and road spray first.",
+  impactSwatchLabel = "Takes the hits",
   coveredLabel = "Film goes on",
   uncoveredLabel = "Left bare",
+  recordLabel = "Every panel on the car",
+  subjectNote = "One car, drawn to scale. Coverage is quoted panel by panel on your own vehicle.",
   actionNote = "We do not publish film prices. Tell us the vehicle and we will price this package in writing.",
   className,
 }: CoveragePlanProps<Id>) {
@@ -112,6 +140,13 @@ export default function CoveragePlan<Id extends string>({
     packages.findIndex((p) => p.id === defaultPackageId)
   );
   const totalPanels = map.panels.length;
+
+  /** Every panel that is both drawn and ordered, in installation order. */
+  const drawn = useMemo(() => {
+    const has = new Set<Id>(map.panels.map((p) => p.id));
+    return order.filter((id) => has.has(id));
+  }, [map, order]);
+  const split = Math.ceil(drawn.length / 2);
 
   /** For every panel, which tier indices cover it. Drives the CSS. */
   const tiers = useMemo(() => {
@@ -201,6 +236,10 @@ export default function CoveragePlan<Id extends string>({
   }, [order, runEntrance]);
 
   const active = packages[activeIdx] ?? packages[0];
+  const activeSet = useMemo(
+    () => new Set<Id>(active?.panels ?? []),
+    [active]
+  );
 
   return (
     <div
@@ -209,47 +248,84 @@ export default function CoveragePlan<Id extends string>({
       data-active={activeIdx}
       data-impact={impactOn ? "true" : undefined}
     >
-      <div className="cov__grid">
-        {/* The sticky frame: the control, the drawing, and the way to buy. */}
-        <div className="cov__frame">
-          <fieldset className="cov-chips">
-            <legend className="cov-chips__legend">{legend}</legend>
-            {packages.map((pkg, i) => (
-              <label
-                key={pkg.id}
-                className="cov-chip"
-                htmlFor={`${uid}-tier-${i}`}
-              >
-                <input
-                  id={`${uid}-tier-${i}`}
-                  className="cov-radio cov-chip__mark"
-                  type="radio"
-                  name={`${uid}-tier`}
-                  value={String(i)}
-                  checked={i === activeIdx}
-                  onChange={() => select(i)}
-                />
-                {pkg.name}
-              </label>
-            ))}
-          </fieldset>
-
-          <div className="mt-6">
-            <CoverageDiagram
-              map={map}
-              uid={uid}
-              order={order}
-              tiers={tiers}
-              stipple={impactPanels}
-              highlight={hovered}
-              generation={generation}
-              delays={delays}
-              title={`${active.name}. ${active.panels.length} of ${totalPanels} panels covered on ${map.subject}.`}
+      {/* The control. One row, full width, above the drawing. */}
+      <fieldset className="cov-chips">
+        <legend className="cov-chips__legend">{legend}</legend>
+        {packages.map((pkg, i) => (
+          <label key={pkg.id} className="cov-chip" htmlFor={`${uid}-tier-${i}`}>
+            <input
+              id={`${uid}-tier-${i}`}
+              className="cov-radio cov-chip__mark"
+              type="radio"
+              name={`${uid}-tier`}
+              value={String(i)}
+              checked={i === activeIdx}
+              onChange={() => select(i)}
             />
-          </div>
+            {pkg.name}
+          </label>
+        ))}
+      </fieldset>
 
+      {/* The drawing, full width, on its own hairline ruled bar. */}
+      <div className="cov__stage">
+        <CoverageDiagram
+          map={map}
+          uid={uid}
+          order={order}
+          tiers={tiers}
+          stipple={impactPanels}
+          highlight={hovered}
+          highlightCovered={hovered ? activeSet.has(hovered) : true}
+          generation={generation}
+          delays={delays}
+          title={`${active.name}. ${active.panels.length} of ${totalPanels} panels covered on ${map.subject}.`}
+        />
+        <CoverageLegend
+          coveredLabel={coveredLabel}
+          uncoveredLabel={uncoveredLabel}
+          impactLabel={impactPanels.length > 0 ? impactSwatchLabel : undefined}
+          note={subjectNote}
+        />
+      </div>
+
+      <div className="cov__cols">
+        {/* What this tier is, and the way to buy it. */}
+        <div className="cov__sell">
+          {packages.map((pkg, i) => (
+            <div
+              key={pkg.id}
+              className="cov-tier"
+              data-tier={i}
+              data-default={i === defaultIdx ? "true" : undefined}
+            >
+              <div className="cov-summary">
+                <span className="cov-summary__name">{pkg.name}</span>
+                <span className="cov-summary__count">
+                  {`${pkg.panels.length} of ${totalPanels} panels`}
+                </span>
+              </div>
+              <p className="cov-note">{pkg.bestFor}</p>
+              {pkg.addsOver ? (
+                <p className="cov-note">
+                  {`Everything in ${pkg.addsOver}, plus ${listOf(
+                    pkg.addedPanels.map((id) => labels[id].toLowerCase())
+                  )}.`}
+                </p>
+              ) : null}
+              {pkg.note ? <p className="cov-note">{pkg.note}</p> : null}
+            </div>
+          ))}
+
+          {/* LOSS AVERSION, TRUTHFULLY. Film is sacrificial, so the honest
+              argument is what the front of the car looks like without it.
+              It was a bare checkbox under the drawing in the first pass
+              and nobody was going to find it. It is a block of its own
+              now, with the reason stated before the switch. */}
           {impactPanels.length > 0 ? (
-            <>
+            <div className="cov-impact">
+              <p className="cov-impact__head">{impactHead}</p>
+              <p className="cov-impact__body">{impactBody}</p>
               <label className="cov-toggle" htmlFor={`${uid}-impact`}>
                 <input
                   id={`${uid}-impact`}
@@ -258,10 +334,10 @@ export default function CoveragePlan<Id extends string>({
                   checked={impactOn}
                   onChange={(e) => setImpactOn(e.currentTarget.checked)}
                 />
-                {impactLabel}
+                <span className="cov-toggle__text">{impactLabel}</span>
               </label>
               <p className="cov-caption cov-impact-note">{impactNote}</p>
-            </>
+            </div>
           ) : null}
 
           <div className="cov-action">
@@ -285,16 +361,44 @@ export default function CoveragePlan<Id extends string>({
           </div>
         </div>
 
-        {/* The record. Every panel named, covered and uncovered alike. */}
+        {/* The record. Every panel named, covered and uncovered alike, in
+            installation order, split into two ruled columns so it stands
+            level with the column beside it. */}
         {/* NOT the live region. All four tiers are rendered here and CSS
             picks one, so announcing this element announces sixty rows of
             record every time a chip is touched. The live region is the one
             line summary at the end of the component. */}
         <div className="cov__record">
+          <p className="cov-subhead">{recordLabel}</p>
           {packages.map((pkg, i) => {
             const set = new Set<Id>(pkg.panels);
-            const on = order.filter((id) => set.has(id));
-            const off = order.filter((id) => !set.has(id));
+            const valueOf = (id: Id) => {
+              if (!set.has(id)) return NOT_COVERED;
+              if (pkg.addsOver && pkg.addedPanels.includes(id)) return ADDED;
+              return COVERED;
+            };
+            const column = (ids: readonly Id[], label: string) => (
+              <KeyValueList label={label}>
+                {ids.map((id) => (
+                  <div
+                    key={id}
+                    className="cov-row"
+                    onPointerEnter={
+                      i === activeIdx ? () => setHovered(id) : undefined
+                    }
+                    onPointerLeave={
+                      i === activeIdx ? () => setHovered(null) : undefined
+                    }
+                  >
+                    <KeyValueRow
+                      k={labels[id]}
+                      v={valueOf(id)}
+                      tone={set.has(id) ? "default" : "pewter"}
+                    />
+                  </div>
+                ))}
+              </KeyValueList>
+            );
             return (
               <div
                 key={pkg.id}
@@ -302,59 +406,13 @@ export default function CoveragePlan<Id extends string>({
                 data-tier={i}
                 data-default={i === defaultIdx ? "true" : undefined}
               >
-                <div className="cov-summary">
-                  <span className="cov-summary__name">{pkg.name}</span>
-                  <span className="cov-summary__count">
-                    {`${on.length} of ${totalPanels} panels`}
-                  </span>
+                <div className="cov-record__split">
+                  {column(drawn.slice(0, split), `${pkg.name}, panel coverage`)}
+                  {column(
+                    drawn.slice(split),
+                    `${pkg.name}, panel coverage continued`
+                  )}
                 </div>
-
-                <p className="cov-note">{pkg.bestFor}</p>
-                {pkg.addsOver ? (
-                  <p className="cov-note">
-                    {`Everything in ${pkg.addsOver}, plus ${listOf(
-                      pkg.addedPanels.map((id) => labels[id].toLowerCase())
-                    )}.`}
-                  </p>
-                ) : null}
-                {pkg.note ? <p className="cov-note">{pkg.note}</p> : null}
-
-                <p className="cov-subhead">{coveredLabel}</p>
-                <KeyValueList label={`${pkg.name}, panels covered`}>
-                  {on.map((id) => (
-                    <div
-                      key={id}
-                      className="cov-row"
-                      onPointerEnter={
-                        i === activeIdx ? () => setHovered(id) : undefined
-                      }
-                      onPointerLeave={
-                        i === activeIdx ? () => setHovered(null) : undefined
-                      }
-                    >
-                      <KeyValueRow
-                        k={labels[id]}
-                        v={pkg.addsOver && pkg.addedPanels.includes(id) ? ADDED : COVERED}
-                      />
-                    </div>
-                  ))}
-                </KeyValueList>
-
-                {off.length > 0 ? (
-                  <>
-                    <p className="cov-subhead">{uncoveredLabel}</p>
-                    <KeyValueList label={`${pkg.name}, panels not covered`}>
-                      {off.map((id) => (
-                        <KeyValueRow
-                          key={id}
-                          k={labels[id]}
-                          v={NOT_COVERED}
-                          tone="pewter"
-                        />
-                      ))}
-                    </KeyValueList>
-                  </>
-                ) : null}
               </div>
             );
           })}

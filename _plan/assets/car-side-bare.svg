@@ -8,18 +8,18 @@
 <g><circle cx="919" cy="254" r="86" fill="#0A0B09" stroke="#6B7477" stroke-width="2"/><circle cx="919" cy="254" r="63" fill="none" stroke="#6B7477" stroke-width="2"/><circle cx="919" cy="254" r="10" fill="none" stroke="#6B7477" stroke-width="2"/></g>
 <path d="M 30 186 C 68 170, 122 154, 178 147 C 232 142, 302 143, 372 145 C 406 118, 468 66, 526 41 C 552 32, 584 31, 614 41 C 672 58, 732 72, 798 84 C 856 88, 900 76, 952 69 C 1032 60, 1102 64, 1146 76 L 1176 92 C 1184 132, 1180 190, 1164 228 L 1126 258 C 1082 268, 1042 282, 1004 306 A 100 100 0 1 0 834 306 L 330 306 A 100 100 0 1 0 154 306 C 114 306, 60 300, 34 292 L 14 288 C 8 252, 16 210, 30 186 Z" fill="#282C29"/>
 <g clip-path="url(#bodyClip)">
-<path data-panel="front-bumper" d="M 0 160 L 30 186 L 172 146 L 184 214 L 178 320 L 0 320 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="hood" d="M 0 120 L 30 186 L 178 147 C 232 142, 302 143, 372 145 L 380 156 C 320 162, 256 170, 200 178 L 176 182 L 172 146 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="front-fender" d="M 172 146 L 176 182 L 200 178 C 256 170, 320 162, 380 156 L 388 152 L 392 320 L 176 320 L 184 214 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rocker" d="M 328 262 L 854 262 L 854 330 L 328 330 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="lower-door" d="M 390 216 L 708 210 L 708 262 L 390 262 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rear-impact" d="M 706 161 L 750 160 L 754 330 L 700 330 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="front-door" d="M 386 156 L 706 161 L 702 330 L 392 330 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rear-door" d="M 706 161 L 750 160 L 858 168 L 858 330 L 702 330 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="roof" d="M 368 148 C 406 116, 468 64, 526 39 C 552 30, 584 29, 616 39 C 672 56, 732 70, 798 82 L 858 92 L 858 168 L 386 156 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rear-fender" d="M 856 116 L 1064 108 L 1030 300 L 1014 340 L 854 340 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="trunk" d="M 858 76 C 898 70, 928 68, 952 67 C 1032 58, 1102 62, 1146 74 L 1176 92 L 1182 128 L 1064 108 L 856 116 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rear-bumper" d="M 1064 108 L 1200 112 L 1200 340 L 1014 340 L 1030 300 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="front-bumper" d="M 0 160 L 30 186 L 172 146 L 184 214 L 178 320 L 0 320 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="hood" d="M 0 120 L 30 186 L 178 147 C 232 142, 302 143, 372 145 L 380 156 C 320 162, 256 170, 200 178 L 176 182 L 172 146 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="front-fender" d="M 172 146 L 176 182 L 200 178 C 256 170, 320 162, 380 156 L 388 152 L 392 320 L 176 320 L 184 214 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rocker" d="M 328 262 L 854 262 L 854 330 L 328 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="lower-door" d="M 390 216 L 708 210 L 708 262 L 390 262 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-impact" d="M 706 161 L 750 160 L 754 330 L 700 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="front-door" d="M 386 156 L 706 161 L 702 330 L 392 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-door" d="M 706 161 L 750 160 L 858 168 L 858 330 L 702 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="roof" d="M 368 148 C 406 116, 468 64, 526 39 C 552 30, 584 29, 616 39 C 672 56, 732 70, 798 82 L 858 92 L 858 168 L 386 156 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-fender" d="M 856 116 L 1064 108 L 1030 300 L 1014 340 L 854 340 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="trunk" d="M 858 76 C 898 70, 928 68, 952 67 C 1032 58, 1102 62, 1146 74 L 1176 92 L 1182 128 L 1064 108 L 856 116 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-bumper" d="M 1064 108 L 1200 112 L 1200 340 L 1014 340 L 1030 300 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
 </g>
 <g clip-path="url(#bodyClip)">
 <path d="M 382 150 C 416 122, 474 76, 530 52 C 552 47, 578 46, 602 53 L 652 152 L 400 158 C 392 157, 388 155, 388 152 Z" fill="#0A0B09" stroke="#6B7477" stroke-width="1.5"/>
@@ -33,10 +33,10 @@
 <path d="M 1086 122 L 1172 130 L 1170 158 L 1084 154 Z" fill="none" stroke="#6B7477" stroke-width="1.4"/>
 </g>
 <g clip-path="url(#bodyClip)">
-<path data-panel="headlight" d="M 70 190 L 78 172 L 162 140 L 176 144 L 174 166 L 88 200 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="fog-light" d="M 24 256 L 90 246 L 104 264 L 98 288 L 28 296 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="headlight" d="M 70 190 L 78 172 L 162 140 L 176 144 L 174 166 L 88 200 Z" fill="#282C29" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="fog-light" d="M 24 256 L 90 246 L 104 264 L 98 288 L 28 296 Z" fill="#282C29" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
 </g>
-<path data-panel="mirror" d="M 396 170 L 398 150 C 398 143, 389 140, 380 144 L 352 157 C 344 161, 346 171, 355 172 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="mirror" d="M 396 170 L 398 150 C 398 143, 389 140, 380 144 L 352 157 C 344 161, 346 171, 355 172 Z" fill="#282C29" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
 <path d="M 30 186 C 68 170, 122 154, 178 147 C 232 142, 302 143, 372 145 C 406 118, 468 66, 526 41 C 552 32, 584 31, 614 41 C 672 58, 732 72, 798 84 C 856 88, 900 76, 952 69 C 1032 60, 1102 64, 1146 76 L 1176 92 C 1184 132, 1180 190, 1164 228 L 1126 258 C 1082 268, 1042 282, 1004 306 A 100 100 0 1 0 834 306 L 330 306 A 100 100 0 1 0 154 306 C 114 306, 60 300, 34 292 L 14 288 C 8 252, 16 210, 30 186 Z" fill="none" stroke="#9BA7AE" stroke-width="2.4" stroke-linejoin="round"/>
 <line x1="0" y1="340" x2="1200" y2="340" stroke="#6B7477" stroke-width="1"/>
 <line x1="0" y1="340" x2="24" y2="340" stroke="#00C1F3" stroke-width="1"/>

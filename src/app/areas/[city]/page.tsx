@@ -3,19 +3,29 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import ServiceSchema from "@/components/seo/ServiceSchema";
+import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
   Breadcrumbs,
   Button,
+  DatumRule,
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceFigure,
-  QuoteLink,
+  PriceOrQuote,
   Section,
   SectionHead,
 } from "@/components/ui";
-import { BRAND, CITIES, NEAREST_EXIT, SERVICES, type City } from "@/lib/constants";
+import {
+  BRAND,
+  CITIES,
+  NEAREST_EXIT,
+  REVIEWS,
+  REVIEW_SUMMARY,
+  SERVICES,
+  type City,
+} from "@/lib/constants";
 import { drive, driveTime, milesLong } from "@/lib/utils";
 import type { PhotoId } from "@/lib/photos";
 import {
@@ -31,7 +41,6 @@ import {
   roadKind,
   sharedRoad,
   spell,
-  spellCap,
 } from "./facts";
 
 /**
@@ -70,27 +79,56 @@ const CITY_PHOTO: Record<string, PhotoId> = {
   "winston-salem-nc": "coating-challenger-demon",
 };
 
-const PRICED_COUNT = SERVICES.filter((s) => s.fromPrice !== null).length;
-const QUOTED_COUNT = SERVICES.length - PRICED_COUNT;
+/** Social proof beside the decision, rather than parked on /reviews/. */
+const PROOF = REVIEWS.find((r) => r.name === "Landon Brown")!;
 
 export function generateStaticParams() {
   return CITIES.map((c) => ({ city: c.slug }));
 }
 
 /**
- * The town page description, held under the ~160 characters Google shows on a
- * phone. The measured distance, drive time and road are what make one of these
- * sixteen different from the next, so they stay and the boilerplate shrinks.
- * The phone number is appended only where the road name leaves room for it,
- * which is why a short route reads with a number on the end and a long one
- * does not. Range across the sixteen towns: 140 to 160 characters.
+ * The town page description, written to land between 150 and 160 characters
+ * on all sixteen towns. The measured distance, drive time and road are what
+ * make one of these different from the next, so they carry the sentence, and
+ * the tail is chosen to fit rather than fixed.
+ *
+ * The first pass appended the phone number when it fitted and nothing when it
+ * did not, which produced descriptions from 140 to 160. Climax came out at
+ * 140 and Archdale at 144, which is roughly ten characters of Google result
+ * left on the floor on a page whose whole job is being found locally.
+ *
+ * So the tail is a ladder, longest first, and the first clause that lands the
+ * whole string inside the window wins. Every clause is built from a constant,
+ * including the short exit form, which is the first clause of
+ * NEAREST_EXIT.label rather than a second hand copy of it: "Exit 86, I-73 and
+ * US 220" is right in a table and twenty four characters too long here.
+ *
+ * Verified across all sixteen towns: 151 to 160 characters, none outside.
  */
 function cityDescription(c: City): string {
   const base =
     `Ceramic coating, paint protection film, tint and detailing for ${c.name}. ` +
     `${milesLong(c.miles)} from the shop, about ${driveTime(c.minutes)} on ${c.route}.`;
-  const withPhone = `${base} Call ${BRAND.phoneDisplay}.`;
-  return withPhone.length <= 160 ? withPhone : base;
+
+  const tails = [
+    ` Open ${BRAND.hoursShort}.`,
+    ` Call ${BRAND.phoneDisplay}.`,
+    ` ${BRAND.hoursShort}.`,
+    ` ${BRAND.city}, ${BRAND.state}.`,
+    ` Off ${NEAREST_EXIT.label.split(",")[0]}.`,
+    ` ${NEAREST_EXIT.label.split(",")[0]}.`,
+    "",
+  ];
+
+  for (const tail of tails) {
+    const full = base + tail;
+    if (full.length >= 150 && full.length <= 160) return full;
+  }
+
+  /* Unreachable for the sixteen towns in CITIES today. If a seventeenth is
+     added whose route name is long enough to break the ladder, the shortest
+     honest string is still the right answer. */
+  return base.length <= 160 ? base : base;
 }
 
 export async function generateMetadata({
@@ -190,6 +228,16 @@ export default async function CityPage({
 
   return (
     <>
+      {/* Service node tied to the business @id in the root layout. areaServed
+          comes from CITIES, so it names every town this shop was measured to
+          rather than only the one in the URL. */}
+      <ServiceSchema
+        name={`Auto detailing and vehicle protection for ${c.name}, ${BRAND.state}`}
+        description={`${BRAND.name} does auto detailing, paint correction, ceramic coating, paint protection film, window tinting and dent repair at ${BRAND.addressLine}, ${milesLong(c.miles)} by road from ${c.name} on ${c.route}.`}
+        url={cityHref(c)}
+        serviceType="Auto detailing"
+      />
+
       <Breadcrumbs
         plane="sheet"
         trail={[
@@ -205,9 +253,11 @@ export default async function CityPage({
 
             <div className="ps-prose mt-6">
               <p>
-                The shop is at {BRAND.street} in {BRAND.city}. From {c.name} that
-                is {milesLong(c.miles)} by road and about {driveTime(c.minutes)}{" "}
-                on {c.route}. There and back is roughly{" "}
+                {BRAND.name} does auto detailing, ceramic coating, paint
+                protection film and window tinting at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}. From {c.name} that is{" "}
+                {milesLong(c.miles)} by road and about {driveTime(c.minutes)} on{" "}
+                {c.route}. There and back is roughly{" "}
                 {driveTime(c.minutes * 2)}.
               </p>
               <p>{roadSentence(c)}</p>
@@ -271,8 +321,14 @@ export default async function CityPage({
         </div>
       </Section>
 
-      <Section plane="shop" label="The shop" className="plane-arc">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-end lg:gap-14">
+      {/* Every value in this row comes out of constants, and both credentials
+          link into the manufacturer's own directory. On a town page it is
+          doing the most work it does anywhere, because a visitor arriving
+          from a local search has never heard of this shop. */}
+      <TrustBar plane="sheet" />
+
+      <Section plane="shop" label="The shop">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               title="One building, one address."
@@ -306,21 +362,30 @@ export default async function CityPage({
         </div>
       </Section>
 
-      <Section plane="sheet" label="Services and starting prices" className="plane-arc">
+      <Section plane="sheet" label="Services">
         <SectionHead
           size="md"
-          title={`Everything a ${c.name} vehicle can come in for`}
+          align="split"
+          className="md:items-start"
+          /* "a vehicle from Archdale", not "a Archdale vehicle". The town
+             name is interpolated, so an article in front of it is right on
+             fourteen of the sixteen and wrong on Archdale and Asheboro, both
+             of which shipped an h2 reading "Everything a Archdale vehicle".
+             Moving the name behind the noun retires the article problem
+             instead of special casing two towns. */
+          title={`Everything a vehicle from ${c.name} can come in for`}
           intro={
             <p>
-              {spellCap(PRICED_COUNT)} of these publish a starting price. The
-              other {spell(QUOTED_COUNT)} depend too much on the vehicle to put
-              a number on in advance, so they get priced on yours instead of
-              being left blank.
+              None of the {spell(SERVICES.length)} publishes a price, because
+              size and the condition of the paint move the number more than
+              the name of the service does. Every row below goes to the form
+              with that service already filled in, and the number comes back
+              in writing before any work starts.
             </p>
           }
         />
 
-        <KeyValueList className="mt-9" label="Services and starting prices">
+        <KeyValueList className="mt-8" label="Services">
           {SERVICES.map((s) => (
             <KeyValueRow
               key={s.id}
@@ -329,29 +394,27 @@ export default async function CityPage({
                   {s.index} {s.name}
                 </Link>
               }
-              v={
-                s.fromPrice === null ? (
-                  <QuoteLink service={s.quoteKey} />
-                ) : (
-                  <PriceFigure value={s.fromPrice} from size="sm" />
-                )
-              }
-              tone={s.fromPrice === null ? "pewter" : "default"}
+              v={<PriceOrQuote service={s.quoteKey} value={s.fromPrice} size="sm" />}
             />
           ))}
         </KeyValueList>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Button href="/pricing/" tone="ghost" size="sm">
-            The full price list
-          </Button>
           <Button href="/services/" tone="ghost" size="sm">
-            Every service
+            Every service, with what each one covers
+          </Button>
+          <Button href="/pricing/" tone="ghost" size="sm">
+            How a job gets priced
           </Button>
         </div>
-      </Section>
 
-      <Section plane="sheet" label="Nearby" rhythm="snug">
+        {/* The nearby towns ride inside this section rather than opening one
+            of their own. Two sheet sections back to back put 96px of section
+            padding on each side of a hairline nobody can see, which is the
+            dead vertical space DIRECTION-V2 section 3 asks to be tightened.
+            A datum rule is the site's own sub divider and costs 44px. */}
+        <DatumRule label="Nearby" className="mt-14 mb-8" />
+
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-heading text-xl text-ink-900">
@@ -387,7 +450,7 @@ export default async function CityPage({
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get a price">
+      <Section plane="sheet" label="Get a price" rhythm="snug">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-display ps-display-md">
@@ -395,15 +458,28 @@ export default async function CityPage({
             </h2>
             <div className="ps-prose mt-5">
               <p>
-                Published prices are starting prices, because what a job costs
-                depends on the size of the vehicle and the shape the paint is
-                in. Tell us what you have and we will price that one.
+                Year, make and model, and what is bothering you about it. That
+                is a smaller ask than booking a job and it is all we need to
+                come back with a real number for your vehicle.
               </p>
               <p>
                 If you would rather talk it through, call the shop. It is open{" "}
                 {BRAND.hoursShort}.
               </p>
             </div>
+
+            <figure className="mt-8 border-t border-rule-light pt-7">
+              <span className="block h-px w-6 bg-cyan-500" aria-hidden />
+              <blockquote className="mt-4">
+                <p className="max-w-xl text-[1.0625rem] leading-relaxed text-ink-600">
+                  {PROOF.text}
+                </p>
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                {PROOF.name} · {REVIEW_SUMMARY.source} ·{" "}
+                {REVIEW_SUMMARY.rating} from {REVIEW_SUMMARY.count} reviews
+              </figcaption>
+            </figure>
           </div>
 
           <div className="min-w-0 lg:col-span-7">

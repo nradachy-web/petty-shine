@@ -7,8 +7,7 @@ import {
   DatumRule,
   KeyValueList,
   KeyValueRow,
-  PriceFigure,
-  QuoteLink,
+  PriceOrQuote,
   Section,
   SectionHead,
 } from "@/components/ui";
@@ -24,8 +23,8 @@ import { spell } from "./areas/[city]/facts";
  * come from. The old Duda site is being replaced under the same domain, and
  * four Google Ads final URLs plus every backlink point at old paths. A dead
  * end here is a wasted click that was already paid for, so the fastest route
- * back to the right page is the whole design: the numbered service index with
- * its prices, then the shop details, then the phone.
+ * back to the right page is the whole design: the numbered service index, then
+ * the shop details, then the phone.
  *
  * The town pages moved from /window-tinting/<city>/ to /areas/<city>/ , so the
  * service area link matters here too.
@@ -47,8 +46,8 @@ export default function NotFound() {
             <div className="ps-prose mt-6">
               <p>
                 The link is dead. The shop is not. Everything it does is
-                listed here with what each one starts at, so you can go
-                straight to the page you were after.
+                listed here, so you can go straight to the page you were
+                after.
               </p>
               <p>
                 If you would rather not hunt for it, call and say what the
@@ -89,7 +88,13 @@ export default function NotFound() {
           <div className="min-w-0 lg:col-span-7">
             <DatumRule label="Everything the shop does" className="mb-7" />
 
-            <KeyValueList label="Services and starting prices">
+            {/* One call for all nine rows. PriceOrQuote reads PRICING_MODE
+                itself, so while pricing is private every row is a quote link
+                carrying its own service, and none of them is a dead cell or a
+                bare /quote/ href. The old code branched on fromPrice by hand
+                and left the five priced rows on a plain PriceFigure with no
+                service prop, which rendered five identical unqualified links. */}
+            <KeyValueList label="Everything the shop quotes">
               {SERVICES.map((s) => (
                 <KeyValueRow
                   key={s.id}
@@ -99,13 +104,12 @@ export default function NotFound() {
                     </Link>
                   }
                   v={
-                    s.fromPrice === null ? (
-                      <QuoteLink service={s.quoteKey} />
-                    ) : (
-                      <PriceFigure value={s.fromPrice} from size="sm" />
-                    )
+                    <PriceOrQuote
+                      service={s.quoteKey}
+                      value={s.fromPrice}
+                      size="sm"
+                    />
                   }
-                  tone={s.fromPrice === null ? "pewter" : "default"}
                 />
               ))}
             </KeyValueList>
@@ -115,7 +119,7 @@ export default function NotFound() {
                 Services index
               </Button>
               <Button href="/pricing/" tone="ghost" size="sm">
-                Price list
+                How we quote
               </Button>
               <Button href="/gallery/" tone="ghost" size="sm">
                 The work

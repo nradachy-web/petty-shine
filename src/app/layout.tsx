@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { BRAND, GADS } from "@/lib/constants";
+import { BRAND, CITIES, CREDENTIALS, GADS, SERVICES } from "@/lib/constants";
 import { photoSrc, PHOTOS } from "@/lib/photos";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -60,10 +60,31 @@ const mono = IBM_Plex_Mono({
 
 const HOME_TITLE = `${BRAND.name} | Auto Detailing and Ceramic Coating in ${BRAND.city}, ${BRAND.state}`;
 
-/* 149 characters. Google truncates a description near 160 on a phone, so
-   every description on this site is written to land inside that, with the
-   hook in the first clause rather than the last. */
-const HOME_DESCRIPTION = `Auto detailing, ceramic coating, paint protection film and window tinting in ${BRAND.city}, ${BRAND.stateName}. Published prices and a quote on your vehicle.`;
+/* THE FALLBACK DESCRIPTION, 153 characters.
+
+   Google truncates a description near 160 on a phone, so every description
+   on this site is written to land inside that, with the hook in the first
+   clause rather than the last.
+
+   It used to end "Published prices and a quote on your vehicle", written
+   when the site published a price ladder. DIRECTION-V2 section 1 took every
+   figure off the site, so that sentence became a promise the site does not
+   keep, and it was reaching further than a fallback should: Next hands this
+   string to any page that declares no description of its own, and the
+   business node below carried it into the JSON-LD of all 36 indexable
+   pages. It is the most quotable sentence about the business on the whole
+   site, which is exactly why it has to be true. */
+const SITE_DESCRIPTION = `Auto detailing, ceramic coating, paint protection film, window tinting and dent repair in ${BRAND.city}, ${BRAND.stateName}. Every job is quoted on your vehicle.`;
+
+/* WHAT THE BUSINESS NODE SAYS IT IS.
+
+   Separate from the meta description on purpose. A meta description is
+   written for a 160 character slot in a result page. This one is written to
+   be lifted whole by an assistant answering "who does ceramic coating near
+   Randleman", so it names the business, the street, the town and both
+   credentials in plain declarative sentences that survive being quoted with
+   no page around them. Nothing in it may say anything the site does not. */
+const BUSINESS_DESCRIPTION = `${BRAND.name} is an auto detailing shop at ${BRAND.street} in ${BRAND.city}, ${BRAND.stateName}. It does auto detailing, paint correction, ceramic coating, paint protection film, window tinting, paintless dent repair, curbed wheel repair and marine detailing. It is a ${CREDENTIALS[0].label} and an ${CREDENTIALS[1].label}, both listed in the manufacturers' own installer directories. Every job is quoted on the vehicle and the number goes in writing before work starts.`;
 
 /** His own shop, his own banner, his own car. */
 const OG_ID = "coating-huracan" as const;
@@ -84,7 +105,7 @@ export const metadata: Metadata = {
     default: HOME_TITLE,
     template: `%s | ${BRAND.name}`,
   },
-  description: HOME_DESCRIPTION,
+  description: SITE_DESCRIPTION,
 
   /* EVERY PAGE MUST SET ITS OWN alternates.canonical. This one is the home
      page's, and Next hands it down to any page that does not declare one,
@@ -97,8 +118,8 @@ export const metadata: Metadata = {
      description when this object leaves them out, and hands this object down
      whole when it does not. Pinning them here put the HOME page's title and
      description on the link card of all 53 pages, so sharing /pricing/ posted
-     a card that said nothing about prices. The home page still reads
-     HOME_TITLE and HOME_DESCRIPTION, because those are its own.
+     a card that said nothing about prices. The home page still reads its
+     own title and description out of src/app/page.tsx.
 
      url is dropped rather than moved: it was BRAND.siteUrl on every page, so
      every share resolved to the home page. Next does not infer og:url from
@@ -185,7 +206,7 @@ const localBusinessSchema = {
   "@id": `${BRAND.siteUrl}/#business`,
   name: BRAND.name,
   legalName: BRAND.legalName,
-  description: HOME_DESCRIPTION,
+  description: BUSINESS_DESCRIPTION,
   url: BRAND.siteUrl,
   telephone: BRAND.phoneDisplay,
   image: `${BRAND.siteUrl}${photoSrc(OG_ID, OG_WIDTH)}`,
@@ -206,6 +227,43 @@ const localBusinessSchema = {
   hasMap: BRAND.mapsUrl,
   openingHoursSpecification: BRAND.hoursSchema.map(openingHours),
   sameAs: [BRAND.facebook, BRAND.instagram],
+
+  /* WHERE, AND WHAT.
+
+     Both derived, never typed. Until these two fields existed the home
+     page's structured data said the business had an address and nothing
+     else: it emits no Service node and no BreadcrumbList, so the nine
+     services and the sixteen towns were declared only on the pages that
+     already named them in their own copy. A crawler landing on / had to
+     infer the whole business from prose.
+
+     areaServed carries the same sixteen City entries the Service nodes
+     use, out of the same CITIES array, so the business and its services
+     can never disagree about where the work is done.
+
+     hasOfferCatalog points at the nine service pages by URL. The Service
+     node on each of those pages points back at this business by @id, so
+     the graph closes in both directions instead of restating the business
+     nine times. NO price and NO priceCurrency anywhere in it: PRICING_MODE
+     is private, and scripts/audit-forbidden.mjs fails the build on a price
+     that reaches JSON-LD. */
+  areaServed: CITIES.map((c) => ({
+    "@type": "City",
+    name: c.name,
+    addressRegion: BRAND.state,
+  })),
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: `Services at ${BRAND.name}`,
+    itemListElement: SERVICES.map((s) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: s.name,
+        url: `${BRAND.siteUrl}${s.href}`,
+      },
+    })),
+  },
 };
 
 export default function RootLayout({

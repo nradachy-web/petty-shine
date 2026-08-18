@@ -11,7 +11,7 @@ import {
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceFigure,
+  PriceOrQuote,
   QuoteLink,
   Section,
   SectionHead,
@@ -20,23 +20,70 @@ import {
   BRAND,
   INTERIOR_ADDONS,
   INTERIOR_PACKAGES,
+  NEAREST_EXIT,
+  priceIsPublic,
+  QUOTE_CTA_LABEL,
+  REVIEWS,
   SERVICES,
 } from "@/lib/constants";
-import { money } from "@/lib/utils";
+import { milesLong } from "@/lib/utils";
+
+/* ============================================================================
+   /interior-detailing/
+
+   "interior car detailing near me" is a real term in his ad account, so this
+   page has to answer it in its own right rather than as a footnote on the
+   detailing page. Who, what and where are in the first hundred words as text.
+
+   NO TRUST BAR HERE, on purpose. The bar's two credentials are a coating
+   accreditation and a film installer listing, and neither of them says
+   anything about leather or carpet. Running it on every page reflexively
+   would turn a checkable claim into decoration. What this page carries at
+   the decision point instead is a real attributed review and an honest
+   statement of what an interior detail is not.
+
+   PRICING IS PRIVATE. Every slot is <PriceOrQuote>, which renders the
+   "Quoted on your vehicle" link and carries the service into the form.
+   ========================================================================== */
 
 const SERVICE = SERVICES.find((s) => s.id === "interior-detailing")!;
 
 const LOWEST = INTERIOR_PACKAGES[0];
-const HIGHEST = INTERIOR_PACKAGES[INTERIOR_PACKAGES.length - 1];
 
+/** Schema may only carry a price the site is allowed to print. */
+const SCHEMA_PRICE = priceIsPublic() ? LOWEST.fromPrice : undefined;
+
+/** The one review of the five that names the inside of the car in the
+    customer's own words. Steve Singleton's is real too but runs to one
+    line, and a one line pull quote beside a full quote form reads as
+    padding rather than as proof. */
+const REVIEW = REVIEWS.find((r) => r.name === "Jacob Freeman")!;
+
+/** What an interior detail is not, said before the money is discussed rather
+    than after. Every line is a scope statement, not a warranty term. */
+const SCOPE = [
+  {
+    k: "Cleaning is not repair",
+    v: "A cracked dash, a tear in a seat or a burn in the upholstery is repair work rather than detailing. We will say so instead of quoting around it.",
+  },
+  {
+    k: "Deep odor",
+    v: "Odor sitting on the surfaces and odor that has soaked into the foam under them are two different problems. Say which one you have when you send the vehicle and the first number will be closer.",
+  },
+  {
+    k: "Sun damaged leather",
+    v: "Conditioning brings color and feel back a long way. It does not put back a hide that has gone hard and split, and no amount of product will.",
+  },
+];
+
+/* 155 characters. */
 const DESCRIPTION =
-  `Interior detailing in ${BRAND.city}, ${BRAND.stateName}. ` +
-  `${INTERIOR_PACKAGES.length} levels, from ${money(LOWEST.fromPrice)} to ` +
-  `${money(HIGHEST.fromPrice)}, and Level 1 comes with every exterior ` +
-  `detail. Call ${BRAND.phoneDisplay}.`;
+  `Interior car detailing in ${BRAND.city}, ${BRAND.stateName}. ` +
+  `${INTERIOR_PACKAGES.length} levels, from a deep clean to leather and vinyl ` +
+  `restoration. Quoted on your vehicle. Call ${BRAND.phoneDisplay}.`;
 
 export const metadata: Metadata = {
-  title: `Interior Detailing in ${BRAND.city}, ${BRAND.state}`,
+  title: `Interior Car Detailing in ${BRAND.city}, ${BRAND.state}`,
   description: DESCRIPTION,
   alternates: { canonical: "/interior-detailing/" },
 };
@@ -45,10 +92,10 @@ export default function InteriorDetailingPage() {
   return (
     <>
       <ServiceSchema
-        name="Interior Detailing"
-        description={`${INTERIOR_PACKAGES.length} levels of interior detailing, from a deep vacuum to leather and vinyl restoration, at Petty Shine in ${BRAND.city}, ${BRAND.state}.`}
+        name="Interior Car Detailing"
+        description={`${INTERIOR_PACKAGES.length} levels of interior car detailing, from a deep clean to leather and vinyl restoration, at ${BRAND.name}, ${BRAND.addressLine}.`}
         url="/interior-detailing/"
-        price={LOWEST.fromPrice}
+        price={SCHEMA_PRICE}
         serviceType="Interior detailing"
       />
 
@@ -59,43 +106,38 @@ export default function InteriorDetailingPage() {
 
       <Section plane="sheet" label={`${SERVICE.index} ${SERVICE.name}`}>
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="min-w-0 lg:col-span-6">
-            <h1 className="ps-display ps-display-lg">
+          <div className="min-w-0 lg:col-span-7">
+            <h1 className="ps-display ps-display-xl">
               Interior detailing in {BRAND.city}
             </h1>
 
             <div className="ps-prose mt-6">
               <p>
-                Interior work comes in {INTERIOR_PACKAGES.length} levels, all
-                priced on this page. Level 1 is a full clean. Level 2 adds conditioning and protection to
-                the leather, plastic and vinyl, and Level 3 takes those
+                Petty Shine details car interiors at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName},{" "}
+                {milesLong(NEAREST_EXIT.miles)} off {NEAREST_EXIT.label}.
+              </p>
+              <p>
+                Interior work runs in {INTERIOR_PACKAGES.length} levels. Level
+                1 is a full clean. Level 2 conditions and protects the leather,
+                plastic and vinyl on top of that clean. Level 3 takes those
                 surfaces back toward new while sanitizing them, with an
                 advanced process through the carpets and upholstery.
               </p>
               <p>
-                A Level 1 interior is included with every exterior detail we
-                do, so if you are already booking a detail you are not paying
-                for the inside twice.
+                A Level 1 interior is included with every exterior detail, so
+                if you are already booking a detail you are not paying for the
+                inside twice.
               </p>
             </div>
 
-            <KeyValueList className="mt-9" label="Interior at a glance">
-              <KeyValueRow k="Levels" v={INTERIOR_PACKAGES.length} />
-              <KeyValueRow
-                k="Starts at"
-                v={<PriceFigure value={LOWEST.fromPrice} from />}
-                strong
-              />
-              <KeyValueRow
-                k="Included"
-                v="Level 1 with every exterior detail"
-                mono={false}
-              />
-              <KeyValueRow k="Shop" v={BRAND.addressLine} />
-              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
-            </KeyValueList>
-
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {/* The primary action, and it was missing. The hero ran two
+                  ghost buttons, so the first solid thing on the page was the
+                  submit inside the form near the foot of it. */}
+              <Button href="#quote" tone="cyan">
+                Get a price on your vehicle
+              </Button>
               <Button href="#levels" tone="ghost">
                 See the {INTERIOR_PACKAGES.length} levels
               </Button>
@@ -108,13 +150,34 @@ export default function InteriorDetailingPage() {
             </div>
           </div>
 
-          <div className="min-w-0 lg:col-span-6">
+          <div className="min-w-0 lg:col-span-5">
             <Plate
               id="interior-bmw-x5m"
               priority
               caption="X5 M, after an interior detail"
-              sizes="(min-width: 1024px) 40rem, 100vw"
+              sizes="(min-width: 1024px) 32rem, 100vw"
             />
+
+            <KeyValueList className="mt-8" label="Interior at a glance">
+              <KeyValueRow k="Levels" v={INTERIOR_PACKAGES.length} />
+              <KeyValueRow
+                k="Price"
+                v={
+                  <PriceOrQuote
+                    service={SERVICE.quoteKey}
+                    value={LOWEST.fromPrice}
+                  />
+                }
+                strong
+              />
+              <KeyValueRow
+                k="Included"
+                v="Level 1 with every exterior detail"
+                mono={false}
+              />
+              <KeyValueRow k="Shop" v={BRAND.addressLine} />
+              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
+            </KeyValueList>
           </div>
         </div>
       </Section>
@@ -122,7 +185,7 @@ export default function InteriorDetailingPage() {
       {/* ---------------------------------------------------------------
           Evidence. Leather and a dashboard, close enough to judge.
           --------------------------------------------------------------- */}
-      <Section plane="shop" label="The surfaces" className="plane-arc">
+      <Section plane="shop" label="The surfaces">
         <SectionHead
           align="split"
           title="Leather, plastic, vinyl, glass, carpet."
@@ -136,7 +199,7 @@ export default function InteriorDetailingPage() {
           }
         />
 
-        <div className="mt-12 grid min-w-0 gap-8 md:grid-cols-2 md:gap-10">
+        <div className="mt-9 grid min-w-0 gap-8 md:mt-11 md:grid-cols-2 md:gap-10">
           <Plate
             id="interior-bmw-door"
             ratio="4 / 3"
@@ -153,26 +216,27 @@ export default function InteriorDetailingPage() {
       </Section>
 
       {/* ---------------------------------------------------------------
-          THE LADDER.
+          THE LADDER. Nothing prints a number, so every row ends in a
+          tap target rather than in a blank.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Levels" id="levels" className="plane-arc">
+      <Section plane="sheet" label="Levels" id="levels">
         <SectionHead
-          title="Every level, priced."
+          title="What each level actually does."
           intro={
             <p>
-              Every figure is a starting price. How dirty the interior is and
-              how much of it is leather decide the rest, and you get that
-              number in writing before work begins.
+              The levels stack, so each one carries the work below it. Pick by
+              what the inside looks like now, and if you are not sure, describe
+              it and we will tell you which level it needs.
             </p>
           }
         />
 
-        <div className="mt-11 border-b border-rule-light">
+        <div className="mt-8 border-b border-rule-light md:mt-10">
           {INTERIOR_PACKAGES.map((pkg, i) => (
             <article
               key={pkg.id}
               id={pkg.id}
-              className="min-w-0 border-t border-rule-light pt-6 pb-7 md:pt-8 md:pb-8"
+              className="min-w-0 border-t border-rule-light pt-6 pb-6 md:pt-7 md:pb-7"
             >
               <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                 <h3 className="ps-heading min-w-0 text-[1.3rem] md:text-[1.6rem]">
@@ -181,21 +245,28 @@ export default function InteriorDetailingPage() {
                   </span>
                   {pkg.name}
                 </h3>
-                <PriceFigure value={pkg.fromPrice} from />
+                {/* The visible wording is QUOTE_CTA_LABEL, one wording
+                    sitewide. The level name is appended for screen readers
+                    only so three links on one page do not all announce
+                    themselves identically. */}
+                <PriceOrQuote
+                  service={SERVICE.quoteKey}
+                  value={pkg.fromPrice}
+                  quoteLabel={
+                    <>
+                      {QUOTE_CTA_LABEL}
+                      <span className="sr-only">, {pkg.name}</span>
+                    </>
+                  }
+                />
               </div>
 
               <p className="ps-prose mt-3 max-w-2xl">{pkg.blurb}</p>
-
-              <div className="mt-2">
-                <QuoteLink service={SERVICE.quoteKey}>
-                  Get this priced
-                </QuoteLink>
-              </div>
             </article>
           ))}
         </div>
 
-        <div className="mt-14 grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
+        <div className="mt-11 grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
           <div className="min-w-0 md:col-span-5">
             <h2 className="ps-heading text-[1.3rem] md:text-[1.5rem]">
               Add-ons
@@ -215,7 +286,12 @@ export default function InteriorDetailingPage() {
                 <KeyValueRow
                   key={addon}
                   k={addon}
-                  v={<QuoteLink service={SERVICE.quoteKey} />}
+                  v={
+                    <QuoteLink
+                      service={SERVICE.quoteKey}
+                      ariaLabel={`${QUOTE_CTA_LABEL}, ${addon}`}
+                    />
+                  }
                   tone="pewter"
                 />
               ))}
@@ -223,7 +299,37 @@ export default function InteriorDetailingPage() {
           </div>
         </div>
 
-        <KeyValueList className="mt-14" label="Also true">
+        {/* ---- What an interior detail is not. Said here, before the
+             money, rather than at pickup. ---- */}
+        <div className="mt-11 grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
+          <div className="min-w-0 md:col-span-5">
+            <h2 className="ps-heading text-[1.3rem] md:text-[1.5rem]">
+              What a detail will not fix
+            </h2>
+            <div className="ps-prose mt-4">
+              <p>
+                A clean interior and a repaired one are different things, and
+                the difference is worth knowing before anyone quotes you.
+              </p>
+            </div>
+          </div>
+
+          <div className="min-w-0 md:col-span-7">
+            <KeyValueList label="The limits of an interior detail">
+              {SCOPE.map((row) => (
+                <KeyValueRow
+                  key={row.k}
+                  k={row.k}
+                  v={row.v}
+                  mono={false}
+                  tone="pewter"
+                />
+              ))}
+            </KeyValueList>
+          </div>
+        </div>
+
+        <KeyValueList className="mt-11" label="Also true">
           <KeyValueRow
             k="Exterior"
             mono={false}
@@ -231,7 +337,7 @@ export default function InteriorDetailingPage() {
               <>
                 Every exterior detail includes a Level 1 interior.{" "}
                 <Link href="/auto-detailing/" className="link-inline">
-                  The exterior levels
+                  Car detailing in {BRAND.city}
                 </Link>
                 .
               </>
@@ -244,20 +350,21 @@ export default function InteriorDetailingPage() {
               <>
                 Interior ceramic coating is offered as a coating add-on.{" "}
                 <Link href="/ceramic-coating/" className="link-inline">
-                  Coating tiers and prices
+                  The three Gtechniq coating tiers
                 </Link>
                 .
               </>
             }
           />
           <KeyValueRow
-            k="Everything else"
+            k="The number"
             mono={false}
             v={
               <>
-                Detailing, coatings and marine work are all published.{" "}
+                What moves an interior price, and what happens when you bring
+                the vehicle in.{" "}
                 <Link href="/pricing/" className="link-inline">
-                  The full price list
+                  What it costs, and how we quote it
                 </Link>
                 .
               </>
@@ -267,14 +374,14 @@ export default function InteriorDetailingPage() {
 
         <CTABand
           variant="line"
-          className="mt-12"
+          className="mt-10"
           service={SERVICE.quoteKey}
           ctaLabel="Get a price"
           body="Send the year, make and model and tell us what the inside looks like now."
         />
       </Section>
 
-      <Section plane="shop" label="The work" className="plane-arc">
+      <Section plane="shop" label="The work">
         <div className="grid min-w-0 gap-10 md:grid-cols-12 md:items-end md:gap-14">
           <div className="min-w-0 md:col-span-7">
             <Plate
@@ -306,7 +413,7 @@ export default function InteriorDetailingPage() {
       {/* ---------------------------------------------------------------
           One primary action, one solid cyan button: the form submit.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Get a price" id="quote" className="plane-arc">
+      <Section plane="sheet" label="Get a price" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -320,6 +427,19 @@ export default function InteriorDetailingPage() {
                 </p>
               }
             />
+
+            <figure className="mt-8 border-t border-rule-light pt-6">
+              <blockquote className="ps-prose">
+                <p>{REVIEW.text}</p>
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                {REVIEW.name}
+                <span aria-hidden="true"> · </span>
+                {REVIEW.service}
+                <span aria-hidden="true"> · </span>
+                Google
+              </figcaption>
+            </figure>
 
             <PhoneLink
               placement="interior-detailing-panel"

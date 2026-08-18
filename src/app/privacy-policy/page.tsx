@@ -16,7 +16,12 @@ import { BRAND } from "@/lib/constants";
  */
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${BRAND.name} handles the information you send through this website.`,
+  /* 151 characters. It was 70, which is short enough that Google writes its
+     own snippet instead, and the one it writes for a privacy page is the
+     first line of boilerplate it finds. This one says the two things a
+     visitor about to fill in the quote form actually wants to know, in the
+     same words the page itself uses. */
+  description: `What ${BRAND.name} does with the information you send through this website. It is used to price and service your vehicle. It is not sold to anyone, ever.`,
   alternates: { canonical: "/privacy-policy/" },
 };
 

@@ -5,35 +5,85 @@ import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import CTABand from "@/components/sections/CTABand";
+import TrustBar from "@/components/sections/TrustBar";
 import {
   Breadcrumbs,
   Button,
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceFigure,
-  QuoteLink,
+  PriceOrQuote,
   RuleLabel,
   Section,
   SectionHead,
 } from "@/components/ui";
-import { BRAND, DETAIL_PACKAGES, NEAREST_EXIT, SERVICES } from "@/lib/constants";
-import { milesLong, money } from "@/lib/utils";
+import {
+  BRAND,
+  CITIES,
+  DETAIL_PACKAGES,
+  NEAREST_EXIT,
+  priceIsPublic,
+  QUOTE_CTA_LABEL,
+  REVIEWS,
+  SERVICES,
+} from "@/lib/constants";
+import { drive, milesLong } from "@/lib/utils";
+
+/* ============================================================================
+   /auto-detailing/
+
+   THIS PAGE HAS TO OWN "car detailing near me". It is the highest volume real
+   search term in his ad account, 31 clicks in 90 days, more than any other
+   single term, and today it lands on a page his account never built for it.
+   So the title, the h1 and the first sentence all say "car detailing" in the
+   form people actually type it, and "auto detailing" appears in the same
+   first paragraph because that is the name the rest of the site and his own
+   Google Business Profile use. Both entities, once each, in the first hundred
+   words, with the town and the state beside them.
+
+   PRICING IS PRIVATE. Every slot goes through <PriceOrQuote>, which renders
+   the tappable "Quoted on your vehicle" link instead of a number and carries
+   the service into the form. Nothing on this page branches on the flag, and
+   nothing on it says the levels are priced here any more, because they are
+   not. The first pass opened "every one of them is priced further down this
+   page", which is now a promise the page cannot keep.
+
+   THE ONE SOLID CYAN BUTTON on this page is the quote form's submit. Every
+   other action is a ghost button or a quote link.
+   ========================================================================== */
 
 const SERVICE = SERVICES.find((s) => s.id === "auto-detailing")!;
 
-/** Both ends of the published ladder, read off the data rather than typed. */
+/** The published floor, read off the data rather than typed. In private
+    mode it never prints, but it still drives the schema field below. */
 const LOWEST = DETAIL_PACKAGES[0];
-const HIGHEST = DETAIL_PACKAGES[DETAIL_PACKAGES.length - 1];
 
+/** Schema may only carry a price the site is allowed to print. A component
+    cannot cover a JSON-LD field, so this is the one place the flag is read
+    directly, through the helper constants.ts exports for exactly this. */
+const SCHEMA_PRICE = priceIsPublic() ? LOWEST.fromPrice : undefined;
+
+/** The five towns his own search terms name, plus the two closest, so a
+    "car detailing near me" search from any of them lands on a real page
+    about that town rather than on a swapped name. */
+const NEARBY = ["greensboro-nc", "high-point-nc", "asheboro-nc", "archdale-nc", "randleman-nc", "trinity-nc"]
+  .map((slug) => CITIES.find((c) => c.slug === slug)!)
+  .sort((a, b) => a.miles - b.miles);
+
+/** Real, attributed, and about this exact service. Jacob Freeman's review
+    is the other detailing one and it names the inside of the car, so it
+    goes on /interior-detailing/ instead and neither page repeats the
+    other. */
+const REVIEW = REVIEWS.find((r) => r.name === "Landon Brown")!;
+
+/* 156 characters. */
 const DESCRIPTION =
-  `Auto detailing in ${BRAND.city}, ${BRAND.stateName}. ` +
-  `${DETAIL_PACKAGES.length} levels with published starting prices, ` +
-  `from ${money(LOWEST.fromPrice)} to ${money(HIGHEST.fromPrice)}. ` +
-  `Call ${BRAND.phoneDisplay}.`;
+  `Car detailing in ${BRAND.city}, ${BRAND.stateName}. ` +
+  `${DETAIL_PACKAGES.length} levels, from a maintenance clean to paint ` +
+  `correction. Quoted on your vehicle, in writing. Call ${BRAND.phoneDisplay}.`;
 
 export const metadata: Metadata = {
-  title: `Auto Detailing in ${BRAND.city}, ${BRAND.state}`,
+  title: `Car Detailing in ${BRAND.city}, ${BRAND.state}`,
   description: DESCRIPTION,
   alternates: { canonical: "/auto-detailing/" },
 };
@@ -48,10 +98,10 @@ export default function AutoDetailingPage() {
   return (
     <>
       <ServiceSchema
-        name="Auto Detailing"
-        description={`${DETAIL_PACKAGES.length} levels of exterior auto detailing, from a maintenance clean to full paint correction, at Petty Shine in ${BRAND.city}, ${BRAND.state}.`}
+        name="Car Detailing"
+        description={`${DETAIL_PACKAGES.length} levels of car detailing, from a maintenance clean to full paint correction, at ${BRAND.name}, ${BRAND.addressLine}.`}
         url="/auto-detailing/"
-        price={LOWEST.fromPrice}
+        price={SCHEMA_PRICE}
         serviceType="Auto detailing"
       />
 
@@ -61,51 +111,45 @@ export default function AutoDetailingPage() {
       />
 
       {/* ---------------------------------------------------------------
-          The record plane opens the page, because the one thing nobody
-          else in the area puts on a detailing page is the number.
+          THE HERO. Who, what and where in the first hundred words, as
+          real text, so an assistant answering "car detailing near
+          Randleman" has a sentence it can lift whole.
           --------------------------------------------------------------- */}
       <Section plane="sheet" label={`${SERVICE.index} ${SERVICE.name}`}>
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="min-w-0 lg:col-span-6">
-            <h1 className="ps-display ps-display-lg">
-              Auto detailing in {BRAND.city}
+          <div className="min-w-0 lg:col-span-7">
+            <h1 className="ps-display ps-display-xl">
+              Car detailing in {BRAND.city}
             </h1>
 
             <div className="ps-prose mt-6">
               <p>
-                Exterior detail comes in {DETAIL_PACKAGES.length} levels, and
-                every one of them is priced further down this page.
+                Petty Shine is an auto detailing shop at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}, {milesLong(NEAREST_EXIT.miles)}{" "}
+                off {NEAREST_EXIT.label}. Car detailing is the work that comes
+                through the doors most.
               </p>
               <p>
-                The levels stack. Level 1 is the maintenance detail plus
-                protection, and Level 2 is Level 1 plus a machine polish.
-                Above that the work turns to correcting the paint rather than
-                adding to the clean.
+                Exterior detailing runs in {DETAIL_PACKAGES.length} levels, and
+                what separates them is what happens to the paint. The lower
+                levels clean it and put protection on top. The higher ones cut
+                and polish the defects out of it.
               </p>
               <p>
-                The shop is at {BRAND.street} in {BRAND.city},{" "}
-                {BRAND.stateName}, {milesLong(NEAREST_EXIT.miles)} off{" "}
-                {NEAREST_EXIT.label}.
+                Every level is quoted on the vehicle in front of us, and the
+                number goes to you in writing before any work starts.
               </p>
             </div>
 
-            <KeyValueList className="mt-9" label="Detailing at a glance">
-              <KeyValueRow k="Levels" v={DETAIL_PACKAGES.length} />
-              <KeyValueRow
-                k="Starts at"
-                v={<PriceFigure value={LOWEST.fromPrice} from />}
-                strong
-              />
-              <KeyValueRow
-                k="Interior"
-                v="Level 1 included with every exterior detail"
-                mono={false}
-              />
-              <KeyValueRow k="Shop" v={BRAND.addressLine} />
-              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
-            </KeyValueList>
-
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {/* The primary action, and it was missing. This is the page that
+                  has to own "car detailing near me", and until the quote form
+                  at the foot of it there was nothing solid on the page to
+                  press: two ghost buttons and a scroll. Same two action hero
+                  the other service pages run, pointed at the inline form. */}
+              <Button href="#quote" tone="cyan">
+                Get a price on your vehicle
+              </Button>
               <Button href="#levels" tone="ghost">
                 See the {DETAIL_PACKAGES.length} levels
               </Button>
@@ -118,22 +162,54 @@ export default function AutoDetailingPage() {
             </div>
           </div>
 
-          <div className="min-w-0 lg:col-span-6">
+          <div className="min-w-0 lg:col-span-5">
             <Plate
               id="detail-mustang-red"
               priority
               caption="Finished, under the shop banner"
-              sizes="(min-width: 1024px) 40rem, 100vw"
+              sizes="(min-width: 1024px) 32rem, 100vw"
             />
+
+            <KeyValueList className="mt-8" label="Detailing at a glance">
+              <KeyValueRow k="Levels" v={DETAIL_PACKAGES.length} />
+              <KeyValueRow
+                k="Price"
+                v={
+                  <PriceOrQuote
+                    service={SERVICE.quoteKey}
+                    value={LOWEST.fromPrice}
+                  />
+                }
+                strong
+              />
+              <KeyValueRow
+                k="Interior"
+                v="Level 1 with every exterior detail"
+                mono={false}
+              />
+              <KeyValueRow k="Shop" v={BRAND.addressLine} />
+              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
+            </KeyValueList>
           </div>
         </div>
       </Section>
 
+      {/* The hairline row the reference runs directly under its hero.
+          Every value comes out of constants and both credentials link to
+          the manufacturer's own directory, which is the argument.
+
+          Pulled up into the hero section's bottom padding, because the
+          reference runs it tight under the copy and a full section gap
+          above it turns a trust row into a floating band. Nothing in
+          .trustbar sets margin, so the utility is not fighting an
+          unlayered rule. */}
+      <TrustBar plane="sheet" className="-mt-6 md:-mt-10" />
+
       {/* ---------------------------------------------------------------
-          Evidence. What actually changes between the levels, next to a
-          photo of the floor those levels happen on.
+          Evidence, on the dark plane. What actually changes between the
+          levels, next to the floor those levels happen on.
           --------------------------------------------------------------- */}
-      <Section plane="shop" label="How the levels differ" className="plane-arc">
+      <Section plane="shop" label="How the levels differ">
         <SectionHead
           align="split"
           title="It comes down to what happens to the paint."
@@ -153,7 +229,7 @@ export default function AutoDetailingPage() {
           }
         />
 
-        <div className="mt-12">
+        <div className="mt-9 md:mt-11">
           <Plate
             id="detail-jeep-orange"
             bleed
@@ -163,28 +239,30 @@ export default function AutoDetailingPage() {
       </Section>
 
       {/* ---------------------------------------------------------------
-          THE LADDER. The reason this page exists.
+          THE LADDER. The reason this page exists. Nothing here prints a
+          number, so every row ends in a tap target instead.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Levels" id="levels" className="plane-arc">
+      <Section plane="sheet" label="Levels" id="levels">
         <SectionHead
-          title="Every level, priced."
+          title="What each level actually does."
           intro={
             <p>
-              Every figure is a starting price, which is how they are
-              published. Size and paint condition move the final number, and
-              you get that number in writing before work begins.
+              The levels stack, so each one carries the work below it. Pick by
+              what the paint looks like now rather than by name, and if you are
+              not sure, say what you see and we will tell you which level it
+              needs.
             </p>
           }
         />
 
-        <div className="mt-11 border-b border-rule-light">
+        <div className="mt-8 border-b border-rule-light md:mt-10">
           {DETAIL_PACKAGES.map((pkg, i) => {
             const subtitle = subtitleOf(pkg);
             return (
               <article
                 key={pkg.id}
                 id={pkg.id}
-                className="min-w-0 border-t border-rule-light pt-6 pb-7 md:pt-8 md:pb-8"
+                className="min-w-0 border-t border-rule-light pt-6 pb-6 md:pt-7 md:pb-7"
               >
                 <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                   <h3 className="ps-heading min-w-0 text-[1.3rem] md:text-[1.6rem]">
@@ -193,7 +271,29 @@ export default function AutoDetailingPage() {
                     </span>
                     {pkg.name}
                   </h3>
-                  <PriceFigure value={pkg.fromPrice} from />
+                  {/* The row's one action. In private mode this is the
+                      "Quoted on your vehicle" link, in public mode it is
+                      the starting price. The page does not know which.
+
+                      No `package` prop on purpose: QuoteForm's
+                      PACKAGE_GROUPS only defines a ladder for ppf and
+                      ceramic, so a detailing package id would ride into
+                      the URL and then be dropped on the floor.
+
+                      The visible wording stays QUOTE_CTA_LABEL, one
+                      wording sitewide, and the level name is appended
+                      for screen readers only, so five links on one page
+                      do not all announce themselves identically. */}
+                  <PriceOrQuote
+                    service={SERVICE.quoteKey}
+                    value={pkg.fromPrice}
+                    quoteLabel={
+                      <>
+                        {QUOTE_CTA_LABEL}
+                        <span className="sr-only">, {pkg.name}</span>
+                      </>
+                    }
+                  />
                 </div>
 
                 {subtitle ? (
@@ -203,18 +303,12 @@ export default function AutoDetailingPage() {
                 ) : null}
 
                 <p className="ps-prose mt-3 max-w-2xl">{pkg.blurb}</p>
-
-                <div className="mt-2">
-                  <QuoteLink service={SERVICE.quoteKey}>
-                    Get this priced
-                  </QuoteLink>
-                </div>
               </article>
             );
           })}
         </div>
 
-        <KeyValueList className="mt-12" label="Also true">
+        <KeyValueList className="mt-10" label="Also true">
           <KeyValueRow
             k="Interior"
             mono={false}
@@ -222,7 +316,21 @@ export default function AutoDetailingPage() {
               <>
                 A Level 1 interior comes with every exterior detail above.{" "}
                 <Link href="/interior-detailing/" className="link-inline">
-                  The three interior levels
+                  What the three interior levels do
+                </Link>
+                .
+              </>
+            }
+          />
+          <KeyValueRow
+            k="Correction"
+            mono={false}
+            v={
+              <>
+                Level 3 is paint correction, and it is the same work sold on
+                its own.{" "}
+                <Link href="/paint-correction/" className="link-inline">
+                  Paint correction, on its own
                 </Link>
                 .
               </>
@@ -236,20 +344,21 @@ export default function AutoDetailingPage() {
                 Level 2 can be finished with a ceramic coating on qualifying
                 paint.{" "}
                 <Link href="/ceramic-coating/" className="link-inline">
-                  Coating tiers and prices
+                  The three Gtechniq coating tiers
                 </Link>
                 .
               </>
             }
           />
           <KeyValueRow
-            k="Everything else"
+            k="The number"
             mono={false}
             v={
               <>
-                Coatings, marine work and interior work are all published too.{" "}
+                What moves a detailing price, and what happens when you bring
+                the vehicle in.{" "}
                 <Link href="/pricing/" className="link-inline">
-                  The full price list
+                  What it costs, and how we quote it
                 </Link>
                 .
               </>
@@ -259,10 +368,10 @@ export default function AutoDetailingPage() {
 
         <CTABand
           variant="line"
-          className="mt-12"
+          className="mt-10"
           service={SERVICE.quoteKey}
           ctaLabel="Get a price"
-          body="Send the year, make and model and we will come back with a number for that vehicle."
+          body="Send the year, make and model and we will come back with a number for that vehicle, in writing, before anything starts."
         />
       </Section>
 
@@ -270,7 +379,7 @@ export default function AutoDetailingPage() {
           The wash stage, on three vehicles that have nothing in common.
           That pairing is the argument: the process does not change.
           --------------------------------------------------------------- */}
-      <Section plane="shop" label="The work" className="plane-arc">
+      <Section plane="shop" label="The work">
         <SectionHead
           align="split"
           title="Every level starts the same way."
@@ -283,7 +392,7 @@ export default function AutoDetailingPage() {
           }
         />
 
-        <div className="mt-12 grid min-w-0 grid-cols-2 gap-5 md:grid-cols-3 md:gap-6">
+        <div className="mt-9 grid min-w-0 grid-cols-2 gap-5 md:mt-11 md:grid-cols-3 md:gap-6">
           <Plate
             id="wash-f250-foam"
             ratio="4 / 3"
@@ -305,7 +414,7 @@ export default function AutoDetailingPage() {
           />
         </div>
 
-        <div className="mt-12 grid min-w-0 gap-8 md:grid-cols-12 md:items-end md:gap-10">
+        <div className="mt-10 grid min-w-0 gap-8 md:grid-cols-12 md:items-end md:gap-10">
           <div className="min-w-0 md:col-span-7">
             <Plate
               id="detail-raptor"
@@ -317,8 +426,8 @@ export default function AutoDetailingPage() {
             <div className="ps-prose">
               <p>
                 The ladder does not change with the vehicle. A Raptor and a
-                Corvette read off the same levels at the same starting
-                prices. Size and paint condition move it from there.
+                Corvette read off the same levels. Size and paint condition
+                move the number from there.
               </p>
             </div>
             <div className="mt-7">
@@ -328,21 +437,67 @@ export default function AutoDetailingPage() {
             </div>
           </div>
         </div>
+      </Section>
 
-        <div className="mt-14">
-          <Plate
-            id="wheels-mustang"
-            bleed
-            caption="Wheels off, Mustang, in the shop"
-          />
+      {/* ---------------------------------------------------------------
+          THE TOWNS. Real internal links with descriptive anchors, each
+          carrying its own measured road distance and drive time, which
+          is the substance that keeps sixteen town pages from being one
+          page with a name swapped in it.
+          --------------------------------------------------------------- */}
+      <Section plane="sheet" label="Service area">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              title="Where the cars come from."
+              intro={
+                <p>
+                  Vehicles come to the shop rather than the other way round, so
+                  the useful number is the drive. Every distance below was
+                  measured on the road from {BRAND.street}, not in a straight
+                  line.
+                </p>
+              }
+            />
+
+            <div className="ps-prose mt-6">
+              <p>
+                {CITIES.length} towns have their own page with the route, the
+                distance and the drive time on it.{" "}
+                <Link href="/areas/" className="link-inline">
+                  Every town we detail cars for
+                </Link>
+                .
+              </p>
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:col-span-7">
+            <KeyValueList label="Towns we detail cars for">
+              {NEARBY.map((c) => (
+                <KeyValueRow
+                  key={c.slug}
+                  k={
+                    <Link href={`/areas/${c.slug}/`} className="link-inline">
+                      Car detailing in {c.name}
+                    </Link>
+                  }
+                  note={c.route}
+                  v={drive(c.miles, c.minutes)}
+                />
+              ))}
+            </KeyValueList>
+          </div>
         </div>
       </Section>
 
       {/* ---------------------------------------------------------------
-          The page's one primary action, and its one solid cyan button:
-          the submit inside QuoteForm.
+          The one primary action, and the page's one solid cyan button:
+          the submit inside QuoteForm. A real review sits beside it,
+          because the decision point is the place proof is worth
+          anything.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Get a price" id="quote" className="plane-arc">
+      <Section plane="sheet" label="Get a price" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -355,6 +510,19 @@ export default function AutoDetailingPage() {
                 </p>
               }
             />
+
+            <figure className="mt-8 border-t border-rule-light pt-6">
+              <blockquote className="ps-prose">
+                <p>{REVIEW.text}</p>
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                {REVIEW.name}
+                <span aria-hidden="true"> · </span>
+                {REVIEW.service}
+                <span aria-hidden="true"> · </span>
+                Google
+              </figcaption>
+            </figure>
 
             <PhoneLink
               placement="auto-detailing-panel"

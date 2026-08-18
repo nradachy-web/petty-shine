@@ -71,31 +71,127 @@
   min-width: 0;
 }
 
-.cov__grid {
+/* THREE BANDS, and this is the fix for the dead column.
+
+   The first pass ran the drawing down a sticky left column beside a
+   fifteen row record. The record is about twice the height of anything
+   that can sit on the left, so the layout opened with a column of empty
+   space and only a real scroll rescued it. The record cannot be made
+   shorter: naming all fifteen panels, covered and bare alike, is the
+   whole point of the component.
+
+   So the drawing takes the full width, which is what a 3.3 to 1 side
+   profile wants anyway, and under it two columns of roughly equal
+   height: the tier and the way to buy it on the left, the record on the
+   right in two ruled columns. Nothing is sticky, so the static stack can
+   use exactly the same three bands and balance for the same reason. */
+.cov__stage {
+  min-width: 0;
+  margin-top: 1.75rem;
+}
+
+.cov__cols {
   display: grid;
   gap: 2rem;
   min-width: 0;
   align-items: start;
+  margin-top: 2rem;
 }
-@media (min-width: 64rem) {
-  .cov__grid {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+/* 80rem, not 64rem, and the extra 16rem is the reason the record can be
+   two columns. The record needs about 340px per column before
+   "Covered, added here" wraps and the two columns stop lining up row for
+   row. Below 80rem the sell block sits above a full width record instead,
+   which is taller but has no dead space in it either. */
+@media (min-width: 80rem) {
+  .cov__cols {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
     gap: 3rem;
   }
-  /* The action bar lives inside the sticky frame, with the chips and the
-     diagram, so the way to buy never scrolls off while the record does.
-     The offset clears a sticky header. A page with a different header
-     height sets --cov-sticky-top on the section rather than fighting
-     this rule with a utility, because `top` is structural and therefore
-     unlayered on purpose. */
-  .cov__frame {
-    position: sticky;
-    top: var(--cov-sticky-top, 5.5rem);
-  }
 }
-.cov__frame,
+.cov__sell,
 .cov__record {
   min-width: 0;
+}
+/* Below 80rem the sell block is the full width of the component, and a
+   full width sentence and a full width solid cyan button are both too
+   much of a good thing. It has no effect at 80rem and up, where the
+   column is already about 400px. */
+.cov__sell {
+  max-width: 46rem;
+}
+
+/* The record in two columns. Fifteen rows in one column is 700px of
+   table beside a 470px column and nothing can close that gap; eight and
+   seven rows stand level with it. Below 64rem they stack, and because
+   the split is taken in installation order the two columns read as one
+   continuous list. */
+.cov-record__split {
+  display: grid;
+  gap: 0 2rem;
+  min-width: 0;
+}
+@media (min-width: 48rem) {
+  .cov-record__split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+/* On the widest layout the record shares the row with the sell block, so
+   it is narrower than it was at 64rem and needs the wider gutter back. */
+@media (min-width: 80rem) {
+  .cov-record__split {
+    gap: 0 2.5rem;
+  }
+}
+
+/* THE HAIRLINE UNDER THE DRAWING. */
+/* No rule of its own. The map's ground line sits at the foot of the SVG
+   and is the same width, so the drawing already ends on a hairline and a
+   second one 20px under it would just be a doubled rule. */
+.cov-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  min-width: 0;
+  margin-top: 0.9rem;
+}
+.cov-legend__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cov-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cov-legend__note {
+  font-family: var(--ps-font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  max-width: 34rem;
+}
+.cov-swatch {
+  flex: none;
+  display: block;
+  width: 1.125rem;
+  height: 0.6875rem;
+  border-width: 1px;
+  border-style: solid;
+}
+.cov-swatch--on {
+  border-width: 2px;
+}
+.cov-swatch--hit {
+  background-size: 5px 5px;
 }
 
 /* ------------------------------------------------------------------
@@ -163,27 +259,78 @@
 /* ------------------------------------------------------------------
    IMPACT TOGGLE
    ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   THE IMPACT BLOCK
+
+   Loss aversion, told honestly. Film is a sacrificial layer, so the
+   argument that actually sells it is what the front of the car looks
+   like after thirty thousand miles without it. In the first pass this
+   was a bare checkbox under the drawing and nobody was going to find
+   it. It is a bordered block now, with the reason stated above the
+   switch, and it is one of the two things holding the left column up.
+   ------------------------------------------------------------------ */
+.cov-impact {
+  margin-top: 1.75rem;
+  padding: 1.125rem 1.25rem 1.25rem;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 0;
+}
+.cov-impact__head {
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.cov-impact__body {
+  margin-top: 0.6rem;
+  font-family: var(--ps-font-body);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
 .cov-toggle {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
   min-height: 2.75rem;
-  padding: 0.4rem 0.2rem;
+  margin-top: 0.9rem;
   font-family: var(--ps-font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
 }
+/* A hard edged switch. No radius anywhere on this site, so the track is
+   a rectangle and the knob is a smaller rectangle that slides. The input
+   itself is the switch rather than a hidden input behind a fake one, so
+   the state survives everywhere. */
 .cov-toggle__mark {
   appearance: none;
   -webkit-appearance: none;
+  position: relative;
   flex: none;
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 2.75rem;
+  height: 1.5rem;
   margin: 0;
   border-width: 1px;
   border-style: solid;
   cursor: pointer;
+}
+.cov-toggle__mark::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: 1.0625rem;
+  transition: transform 0.18s var(--ps-ease);
+}
+.cov-toggle__mark:checked::after {
+  transform: translateX(1.4375rem);
+}
+.cov-toggle__text {
+  min-width: 0;
 }
 .cov-toggle:focus-within {
   outline-width: 2px;
@@ -219,7 +366,8 @@
    as the rule it is overriding. That is the trap the build contract
    warns about, and it bit this file once already. */
 .cov[data-impact="true"] .cov-stipple,
-.cov:has(.cov-check:checked) .cov-stipple {
+.cov:has(.cov-check:checked) .cov-stipple,
+.cov-static__item:has(.cov-check:checked) .cov-stipple {
   opacity: 1;
 }
 
@@ -230,7 +378,8 @@
   display: none;
 }
 .cov[data-impact="true"] .cov-impact-note,
-.cov:has(.cov-check:checked) .cov-impact-note {
+.cov:has(.cov-check:checked) .cov-impact-note,
+.cov-static__item:has(.cov-check:checked) .cov-impact-note {
   display: block;
 }
 
@@ -245,7 +394,7 @@
 }
 
 .cov-action {
-  margin-top: 1.25rem;
+  margin-top: 1.75rem;
   display: grid;
   gap: 0.75rem;
   min-width: 0;
@@ -337,27 +486,12 @@
   border-top-style: solid;
 }
 
-/* THE STACK GETS ITS OWN LAYOUT, and this is why.
-
-   .cov__grid is built for the interactive plan, where the left column is
-   sticky and rides beside a record three times its height. Nothing in
-   this stack is sticky, so the same 7fr/5fr split leaves a column of dead
-   space under every diagram, once per package, four times down the page.
-   Here the drawing sits above its own record in one column instead, and
-   the column is capped so a fifteen row record does not stretch across
-   1100px of desktop. Below 64rem both renderings are already one column,
-   so nothing changes there. */
-@media (min-width: 64rem) {
-  .cov-static {
-    max-width: 46rem;
-  }
-  .cov-static .cov__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
-  }
-  .cov-static .cov__frame {
-    position: static;
-  }
+/* The stack uses the same three bands as the plan and needs no layout of
+   its own. It used to get one, because the plan's sticky column left it
+   with the same dead space four times down the page. The plan is not
+   sticky any more and both balance the same way. */
+.cov-static .cov__stage {
+  margin-top: 0;
 }
 
 /* Specification pending. */
@@ -396,7 +530,19 @@
        covered panels must never composite to a third shade. */
     --cov-covered: #123a47;
     --cov-covered: color-mix(in srgb, var(--cov-on) 26%, var(--ps-panel));
-    --cov-shell: var(--ps-panel);
+    /* THE BARE CAR HAS TO READ.
+       This was --ps-panel, the same near black the section behind it is
+       built from, which measured 1.06 to 1 against the ground. The
+       covered panels were tuned against it and read fine; the thing they
+       are being compared against did not read at all, so the diagram
+       said "some cyan shapes" rather than "this much of the car".
+       Lifted to a small fraction of the quiet tone, which clears about
+       1.4 to 1 against the ground while staying clearly under the
+       covered fill, so the two are still separable by value on top of
+       the cyan stroke and the words in the record. Fallback first, then
+       the plane aware value. */
+    --cov-shell: #282c29;
+    --cov-shell: color-mix(in srgb, var(--ps-quiet) 16%, var(--ps-panel));
     /* THE SEAM IS NOT A HAIRLINE.
        It was --ps-rule, the 1px table rule, which measured 1.4:1 against
        the shell. That is fine for a rule between two rows of type and
@@ -419,6 +565,9 @@
   .plane-sheet .cov,
   .plane-sheet .cov-static {
     --cov-on: var(--ps-link);
+    /* On paper the ground is already light, so the shell goes the other
+       way: a touch darker than the panel rather than lighter. */
+    --cov-shell: color-mix(in srgb, var(--ps-quiet) 14%, var(--ps-panel));
     /* On paper the quiet tone is already a mid grey, so the seam takes it
        whole. Mixed toward the panel the way the dark plane does it, it
        lands at 2.6:1 and the drawing goes soft again. */
@@ -459,19 +608,67 @@
     outline-color: var(--cov-on);
   }
 
-  .cov-toggle {
+  .cov-impact {
+    border-color: var(--ps-rule);
+    background-color: var(--ps-band);
+  }
+  /* The block itself answers the switch, so the state is never carried
+     by the knob alone. */
+  .cov[data-impact="true"] .cov-impact,
+  .cov:has(.cov-check:checked) .cov-impact,
+  .cov-static__item:has(.cov-check:checked) .cov-impact {
+    border-color: var(--cov-mark);
+  }
+  .cov-impact__head {
+    color: var(--ps-heading);
+  }
+  .cov-impact__body {
     color: var(--ps-body);
+  }
+
+  .cov-toggle {
+    color: var(--ps-key);
   }
   .cov-toggle__mark {
     border-color: var(--ps-rule);
     background-color: transparent;
   }
-  .cov-toggle__mark:checked {
-    border-color: var(--ps-quiet);
+  .cov-toggle__mark::after {
     background-color: var(--ps-quiet);
+  }
+  /* Pewter, not cyan, because pewter is what the overlay itself paints
+     and because the one solid cyan on this screen is the action button. */
+  .cov-toggle__mark:checked {
+    border-color: var(--cov-mark);
+  }
+  .cov-toggle:has(.cov-toggle__mark:checked) {
+    color: var(--ps-heading);
   }
   .cov-toggle:focus-within {
     outline-color: var(--cov-on);
+  }
+
+  .cov-legend__item {
+    color: var(--ps-key);
+  }
+  .cov-legend__note {
+    color: var(--ps-quiet);
+  }
+  .cov-swatch--on {
+    background-color: var(--cov-covered);
+    border-color: var(--cov-on);
+  }
+  .cov-swatch--off {
+    background-color: var(--cov-shell);
+    border-color: var(--cov-seam);
+  }
+  .cov-swatch--hit {
+    background-color: var(--cov-shell);
+    border-color: var(--cov-seam);
+    background-image: radial-gradient(
+      var(--cov-mark) 0.9px,
+      transparent 1.1px
+    );
   }
 
   .cov-shell-fill {
@@ -575,6 +772,19 @@
     stroke-width: 3.6;
     stroke-linejoin: round;
     pointer-events: none;
+  }
+  /* Pointing at a row for a panel this tier does NOT cover cannot answer
+     in cyan, because cyan is the one thing on this drawing that means
+     film. It answers in the outline tone instead. */
+  .cov-hi--quiet {
+    stroke: var(--cov-edge);
+  }
+
+  .cov-datum {
+    stroke: var(--cov-seam);
+  }
+  .cov-datum--lead {
+    stroke: var(--cov-on);
   }
 
   /* Pattern content is painted in its own context, so the dots carry

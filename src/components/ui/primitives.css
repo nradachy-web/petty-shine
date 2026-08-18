@@ -926,3 +926,35 @@
     color: var(--ps-key);
   }
 }
+
+/* ============================================================
+   PRIVATE PRICING, THE NARROW ROW
+   Added by the pricing audit, 2026-08-18.
+
+   With PRICING_MODE set to "private" the value of nearly every kv
+   row on the site is the same QUOTE_CTA_LABEL link. In the two
+   column row on a 390px phone the value column is roughly 180px
+   and that label is wider than that, so it broke across two lines
+   with the accent underline running at two ragged widths and the
+   arrow orphaned beside them. The sixteen town pages and the 404
+   each stack nine of these, so one wrapped label became the most
+   repeated shape on the page.
+
+   Under 40rem a row whose value is a quote link becomes a single
+   column: the key on its own line, the link whole underneath.
+   Nothing else about the row changes, and the 44px tap target on
+   .quote-link is untouched. Above 40rem the two column row is
+   wide enough and is left exactly as it was.
+
+   This is structural only, so it stays unlayered on purpose. See
+   THE TAILWIND v4 LAYER TRAP at the top of this file.
+   ============================================================ */
+
+@media (max-width: 39.99em) {
+  .kv:has(.quote-link) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    row-gap: 0.15rem;
+    padding-block: 0.6rem 0.4rem;
+  }
+}

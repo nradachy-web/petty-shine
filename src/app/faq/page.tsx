@@ -11,7 +11,7 @@ import {
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceFigure,
+  PriceOrQuote,
   QuoteLink,
   Section,
   SectionHead,
@@ -29,7 +29,7 @@ import {
   SERVICES,
 } from "@/lib/constants";
 import { miles, milesLong } from "@/lib/utils";
-import { spell, spellCap } from "../areas/[city]/facts";
+import { spell } from "../areas/[city]/facts";
 
 /**
  * NO FAQPage SCHEMA ON THIS PAGE.
@@ -50,9 +50,6 @@ const STEK = CREDENTIALS.find((c) => c.id === "stek")!;
 const NINE_YEAR = COATINGS.find((c) => c.id === "petty-shine-nine")!;
 const PPF = SERVICES.find((s) => s.id === "paint-protection-film")!;
 const TINT = SERVICES.find((s) => s.id === "window-tinting")!;
-
-const PRICED = SERVICES.filter((s) => s.fromPrice !== null);
-const QUOTED = SERVICES.filter((s) => s.fromPrice === null);
 
 const NEAREST = CITIES[0];
 const FARTHEST = CITIES[CITIES.length - 1];
@@ -108,7 +105,7 @@ const INDEX = [
     label: `Can the back glass be darker than the front in ${BRAND.stateName}?`,
   },
   { id: "how-long", label: "How long will my vehicle be with you?" },
-  { id: "starting-prices", label: "Is the published price the final price?" },
+  { id: "starting-prices", label: "Why is there no price list on this site?" },
   { id: "where", label: "Where are you, and how far do people drive?" },
 ];
 
@@ -127,13 +124,15 @@ export default function FaqPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                These are the ones that come up on the phone every week. The
-                answers carry the real numbers and the real conditions, up to
-                and including the parts that are not in our favor.
+                {BRAND.name} does auto detailing, ceramic coating, paint
+                protection film and window tinting at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}. These are the questions that
+                come up on the phone every week.
               </p>
               <p>
-                Where there is no honest number to give, the answer says so
-                instead of inventing one.
+                The answers carry the real conditions, up to and including the
+                parts that are not in our favor. Where there is no honest
+                number to give, the answer says so instead of inventing one.
               </p>
             </div>
 
@@ -184,12 +183,12 @@ export default function FaqPage() {
           <div className="min-w-0 lg:col-span-4">
             <SectionHead
               size="md"
-              title="Prices, chemistry and the guarantee"
+              title="Tiers, chemistry and the guarantee"
               intro={
                 <p>
-                  Three tiers are published with their starting prices, and the
-                  conditions attached to the longest one are published with
-                  them.
+                  Three tiers, each with its own chemistry and its own
+                  guarantee, and the conditions attached to the longest one
+                  are printed here rather than left for you to find out later.
                 </p>
               }
             />
@@ -199,19 +198,33 @@ export default function FaqPage() {
               <Question id="coating-cost" q="What does a ceramic coating cost?">
                 <Answer>
                   <p>
-                    Three tiers, and all three starting prices are published.
-                    The number moves with the size of the vehicle and how much
-                    correction the paint needs before anything is applied, so
-                    what is below is where each one starts.
+                    It depends on two things that no website can see: how big
+                    the vehicle is, and how much correction the paint needs
+                    before anything is applied. A coating goes on to prepared
+                    paint, so a car that needs a full correction first is a
+                    different job from one that needs a polish.
+                  </p>
+                  <p>
+                    What is fixed is which tier you are buying. Pick the
+                    guarantee you want out of the three below and we will
+                    price that tier on your vehicle, in writing, before any
+                    work starts.
                   </p>
                 </Answer>
-                <KeyValueList className="mt-6" label="Coating starting prices">
+                <KeyValueList className="mt-6" label="The three coating tiers">
                   {COATINGS.map((c) => (
                     <KeyValueRow
                       key={c.id}
                       k={c.name}
                       note={`${c.guarantee} guarantee`}
-                      v={<PriceFigure value={c.fromPrice} from size="sm" />}
+                      v={
+                        <PriceOrQuote
+                          service="ceramic"
+                          package={c.id}
+                          value={c.fromPrice}
+                          size="sm"
+                        />
+                      }
                     />
                   ))}
                 </KeyValueList>
@@ -277,7 +290,7 @@ export default function FaqPage() {
 
       {/* ---------------------------------------------------------- */}
 
-      <Section plane="shop" label="The cars" className="plane-arc">
+      <Section plane="shop" label="The cars">
         <SectionHead
           title="Cars that have been in the shop"
           intro="Every photograph on this site is a job that came through the building on Branson Mill Road. Nothing here is stock."
@@ -330,7 +343,7 @@ export default function FaqPage() {
       <Section
         plane="sheet"
         label="Paint protection film"
-        className="plane-arc"
+       
       >
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-4">
@@ -522,25 +535,26 @@ export default function FaqPage() {
 
               <Question
                 id="starting-prices"
-                q="Is the published price the final price?"
+                q="Why is there no price list on this site?"
               >
                 <Answer>
                   <p>
-                    It is a starting price. {spellCap(PRICED.length)} of the{" "}
-                    {spell(SERVICES.length)} services on this site publish one,
-                    and the number moves with the size of the vehicle and the
-                    condition of the paint. A single cab truck and a three row
-                    SUV are not the same job at the same price.
+                    Because a price list would be wrong for most of the
+                    vehicles that read it. A single cab truck and a three row
+                    SUV are not the same job, and two cars of the same model
+                    are not the same job either if one of them has been
+                    through six years of automatic car washes.
                   </p>
                   <p>
-                    The other {spell(QUOTED.length)} publish nothing, because
-                    there is no honest starting number for them. Those get
-                    looked at and quoted, and the quote is the price.
+                    All {spell(SERVICES.length)} services are quoted on the
+                    vehicle instead. You get one number, it covers the work
+                    described next to it, and it is in writing before anyone
+                    touches the car. Nothing is added in the bay.
                   </p>
                 </Answer>
                 <div className="mt-6">
                   <Button href="/pricing/" tone="ghost" size="sm">
-                    The full price list
+                    What drives the number on each service
                   </Button>
                 </div>
               </Question>

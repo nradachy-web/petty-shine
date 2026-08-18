@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
 import PhoneLink from "@/components/tracking/PhoneLink";
@@ -6,9 +7,9 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
 import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
-import PriceFigure from "@/components/ui/PriceFigure";
 import Section, { SectionHead } from "@/components/ui/Section";
 import { BRAND, SERVICES } from "@/lib/constants";
+import { spell } from "../areas/[city]/facts";
 
 export const metadata: Metadata = {
   title: "Get a Quote",
@@ -24,8 +25,23 @@ const STEPS = [
   { n: "03", text: "You pick a date and drop it off." },
 ];
 
-/** Only the services that publish a starting price. The rest are the form. */
-const PRICED = SERVICES.filter((s) => s.fromPrice !== null);
+/**
+ * PRICING IS PRIVATE, SO THIS PAGE STOPPED CLAIMING OTHERWISE.
+ *
+ * This section used to be a "Published starting prices" table built from
+ * SERVICES.filter(s => s.fromPrice !== null). With PRICING_MODE set to
+ * "private" every one of those value cells rendered the identical "Quoted
+ * on your vehicle" link, under a heading that read "What we publish before
+ * you ask", on the one page that exists to take a quote request. The page
+ * contradicted itself in the same screen, and the five links pointed back
+ * at /quote/ with nothing preselected, from /quote/.
+ *
+ * What replaces it is the honest version of the same job: the nine things
+ * he quotes, each one linking to the page that explains it, so a visitor
+ * who is not sure which line to pick in the form above can go and read.
+ * No cell is a price, so no cell can be a dead one.
+ */
+const ALL_SERVICES = SERVICES;
 
 export default function QuotePage() {
   return (
@@ -54,10 +70,23 @@ export default function QuotePage() {
           <div className="min-w-0 lg:col-span-5 lg:col-start-1 lg:row-start-1">
             <h1 className="ps-display ps-display-lg">Tell us about the vehicle.</h1>
 
+            {/* THE WHO AND THE WHERE COME FIRST, IN TEXT.
+
+                DIRECTION-V2 section 6 asks for the who, the what and the
+                where inside the first hundred words of every page. This one
+                is in the sitemap at 0.9 and it opened on "Nothing on this
+                site carries a price", which names no business and no town.
+                An assistant lifting a sentence off this page had nothing to
+                attach it to, and a searcher landing here from an ad had to
+                scroll to the footer to learn whose form it is. Both facts
+                come out of BRAND, so neither can drift. */}
             <div className="ps-prose mt-6">
               <p>
-                Every price on this site is a starting price. Send the vehicle
-                and we will price that one.
+                {BRAND.name} is an auto detailing shop at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}. Nothing on this site carries a
+                price, because the vehicle decides it. Send yours and we will
+                come back with a number for that one, in writing, before any
+                work starts.
               </p>
             </div>
           </div>
@@ -136,34 +165,41 @@ export default function QuotePage() {
         </div>
       </Section>
 
-      <Section plane="sheet" label="Published starting prices">
+      <Section plane="sheet" label="Everything we quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               size="md"
-              title="What we publish before you ask."
+              title="What goes in the form."
               intro={
                 <p>
-                  These are the starting prices on the services that have one.
-                  Film, tint, dent repair and wheel repair are quoted on the
-                  vehicle, which is what the form above is for.
+                  These are the {spell(ALL_SERVICES.length)} services the shop
+                  quotes. If you are not sure which one you want, open the page
+                  for it and read what the work actually is, then come back and
+                  send the vehicle.
                 </p>
               }
             />
             <div className="mt-7">
               <Button href="/pricing/" tone="ghost" size="sm">
-                The full price list
+                What moves the number
               </Button>
             </div>
           </div>
 
           <div className="min-w-0 lg:col-span-7">
-            <KeyValueList label="Published starting prices">
-              {PRICED.map((s) => (
+            <KeyValueList label="Everything we quote">
+              {ALL_SERVICES.map((s) => (
                 <KeyValueRow
                   key={s.id}
-                  k={s.name}
-                  v={<PriceFigure value={s.fromPrice as number} from />}
+                  k={
+                    <Link href={s.href} className="link-inline">
+                      {s.index} {s.name}
+                    </Link>
+                  }
+                  v={s.blurb}
+                  mono={false}
+                  layout="prose"
                 />
               ))}
             </KeyValueList>

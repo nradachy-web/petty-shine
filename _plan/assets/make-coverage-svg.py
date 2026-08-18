@@ -2,100 +2,108 @@
 """
 Generates the Coverage Plan car diagram.
 
+THE CAR IS A MID ENGINE COUPE, drawn from a C8 Corvette. Two of his own
+gallery photos are a Rapid Blue C8 and one is a C7 Grand Sport, so the
+diagram matches the cars actually on the page.
+
 One source of truth for the geometry. Emits:
   car-side-panels.svg          every panel lit, for eyeballing the seams
   car-side-<package>.svg       one per Petty Shine PPF package
-and prints the TypeScript panel map body for src/components/ppf/panelMaps.ts
+  car-side-bare.svg            nothing lit, which is the contrast check
 
 Technique (see README.md): draw ONE body outline, clip every panel polygon
 against it, then draw the outline again on top.
 
     python3 make-coverage-svg.py && python3 ../../scripts/render-svg.py car-side-panels.svg out.png 1200
+
+If you change anything here, port the same numbers into
+src/components/ppf/carSideMap.ts. The two are checked by eye, not by a script.
 """
 import os
 
-VIEWBOX = "0 0 1200 470"
-
-# ---------------------------------------------------------------- geometry
-# Facing left. Ground y=428. Axles (272,344) and (964,344), tire r=84,
-# wheel arch r=96 centred on the axle, rocker line y=388, beltline y~200.
+VIEWBOX = "0 0 1200 348"
 
 BODY = (
-    "M 76 252 "
-    "C 112 240, 190 224, 300 212 "
-    "C 372 204, 418 200, 452 196 "
-    "C 496 172, 560 120, 622 96 "
-    "C 700 88, 782 88, 854 100 "
-    "C 906 116, 958 154, 1004 186 "
-    "C 1050 194, 1100 200, 1140 206 "
-    "C 1166 214, 1181 244, 1176 302 "
-    "C 1174 348, 1166 378, 1132 386 "
-    "L 1049 388 "
-    "A 96 96 0 1 0 879 388 "
-    "L 357 388 "
-    "A 96 96 0 1 0 187 388 "
-    "L 116 384 "
-    "C 88 380, 75 368, 74 340 "
-    "C 73 300, 73 272, 76 252 Z"
+    "M 30 186 "
+    "C 68 170, 122 154, 178 147 "
+    "C 232 142, 302 143, 372 145 "
+    "C 406 118, 468 66, 526 41 "
+    "C 552 32, 584 31, 614 41 "
+    "C 672 58, 732 72, 798 84 "
+    "C 856 88, 900 76, 952 69 "
+    "C 1032 60, 1102 64, 1146 76 "
+    "L 1176 92 "
+    "C 1184 132, 1180 190, 1164 228 "
+    "L 1126 258 "
+    "C 1082 268, 1042 282, 1004 306 "
+    "A 100 100 0 1 0 834 306 "
+    "L 330 306 "
+    "A 100 100 0 1 0 154 306 "
+    "C 114 306, 60 300, 34 292 "
+    "L 14 288 "
+    "C 8 252, 16 210, 30 186 Z"
 )
 
 GLASS = (
-    "M 478 204 "
-    "C 516 178, 570 138, 634 126 "
-    "C 704 120, 780 120, 844 132 "
-    "C 888 152, 934 176, 966 192 Z"
+    "M 382 150 C 416 122, 474 76, 530 52 C 552 47, 578 46, 602 53 "
+    "L 652 152 L 400 158 C 392 157, 388 155, 388 152 Z"
 )
 
-BPILLAR = "M 686 199 L 700 124"
+GAP = "M 668 92 C 720 106, 780 118, 850 126 L 852 158 L 680 138 Z"
 
-HANDLES = [
-    "M 606 248 L 650 246 A 5 5 0 0 1 650 256 L 606 258 A 5 5 0 0 1 606 248 Z",
-    "M 792 245 L 834 243 A 5 5 0 0 1 834 253 L 792 255 A 5 5 0 0 1 792 245 Z",
+INTAKE = (
+    "M 764 188 L 820 168 C 828 166, 834 173, 832 182 L 824 244 "
+    "C 822 252, 816 258, 808 258 L 766 254 C 758 254, 752 248, 752 240 "
+    "L 752 200 C 752 193, 757 190, 764 188 Z"
+)
+
+LINES = [
+    "M 630 190 L 666 188 A 5 5 0 0 1 666 198 L 630 200 A 5 5 0 0 1 630 190 Z",
+    "M 1136 74 L 1176 88",
+    "M 1052 274 L 1112 250",
+    "M 856 116 L 1064 108",
+    "M 858 170 C 940 160, 1010 152, 1058 150",
+    "M 1086 122 L 1172 130 L 1170 158 L 1084 154 Z",
 ]
 
-WHEELS = [(272, 344), (964, 344)]
-TIRE_R, RIM_R, HUB_R = 84, 50, 9
+WHEELS = [(242, 259, 81, 60, 10), (919, 254, 86, 63, 10)]
 
-# Panels. "body" panels are clipped and drawn in PANEL_ORDER.
-# "detail" panels draw on top of the body panels so they stay readable.
-# "free" panels are not clipped (the mirror sits proud of the silhouette).
 PANELS = [
     ("front-bumper", "body", "transparent",
-     "M 40 296 L 66 288 L 150 268 L 202 260 L 210 300 L 204 392 L 40 392 Z"),
+     "M 0 160 L 30 186 L 172 146 L 184 214 L 178 320 L 0 320 Z"),
     ("hood", "body", "transparent",
-     "M 40 226 L 470 148 L 475 226 L 400 232 L 300 244 L 202 260 L 150 268 L 66 288 Z"),
+     "M 0 120 L 30 186 L 178 147 C 232 142, 302 143, 372 145 L 380 156 "
+     "C 320 162, 256 170, 200 178 L 176 182 L 172 146 Z"),
     ("headlight", "detail", "body",
-     "M 62 330 L 70 292 L 198 264 L 220 272 L 214 294 L 92 326 Z"),
+     "M 70 190 L 78 172 L 162 140 L 176 144 L 174 166 L 88 200 Z"),
     ("fog-light", "detail", "body",
-     "M 92 336 L 134 332 A 7 7 0 0 1 140 339 L 140 352 A 7 7 0 0 1 134 359 "
-     "L 92 364 A 7 7 0 0 1 85 357 L 85 343 A 7 7 0 0 1 92 336 Z"),
+     "M 24 256 L 90 246 L 104 264 L 98 288 L 28 296 Z"),
     ("mirror", "free", "body",
-     "M 478 198 L 481 182 C 481 175, 472 172, 463 176 L 437 189 "
-     "C 429 193, 431 202, 440 203 L 476 202 Z"),
+     "M 396 170 L 398 150 C 398 143, 389 140, 380 144 L 352 157 "
+     "C 344 161, 346 171, 355 172 Z"),
     ("front-fender", "body", "transparent",
-     "M 202 260 L 300 244 L 400 232 L 475 226 L 478 198 L 468 358 "
-     "L 300 358 L 300 392 L 204 392 L 210 300 Z"),
+     "M 172 146 L 176 182 L 200 178 C 256 170, 320 162, 380 156 "
+     "L 388 152 L 392 320 L 176 320 L 184 214 Z"),
     ("rocker", "body", "transparent",
-     "M 330 358 L 890 358 L 890 394 L 330 394 Z"),
+     "M 328 262 L 854 262 L 854 330 L 328 330 Z"),
     ("lower-door", "body", "transparent",
-     "M 471 314 L 860 310 L 858 358 L 468 358 Z"),
+     "M 390 216 L 708 210 L 708 262 L 390 262 Z"),
     ("rear-impact", "body", "transparent",
-     "M 866 189 L 924 188 L 918 394 L 856 394 Z"),
+     "M 706 161 L 750 160 L 754 330 L 700 330 Z"),
     ("front-door", "body", "transparent",
-     "M 478 198 L 686 193 L 678 358 L 468 358 Z"),
+     "M 386 156 L 706 161 L 702 330 L 392 330 Z"),
     ("rear-door", "body", "transparent",
-     "M 686 193 L 866 189 L 858 358 L 678 358 Z"),
+     "M 706 161 L 750 160 L 858 168 L 858 330 L 702 330 Z"),
     ("roof", "body", "transparent",
-     "M 446 202 C 492 166, 558 114, 622 90 C 700 82, 784 82, 856 94 "
-     "C 908 110, 964 152, 1012 188 Z"),
+     "M 368 148 C 406 116, 468 64, 526 39 C 552 30, 584 29, 616 39 "
+     "C 672 56, 732 70, 798 82 L 858 92 L 858 168 L 386 156 Z"),
     ("rear-fender", "body", "transparent",
-     "M 866 189 L 970 184 L 1012 140 L 1008 220 L 1100 234 L 1174 250 "
-     "L 1180 266 L 1122 286 L 1082 318 L 1062 360 L 1056 394 L 856 394 Z"),
+     "M 856 116 L 1064 108 L 1030 300 L 1014 340 L 854 340 Z"),
     ("trunk", "body", "transparent",
-     "M 1008 120 L 1230 200 L 1174 250 L 1100 234 L 1008 220 L 1012 140 Z"),
+     "M 858 76 C 898 70, 928 68, 952 67 C 1032 58, 1102 62, 1146 74 "
+     "L 1176 92 L 1182 128 L 1064 108 L 856 116 Z"),
     ("rear-bumper", "body", "transparent",
-     "M 1174 250 L 1240 262 L 1240 420 L 1030 420 L 1056 394 L 1062 360 "
-     "L 1082 318 L 1122 286 L 1180 266 Z"),
+     "M 1064 108 L 1200 112 L 1200 340 L 1014 340 L 1030 300 Z"),
 ]
 
 PANEL_ORDER = [
@@ -117,17 +125,20 @@ PACKAGES = {
     "full-front-trackback": TRACKBACK,
     "full-vehicle": FULL_VEHICLE,
     "all": [p[0] for p in PANELS],
+    "bare": [],
 }
 
 # ---------------------------------------------------------------- colours
-GROUND = "#0A0B09"
-BODY_FILL = "#121410"
-RULE = "#2C302A"
-OUTLINE = "#9BA7AE"
-GLASS_FILL = "#0A0B09"
-LIT_FILL = "#41423C"  # opaque: 22% spec-000 over shop-060, so overlapping panels never compound
-LIT_STROKE = "#00C1F3"
-TIRE_FILL = "#0E100D"
+# These are the values the component actually computes at runtime on the
+# shop plane, not the raw tokens, so a render here matches the site.
+GROUND = "#0A0B09"           # --ps-ground
+BODY_FILL = "#282C29"        # --cov-shell, quiet 16% over panel
+RULE = "#6B7477"             # --cov-seam, quiet 65% over panel
+OUTLINE = "#9BA7AE"          # --cov-edge, pewter
+GLASS_FILL = "#0A0B09"       # --cov-glass, the ground
+LIT_FILL = "#0D414B"         # --cov-covered, accent 26% over panel. Opaque.
+LIT_STROKE = "#00C1F3"       # --cov-on
+TIRE_FILL = "#0A0B09"
 STIPPLE = "#9BA7AE"
 
 
@@ -143,13 +154,13 @@ def svg(lit, stipple=False):
         f'<circle cx="9.5" cy="9.5" r="2" fill="{STIPPLE}" fill-opacity="0.6"/>'
         '</pattern>')
     out.append('</defs>')
-    out.append(f'<rect width="1200" height="470" fill="{GROUND}"/>')
+    out.append('<rect width="1200" height="348" fill="%s"/>' % GROUND)
 
-    for cx, cy in WHEELS:
+    for cx, cy, tr, rr, hr in WHEELS:
         out.append(
-            f'<g><circle cx="{cx}" cy="{cy}" r="{TIRE_R}" fill="{TIRE_FILL}" stroke="{RULE}" stroke-width="2"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="{RIM_R}" fill="none" stroke="{RULE}" stroke-width="2"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="{HUB_R}" fill="none" stroke="{RULE}" stroke-width="2"/></g>')
+            f'<g><circle cx="{cx}" cy="{cy}" r="{tr}" fill="{TIRE_FILL}" stroke="{RULE}" stroke-width="2"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{rr}" fill="none" stroke="{RULE}" stroke-width="2"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{hr}" fill="none" stroke="{RULE}" stroke-width="2"/></g>')
 
     out.append(f'<path d="{BODY}" fill="{BODY_FILL}"/>')
 
@@ -168,11 +179,13 @@ def svg(lit, stipple=False):
             out.append(panel_svg(pid, path, off))
     out.append('</g>')
 
-    out.append(f'<path d="{GLASS}" fill="{GLASS_FILL}" stroke="{RULE}" stroke-width="1.5"/>')
-    out.append(f'<path d="{BPILLAR}" fill="none" stroke="{RULE}" stroke-width="1.5"/>')
-
-    for h in HANDLES:
-        out.append(f'<path d="{h}" fill="none" stroke="{RULE}" stroke-width="1.4"/>')
+    # Decor is clipped too, so a seam line can never stray onto the ground.
+    out.append('<g clip-path="url(#bodyClip)">')
+    for d in (GLASS, GAP, INTAKE):
+        out.append(f'<path d="{d}" fill="{GLASS_FILL}" stroke="{RULE}" stroke-width="1.5"/>')
+    for d in LINES:
+        out.append(f'<path d="{d}" fill="none" stroke="{RULE}" stroke-width="1.4"/>')
+    out.append('</g>')
 
     out.append('<g clip-path="url(#bodyClip)">')
     for pid in PANEL_ORDER:
@@ -196,8 +209,8 @@ def svg(lit, stipple=False):
                 out.append(f'<path d="{by_id[pid][3]}" fill="url(#stip)" stroke="none"/>')
 
     out.append(f'<path d="{BODY}" fill="none" stroke="{OUTLINE}" stroke-width="2.4" stroke-linejoin="round"/>')
-    out.append(f'<line x1="0" y1="440" x2="1200" y2="440" stroke="{RULE}" stroke-width="1"/>')
-    out.append(f'<line x1="0" y1="440" x2="24" y2="440" stroke="{LIT_STROKE}" stroke-width="1"/>')
+    out.append(f'<line x1="0" y1="340" x2="1200" y2="340" stroke="{RULE}" stroke-width="1"/>')
+    out.append(f'<line x1="0" y1="340" x2="24" y2="340" stroke="{LIT_STROKE}" stroke-width="1"/>')
     out.append('</svg>')
     return "\n".join(out)
 
@@ -205,6 +218,7 @@ def svg(lit, stipple=False):
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     open(os.path.join(here, "car-side-panels.svg"), "w").write(svg(PACKAGES["all"]))
+    open(os.path.join(here, "car-side-bare.svg"), "w").write(svg(PACKAGES["bare"]))
     open(os.path.join(here, "car-side-impact.svg"), "w").write(
         svg(PACKAGES["full-front"], stipple=True))
     for name in ("partial-front", "full-front", "full-front-trackback", "full-vehicle"):

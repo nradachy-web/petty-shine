@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
   Breadcrumbs,
@@ -41,6 +42,18 @@ const FARTHEST = CITIES[CITIES.length - 1];
 export default function AreasPage() {
   return (
     <>
+      {/* The service area index is the one non service page on this site that
+          earns a Service node: it is a page about where the work is done, so
+          areaServed is its subject rather than a repetition. provider points
+          at the business @id in the root layout, so the graph connects rather
+          than restating itself. No offers node while pricing is private. */}
+      <ServiceSchema
+        name={`Auto detailing and vehicle protection across the Triad`}
+        description={`${BRAND.name} works out of one building at ${BRAND.addressLine} and covers ${CITY_COUNT} measured towns across ${countyGroups().length} counties, from ${NEAREST.name} at ${milesLong(NEAREST.miles)} to ${FARTHEST.name} at ${milesLong(FARTHEST.miles)}.`}
+        url="/areas/"
+        serviceType="Auto detailing"
+      />
+
       <Breadcrumbs
         plane="sheet"
         trail={[{ label: "Service area", href: "/areas/" }]}
@@ -55,16 +68,18 @@ export default function AreasPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                There is one shop and it is at {BRAND.street} in {BRAND.city}.
-                Everything below is road distance and drive time from that door,
-                measured along the route people actually take. None of it is
-                estimated and none of it is straight line mileage.
+                There is one shop and it is at {BRAND.street} in {BRAND.city},{" "}
+                {BRAND.stateName}. Detailing, ceramic coating, paint protection
+                film and window tinting all happen there. Everything below is
+                road distance and drive time from that door, measured along the
+                route people actually take, and none of it is straight line
+                mileage.
               </p>
               <p>
                 {NEAREST.name} is {milesLong(NEAREST.miles)} out.{" "}
-                {FARTHEST.name} is {miles(FARTHEST.miles)}. Every town on the
-                list has its own page with the route, the county line and the
-                exit.
+                {FARTHEST.name} is {milesLong(FARTHEST.miles)}. Every town on
+                the list has its own page with the route, the county line and
+                the exit.
               </p>
             </div>
 
@@ -125,8 +140,8 @@ export default function AreasPage() {
         </div>
       </Section>
 
-      <Section plane="shop" label="The shop" className="plane-arc">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-end lg:gap-14">
+      <Section plane="shop" label="The shop">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               title="One building, one address."
@@ -160,7 +175,7 @@ export default function AreasPage() {
         </div>
       </Section>
 
-      <Section plane="sheet" label="By county" className="plane-arc">
+      <Section plane="sheet" label="By county">
         <SectionHead
           size="md"
           title={`${spellCap(COUNTIES.length)} counties, one shop.`}
@@ -203,9 +218,11 @@ export default function AreasPage() {
             </h2>
             <div className="ps-prose mt-5">
               <p>
-                What a job costs depends on the vehicle and the shape the paint
-                is in, so every published price on this site is a starting
-                price. Send us the vehicle and we will price that one.
+                The drive is the one thing on this page we can measure without
+                seeing your vehicle. What the work costs depends on the size of
+                it and the shape the paint is in, so nothing on this site
+                carries a published price. Send us the vehicle and we will
+                price that one, in writing, before any work starts.
               </p>
               <p>
                 If your town is not on the list, call anyway. The list is what

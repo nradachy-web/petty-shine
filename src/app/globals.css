@@ -139,8 +139,10 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /* section rhythm, read by .section */
-  --section-pad-y: 4.5rem;
+  /* SECTION RHYTHM, ONE KNOB FOR THE WHOLE SITE.
+     Read by .section here and by section.ps-section below, so the two
+     vocabularies can no longer drift apart. See THE VERTICAL RHYTHM. */
+  --section-pad-y: 3.75rem;
 
   /* retired, see THE PLANE CHANGE. Kept at 0 so nothing can
      reintroduce a curve by reading it. */
@@ -314,10 +316,10 @@ body {
   .container-wide {
     padding-inline: 2rem;
   }
-  :root { --section-pad-y: 6.5rem; }
+  :root { --section-pad-y: 5.25rem; }
 }
 @media (min-width: 1200px) {
-  :root { --section-pad-y: 7.5rem; }
+  :root { --section-pad-y: 6rem; }
 }
 
 /* Section rhythm. The padding sits in @layer components so a py-* utility
@@ -332,6 +334,51 @@ body {
   .section-lg {
     padding-block: calc(var(--section-pad-y) * 1.35);
   }
+}
+
+/* --------------------------------------------------------------------------
+   THE VERTICAL RHYTHM
+
+   DIRECTION-V2 section 3: "Generous but disciplined rhythm. The current site
+   has dead vertical space in several places where a section's intro ends well
+   above its content. Tighten it."
+
+   Two files were setting the same rhythm to two different numbers.
+   globals.css published --section-pad-y for its own .section class, and
+   primitives.css hard coded 4.5 / 6.5 / 7.5rem into .ps-section, which is the
+   class every band on the site actually renders. Retuning the variable alone
+   would therefore have changed nothing visible, which is exactly the sort of
+   silent no-op this codebase has already shipped once.
+
+   So the variable now drives both. --section-pad-y is the single knob:
+   change it in one place and every band on the site moves together.
+
+   The measurement, taken off the reference: vassolaw.com runs roughly 80 to
+   90px between a plane change and the first eyebrow at 1440. This site was
+   running 120px, and on a page whose sections are already introduced by a
+   datum rule and a mono label the extra 30px reads as emptiness rather than
+   as room. 6rem is 96px, inside the reference band, and the whole ladder
+   comes down with it: 72 / 84 / 96 instead of 72 / 104 / 120.
+
+   SPECIFICITY, NOT SOURCE ORDER. section.ps-section is 0,1,1 against
+   .ps-section at 0,1,0, so this wins no matter which stylesheet the bundler
+   emits first. Both are unlayered, so a source-order tie would have been a
+   coin flip. The modifiers have to be restated for the same reason: they are
+   0,1,0 and would otherwise lose to the base rule here.
+
+   TO THE PRIMITIVES OWNER: the right long term home for this is
+   primitives.css reading var(--section-pad-y) directly, at which point this
+   block can be deleted whole. Nothing else in it is load bearing.
+   -------------------------------------------------------------------------- */
+
+section.ps-section {
+  padding-block: var(--section-pad-y);
+}
+section.ps-section--snug {
+  padding-block: calc(var(--section-pad-y) * 0.62);
+}
+section.ps-section--flush {
+  padding-block: 0;
 }
 
 /* Edge to edge inside a padded page. Prefer putting full bleed photography
@@ -728,24 +775,30 @@ body {
 }
 
 /* Legibility scrims for type set over photography. Neutral black only,
-   never a brand color, never decorative. */
-.scrim-b {
-  background-image: linear-gradient(
-    180deg,
-    rgba(10, 11, 9, 0) 0%,
-    rgba(10, 11, 9, 0.2) 40%,
-    rgba(10, 11, 9, 0.78) 76%,
-    rgba(10, 11, 9, 0.96) 100%
-  );
-}
+   never a brand color, never decorative.
+
+   THESE WERE FOUR STOP SOFT GRADIENTS AND ARE NOW FLAT FILLS.
+   DIRECTION-V2 section 2 rules out soft gradients along with curves, blobs
+   and glows, and a scrim that fades out is the single most common tell of a
+   template hero. Nothing in src referenced either class when this changed,
+   so the names are kept rather than deleted purely so that a hero built on
+   one of them later gets a legible flat scrim instead of a silently missing
+   background and unreadable type over a photograph.
+
+   0.66 is the value the home hero uses and the value that was measured: it
+   is what it takes to hold AA for 15px body copy over the brightest part of
+   coating-huracan, the blue paint on the Huracan's hood. Use .scrim-b for a
+   band, .scrim-l where the copy sits on one side, and set opacity on the
+   element if a particular photograph needs more or less. */
+.scrim-b,
 .scrim-l {
-  background-image: linear-gradient(
-    100deg,
-    rgba(10, 11, 9, 0.94) 0%,
-    rgba(10, 11, 9, 0.8) 34%,
-    rgba(10, 11, 9, 0.42) 62%,
-    rgba(10, 11, 9, 0.1) 100%
-  );
+  background-image: none;
+}
+@layer components {
+  .scrim-b,
+  .scrim-l {
+    background-color: rgb(10 11 9 / 0.66);
+  }
 }
 
 /* Chip. 1px stroke, mono label, no fill. */
@@ -1021,6 +1074,299 @@ textarea.field {
 .reveal-group[data-reveal="in"] > *:nth-child(4) { transition-delay: 0.21s; }
 .reveal-group[data-reveal="in"] > *:nth-child(5) { transition-delay: 0.28s; }
 .reveal-group[data-reveal="in"] > *:nth-child(n + 6) { transition-delay: 0.35s; }
+
+/* ==========================================================================
+   THE HERO
+   src/components/sections/HomeHero.tsx
+
+   Full bleed photograph, one flat tonal overlay, letterspaced eyebrow, one
+   display heading, one solid action and one outline action. Measured off
+   vassolaw.com at 1440 and at 390.
+
+   THE OVERLAY IS ONE FLAT FILL. Not a gradient, not a vignette, not a blur.
+   DIRECTION-V2 section 2 forbids curves, blobs, glows and soft gradients, and
+   a scrim that fades out is the most common tell of a template hero. The
+   value is shop-000 at 0.66, which is what it takes to hold AA on 15px body
+   copy over the brightest part of that photograph, the blue paint on the
+   Huracan's hood. Lower and the paragraph starts breaking up over the
+   highlights on the door.
+
+   HEIGHT COMES FROM THE COPY, NOT FROM A RATIO. min-height sets the floor so
+   the photograph reads as a hero at any width, and the copy is free to make
+   the box taller when it needs to. A fixed aspect-ratio hero looks correct at
+   the width it was drawn at and clips its own paragraph one breakpoint later.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 33rem;
+  /* Only the free axis of the cover crop does anything, and which axis is
+     free flips with the viewport. Below 1024 the 4:3 source is scaled to the
+     height of a portrait box, so X chooses the window and only about 35% of
+     the frame survives: 52% is the one window that keeps the headlight, the
+     front wheel and the swoosh on his banner all in shot, which is what the
+     copy is sitting on top of. Above 1024 the box is landscape, the source
+     is scaled to width, and Y chooses: 42% keeps the banner and the Crystal
+     Serum Ultra display in frame while the car still sits on the floor. */
+  --hero-focus: 52% 50%;
+}
+.hero__media,
+.hero__media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hero__media img {
+  object-fit: cover;
+  object-position: var(--hero-focus);
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+}
+@layer components {
+  .hero__scrim {
+    /* shop-000 #0A0B09 */
+    background-color: rgb(10 11 9 / 0.66);
+  }
+}
+
+.hero__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  padding-block: 3.25rem 3.5rem;
+}
+.hero__copy {
+  min-width: 0;
+  /* Wider than the heading measure on purpose. The eyebrow is one line of
+     letterspaced caps and it has to stay one line at 1024 and up, or the
+     town orphans onto a second line under it and the hero opens on a typo
+     shaped hole. The heading and the paragraph set their own narrower
+     measures below. */
+  max-width: 46rem;
+}
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+.hero__title {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+}
+.hero__prose {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.hero__prose > * + * {
+  margin-top: 0.9rem;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+  /* Under 520 the two actions stack, and two stacked buttons at their own
+     natural widths read as a mistake. Stretch them to one column so the
+     ragged right edge cannot happen. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+  /* The ghost button's border is --ps-rule, a 1px hairline built to sit on a
+     flat near black ground. On a photograph, even under the scrim, it
+     disappears. Scoped to the hero so no other outline button on the site
+     changes, and set through the variable the primitive already reads rather
+     than by re-declaring its border out from under it. */
+  --ps-rule: rgb(232 228 216 / 0.42);
+}
+
+@layer components {
+  .hero__eyebrow {
+    color: var(--color-spec-000);
+  }
+  .hero__prose {
+    color: var(--color-spec-000);
+  }
+}
+
+@media (min-width: 520px) {
+  .hero__actions {
+    display: flex;
+  }
+}
+@media (min-width: 768px) {
+  .hero {
+    min-height: 38rem;
+  }
+  .hero__body {
+    padding-block: 4rem 4.5rem;
+  }
+  .hero__prose {
+    font-size: 1.0625rem;
+  }
+}
+@media (min-width: 1024px) {
+  .hero {
+    min-height: min(86svh, 45rem);
+    --hero-focus: 50% 42%;
+  }
+}
+
+/* The trust row inside the hero runs over a photograph rather than over a
+   flat ground, so two of the plane's colours are not safe there and are
+   raised for that context only.
+
+   --plane-rule is rule-dark, a hairline drawn to read against near black. On
+   a lit shop floor it disappears entirely and the row loses the one line that
+   makes it read as a bar rather than as loose text.
+
+   --plane-muted is ink-300, which is 5.5:1 against the darkest part of the
+   frame the row crosses but only 3.7:1 against the brightest, and the row is
+   10px text. Raising it to a near opaque spec-000 clears AA across the whole
+   width of the photograph, including the blue paint. */
+.hero__trust {
+  --plane-rule: rgb(232 228 216 / 0.3);
+  --plane-muted: rgb(232 228 216 / 0.88);
+}
+
+/* ==========================================================================
+   THE TRUST BAR
+   src/components/sections/TrustBar.tsx
+
+   The reference runs one hairline row directly under the hero. It will not
+   fit on one line at 390 and it never pretends to, so it has three states
+   and each one is deliberate:
+
+     under 640    one item per row, a hairline above each, reads as a record
+     640 to 1023  two columns, two rows, the same hairlines
+     1024 and up  one row under one continuous hairline
+
+   Measured at the tightest width that uses the row layout: at 1024 the four
+   items come to about 840px of text inside a 960px shell, so the row fits
+   with the column gap at its clamp floor and wraps cleanly rather than
+   clipping if a credential label in constants ever gets longer.
+   ========================================================================== */
+
+.trustbar {
+  position: relative;
+  z-index: 1;
+}
+.trustbar__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.trustbar__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  min-width: 0;
+  padding-block: 0.7rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.trustbar__stars {
+  display: block;
+  flex: none;
+  /* baseline-aligned by hand: the flex item is a block, so it aligns on its
+     bottom edge, and the star shape has no descender to sit on. */
+  transform: translateY(0.05em);
+}
+.trustbar__stars svg {
+  display: block;
+  fill: currentColor;
+}
+.trustbar__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+  /* TAP TARGET. The label sets a 10px line box, so the link was a 14px tall
+     hit area on the one row of the page whose whole argument is "go and check
+     this yourself". The padding takes it to the full height of the row and the
+     matching negative margin gives every pixel of it back, so the box grows
+     past 24px and nothing on the row moves. */
+  padding-block: 0.4rem;
+  margin-block: -0.4rem;
+  text-decoration: none;
+  transition: color 0.18s var(--ease-out);
+}
+.trustbar__mark {
+  font-size: 0.85em;
+}
+
+@layer components {
+  .trustbar__item {
+    border-color: var(--plane-rule);
+    color: var(--plane-muted);
+  }
+  .trustbar__stars {
+    color: var(--plane-chip);
+  }
+  .trustbar__value {
+    color: var(--plane-heading);
+  }
+  /* The credential is the one thing on this row a visitor is meant to go and
+     check, so it is the one thing on this row that behaves like a link. */
+  .trustbar__link:hover,
+  .trustbar__link:focus-visible {
+    color: var(--plane-heading);
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+}
+
+@media (min-width: 640px) {
+  .trustbar__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .trustbar__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: clamp(1.5rem, 3vw, 3rem);
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
+  .trustbar__item {
+    border-top-width: 0;
+    padding-block: 0.95rem;
+    font-size: 0.6875rem;
+  }
+}
+@layer components {
+  @media (min-width: 1024px) {
+    .trustbar__row {
+      border-color: var(--plane-rule);
+    }
+  }
+}
 
 /* ==========================================================================
    MOBILE OVERFLOW GUARDS

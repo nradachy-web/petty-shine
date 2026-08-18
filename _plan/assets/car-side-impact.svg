@@ -1,44 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 348">
 <defs>
-<clipPath id="bodyClip"><path d="M 76 252 C 112 240, 190 224, 300 212 C 372 204, 418 200, 452 196 C 496 172, 560 120, 622 96 C 700 88, 782 88, 854 100 C 906 116, 958 154, 1004 186 C 1050 194, 1100 200, 1140 206 C 1166 214, 1181 244, 1176 302 C 1174 348, 1166 378, 1132 386 L 1049 388 A 96 96 0 1 0 879 388 L 357 388 A 96 96 0 1 0 187 388 L 116 384 C 88 380, 75 368, 74 340 C 73 300, 73 272, 76 252 Z"/></clipPath>
+<clipPath id="bodyClip"><path d="M 30 186 C 68 170, 122 154, 178 147 C 232 142, 302 143, 372 145 C 406 118, 468 66, 526 41 C 552 32, 584 31, 614 41 C 672 58, 732 72, 798 84 C 856 88, 900 76, 952 69 C 1032 60, 1102 64, 1146 76 L 1176 92 C 1184 132, 1180 190, 1164 228 L 1126 258 C 1082 268, 1042 282, 1004 306 A 100 100 0 1 0 834 306 L 330 306 A 100 100 0 1 0 154 306 C 114 306, 60 300, 34 292 L 14 288 C 8 252, 16 210, 30 186 Z"/></clipPath>
 <pattern id="stip" width="13" height="13" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2" fill="#9BA7AE" fill-opacity="0.6"/><circle cx="9.5" cy="9.5" r="2" fill="#9BA7AE" fill-opacity="0.6"/></pattern>
 </defs>
-<rect width="1200" height="470" fill="#0A0B09"/>
-<g><circle cx="272" cy="344" r="84" fill="#0E100D" stroke="#2C302A" stroke-width="2"/><circle cx="272" cy="344" r="50" fill="none" stroke="#2C302A" stroke-width="2"/><circle cx="272" cy="344" r="9" fill="none" stroke="#2C302A" stroke-width="2"/></g>
-<g><circle cx="964" cy="344" r="84" fill="#0E100D" stroke="#2C302A" stroke-width="2"/><circle cx="964" cy="344" r="50" fill="none" stroke="#2C302A" stroke-width="2"/><circle cx="964" cy="344" r="9" fill="none" stroke="#2C302A" stroke-width="2"/></g>
-<path d="M 76 252 C 112 240, 190 224, 300 212 C 372 204, 418 200, 452 196 C 496 172, 560 120, 622 96 C 700 88, 782 88, 854 100 C 906 116, 958 154, 1004 186 C 1050 194, 1100 200, 1140 206 C 1166 214, 1181 244, 1176 302 C 1174 348, 1166 378, 1132 386 L 1049 388 A 96 96 0 1 0 879 388 L 357 388 A 96 96 0 1 0 187 388 L 116 384 C 88 380, 75 368, 74 340 C 73 300, 73 272, 76 252 Z" fill="#121410"/>
+<rect width="1200" height="348" fill="#0A0B09"/>
+<g><circle cx="242" cy="259" r="81" fill="#0A0B09" stroke="#6B7477" stroke-width="2"/><circle cx="242" cy="259" r="60" fill="none" stroke="#6B7477" stroke-width="2"/><circle cx="242" cy="259" r="10" fill="none" stroke="#6B7477" stroke-width="2"/></g>
+<g><circle cx="919" cy="254" r="86" fill="#0A0B09" stroke="#6B7477" stroke-width="2"/><circle cx="919" cy="254" r="63" fill="none" stroke="#6B7477" stroke-width="2"/><circle cx="919" cy="254" r="10" fill="none" stroke="#6B7477" stroke-width="2"/></g>
+<path d="M 30 186 C 68 170, 122 154, 178 147 C 232 142, 302 143, 372 145 C 406 118, 468 66, 526 41 C 552 32, 584 31, 614 41 C 672 58, 732 72, 798 84 C 856 88, 900 76, 952 69 C 1032 60, 1102 64, 1146 76 L 1176 92 C 1184 132, 1180 190, 1164 228 L 1126 258 C 1082 268, 1042 282, 1004 306 A 100 100 0 1 0 834 306 L 330 306 A 100 100 0 1 0 154 306 C 114 306, 60 300, 34 292 L 14 288 C 8 252, 16 210, 30 186 Z" fill="#282C29"/>
 <g clip-path="url(#bodyClip)">
-<path data-panel="front-bumper" d="M 40 296 L 66 288 L 150 268 L 202 260 L 210 300 L 204 392 L 40 392 Z" fill="#41423C" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="hood" d="M 40 226 L 470 148 L 475 226 L 400 232 L 300 244 L 202 260 L 150 268 L 66 288 Z" fill="#41423C" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="front-fender" d="M 202 260 L 300 244 L 400 232 L 475 226 L 478 198 L 468 358 L 300 358 L 300 392 L 204 392 L 210 300 Z" fill="#41423C" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
-<path data-panel="rocker" d="M 330 358 L 890 358 L 890 394 L 330 394 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="lower-door" d="M 471 314 L 860 310 L 858 358 L 468 358 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="rear-impact" d="M 866 189 L 924 188 L 918 394 L 856 394 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="front-door" d="M 478 198 L 686 193 L 678 358 L 468 358 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="rear-door" d="M 686 193 L 866 189 L 858 358 L 678 358 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="roof" d="M 446 202 C 492 166, 558 114, 622 90 C 700 82, 784 82, 856 94 C 908 110, 964 152, 1012 188 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="rear-fender" d="M 866 189 L 970 184 L 1012 140 L 1008 220 L 1100 234 L 1174 250 L 1180 266 L 1122 286 L 1082 318 L 1062 360 L 1056 394 L 856 394 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="trunk" d="M 1008 120 L 1230 200 L 1174 250 L 1100 234 L 1008 220 L 1012 140 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="rear-bumper" d="M 1174 250 L 1240 262 L 1240 420 L 1030 420 L 1056 394 L 1062 360 L 1082 318 L 1122 286 L 1180 266 Z" fill="transparent" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="front-bumper" d="M 0 160 L 30 186 L 172 146 L 184 214 L 178 320 L 0 320 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="hood" d="M 0 120 L 30 186 L 178 147 C 232 142, 302 143, 372 145 L 380 156 C 320 162, 256 170, 200 178 L 176 182 L 172 146 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="front-fender" d="M 172 146 L 176 182 L 200 178 C 256 170, 320 162, 380 156 L 388 152 L 392 320 L 176 320 L 184 214 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<path data-panel="rocker" d="M 328 262 L 854 262 L 854 330 L 328 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="lower-door" d="M 390 216 L 708 210 L 708 262 L 390 262 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-impact" d="M 706 161 L 750 160 L 754 330 L 700 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="front-door" d="M 386 156 L 706 161 L 702 330 L 392 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-door" d="M 706 161 L 750 160 L 858 168 L 858 330 L 702 330 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="roof" d="M 368 148 C 406 116, 468 64, 526 39 C 552 30, 584 29, 616 39 C 672 56, 732 70, 798 82 L 858 92 L 858 168 L 386 156 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-fender" d="M 856 116 L 1064 108 L 1030 300 L 1014 340 L 854 340 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="trunk" d="M 858 76 C 898 70, 928 68, 952 67 C 1032 58, 1102 62, 1146 74 L 1176 92 L 1182 128 L 1064 108 L 856 116 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="rear-bumper" d="M 1064 108 L 1200 112 L 1200 340 L 1014 340 L 1030 300 Z" fill="transparent" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
 </g>
-<path d="M 478 204 C 516 178, 570 138, 634 126 C 704 120, 780 120, 844 132 C 888 152, 934 176, 966 192 Z" fill="#0A0B09" stroke="#2C302A" stroke-width="1.5"/>
-<path d="M 686 199 L 700 124" fill="none" stroke="#2C302A" stroke-width="1.5"/>
-<path d="M 606 248 L 650 246 A 5 5 0 0 1 650 256 L 606 258 A 5 5 0 0 1 606 248 Z" fill="none" stroke="#2C302A" stroke-width="1.4"/>
-<path d="M 792 245 L 834 243 A 5 5 0 0 1 834 253 L 792 255 A 5 5 0 0 1 792 245 Z" fill="none" stroke="#2C302A" stroke-width="1.4"/>
 <g clip-path="url(#bodyClip)">
-<path data-panel="headlight" d="M 62 330 L 70 292 L 198 264 L 220 272 L 214 294 L 92 326 Z" fill="#121410" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
-<path data-panel="fog-light" d="M 92 336 L 134 332 A 7 7 0 0 1 140 339 L 140 352 A 7 7 0 0 1 134 359 L 92 364 A 7 7 0 0 1 85 357 L 85 343 A 7 7 0 0 1 92 336 Z" fill="#121410" stroke="#2C302A" stroke-width="1" stroke-linejoin="round"/>
+<path d="M 382 150 C 416 122, 474 76, 530 52 C 552 47, 578 46, 602 53 L 652 152 L 400 158 C 392 157, 388 155, 388 152 Z" fill="#0A0B09" stroke="#6B7477" stroke-width="1.5"/>
+<path d="M 668 92 C 720 106, 780 118, 850 126 L 852 158 L 680 138 Z" fill="#0A0B09" stroke="#6B7477" stroke-width="1.5"/>
+<path d="M 764 188 L 820 168 C 828 166, 834 173, 832 182 L 824 244 C 822 252, 816 258, 808 258 L 766 254 C 758 254, 752 248, 752 240 L 752 200 C 752 193, 757 190, 764 188 Z" fill="#0A0B09" stroke="#6B7477" stroke-width="1.5"/>
+<path d="M 630 190 L 666 188 A 5 5 0 0 1 666 198 L 630 200 A 5 5 0 0 1 630 190 Z" fill="none" stroke="#6B7477" stroke-width="1.4"/>
+<path d="M 1136 74 L 1176 88" fill="none" stroke="#6B7477" stroke-width="1.4"/>
+<path d="M 1052 274 L 1112 250" fill="none" stroke="#6B7477" stroke-width="1.4"/>
+<path d="M 856 116 L 1064 108" fill="none" stroke="#6B7477" stroke-width="1.4"/>
+<path d="M 858 170 C 940 160, 1010 152, 1058 150" fill="none" stroke="#6B7477" stroke-width="1.4"/>
+<path d="M 1086 122 L 1172 130 L 1170 158 L 1084 154 Z" fill="none" stroke="#6B7477" stroke-width="1.4"/>
 </g>
-<path data-panel="mirror" d="M 478 198 L 481 182 C 481 175, 472 172, 463 176 L 437 189 C 429 193, 431 202, 440 203 L 476 202 Z" fill="#41423C" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
 <g clip-path="url(#bodyClip)">
-<path d="M 40 296 L 66 288 L 150 268 L 202 260 L 210 300 L 204 392 L 40 392 Z" fill="url(#stip)" stroke="none"/>
-<path d="M 40 226 L 470 148 L 475 226 L 400 232 L 300 244 L 202 260 L 150 268 L 66 288 Z" fill="url(#stip)" stroke="none"/>
-<path d="M 62 330 L 70 292 L 198 264 L 220 272 L 214 294 L 92 326 Z" fill="url(#stip)" stroke="none"/>
-<path d="M 92 336 L 134 332 A 7 7 0 0 1 140 339 L 140 352 A 7 7 0 0 1 134 359 L 92 364 A 7 7 0 0 1 85 357 L 85 343 A 7 7 0 0 1 92 336 Z" fill="url(#stip)" stroke="none"/>
-<path d="M 330 358 L 890 358 L 890 394 L 330 394 Z" fill="url(#stip)" stroke="none"/>
+<path data-panel="headlight" d="M 70 190 L 78 172 L 162 140 L 176 144 L 174 166 L 88 200 Z" fill="#282C29" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
+<path data-panel="fog-light" d="M 24 256 L 90 246 L 104 264 L 98 288 L 28 296 Z" fill="#282C29" stroke="#6B7477" stroke-width="1" stroke-linejoin="round"/>
 </g>
-<path d="M 478 198 L 481 182 C 481 175, 472 172, 463 176 L 437 189 C 429 193, 431 202, 440 203 L 476 202 Z" fill="url(#stip)" stroke="none"/>
-<path d="M 76 252 C 112 240, 190 224, 300 212 C 372 204, 418 200, 452 196 C 496 172, 560 120, 622 96 C 700 88, 782 88, 854 100 C 906 116, 958 154, 1004 186 C 1050 194, 1100 200, 1140 206 C 1166 214, 1181 244, 1176 302 C 1174 348, 1166 378, 1132 386 L 1049 388 A 96 96 0 1 0 879 388 L 357 388 A 96 96 0 1 0 187 388 L 116 384 C 88 380, 75 368, 74 340 C 73 300, 73 272, 76 252 Z" fill="none" stroke="#9BA7AE" stroke-width="2.4" stroke-linejoin="round"/>
-<line x1="0" y1="440" x2="1200" y2="440" stroke="#2C302A" stroke-width="1"/>
-<line x1="0" y1="440" x2="24" y2="440" stroke="#00C1F3" stroke-width="1"/>
+<path data-panel="mirror" d="M 396 170 L 398 150 C 398 143, 389 140, 380 144 L 352 157 C 344 161, 346 171, 355 172 Z" fill="#0D414B" stroke="#00C1F3" stroke-width="2.4" stroke-linejoin="round"/>
+<g clip-path="url(#bodyClip)">
+<path d="M 0 160 L 30 186 L 172 146 L 184 214 L 178 320 L 0 320 Z" fill="url(#stip)" stroke="none"/>
+<path d="M 0 120 L 30 186 L 178 147 C 232 142, 302 143, 372 145 L 380 156 C 320 162, 256 170, 200 178 L 176 182 L 172 146 Z" fill="url(#stip)" stroke="none"/>
+<path d="M 70 190 L 78 172 L 162 140 L 176 144 L 174 166 L 88 200 Z" fill="url(#stip)" stroke="none"/>
+<path d="M 24 256 L 90 246 L 104 264 L 98 288 L 28 296 Z" fill="url(#stip)" stroke="none"/>
+<path d="M 328 262 L 854 262 L 854 330 L 328 330 Z" fill="url(#stip)" stroke="none"/>
+</g>
+<path d="M 396 170 L 398 150 C 398 143, 389 140, 380 144 L 352 157 C 344 161, 346 171, 355 172 Z" fill="url(#stip)" stroke="none"/>
+<path d="M 30 186 C 68 170, 122 154, 178 147 C 232 142, 302 143, 372 145 C 406 118, 468 66, 526 41 C 552 32, 584 31, 614 41 C 672 58, 732 72, 798 84 C 856 88, 900 76, 952 69 C 1032 60, 1102 64, 1146 76 L 1176 92 C 1184 132, 1180 190, 1164 228 L 1126 258 C 1082 268, 1042 282, 1004 306 A 100 100 0 1 0 834 306 L 330 306 A 100 100 0 1 0 154 306 C 114 306, 60 300, 34 292 L 14 288 C 8 252, 16 210, 30 186 Z" fill="none" stroke="#9BA7AE" stroke-width="2.4" stroke-linejoin="round"/>
+<line x1="0" y1="340" x2="1200" y2="340" stroke="#6B7477" stroke-width="1"/>
+<line x1="0" y1="340" x2="24" y2="340" stroke="#00C1F3" stroke-width="1"/>
 </svg>

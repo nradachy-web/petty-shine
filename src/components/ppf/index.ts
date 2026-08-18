@@ -48,6 +48,8 @@ export type { CoveragePlanProps } from "./CoveragePlan";
 export { default as CoverageStack } from "./CoverageStack";
 export type { CoverageStackProps } from "./CoverageStack";
 
+export { default as CoverageLegend } from "./CoverageLegend";
+
 export { default as CoverageDiagram } from "./CoverageDiagram";
 export type { CoverageDiagramProps } from "./CoverageDiagram";
 

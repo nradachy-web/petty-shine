@@ -34,7 +34,12 @@ export type { PlateProps, BleedClearedId } from "./Plate";
 
 export { default as Reveal, RevealGroup, RevealItem } from "./Reveal";
 
-export { default as PriceFigure } from "./PriceFigure";
+/* The price slot. <PriceOrQuote> is the one a page should reach for:
+   it reads PRICING_MODE for you and renders the quote link whenever
+   the price is private or missing. See src/lib/constants.ts. */
+export { default as PriceFigure, PriceOrQuote } from "./PriceFigure";
+export type { PriceFigureProps, PriceOrQuoteProps } from "./PriceFigure";
+
 export { default as QuoteLink } from "./QuoteLink";
 export type { QuoteLinkProps } from "./QuoteLink";
 

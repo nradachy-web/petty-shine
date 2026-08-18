@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/* ============================================================
+   MONEY
+
+   THE RAW FORMATTER. It knows nothing about whether the site is
+   allowed to print a price, so it is the wrong thing to call from a
+   page, a heading, a description or a schema field while PRICING_MODE
+   is "private". `npm run audit` fails the build on a dollar figure
+   that reaches the rendered HTML, and this function is the only way
+   one can get there.
+
+   From a page, call publicMoney() in src/lib/constants.ts, which
+   returns null when there is nothing you may print, or render
+   <PriceOrQuote> and let the component decide. This stays exported
+   because the quote form, the internal record and public pricing mode
+   all still need a formatted number.
+   ============================================================ */
+
 export function money(n: number): string {
   return `$${n.toLocaleString("en-US")}`;
 }

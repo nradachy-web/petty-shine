@@ -12,7 +12,10 @@ import { driveTimeShort, milesLong, milesShort } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Contact and Directions",
-  description: `Petty Shine is at ${BRAND.addressLine}. Call ${BRAND.phoneDisplay} or send your vehicle through for a price. Open ${BRAND.hoursShort}.`,
+  /* 159 characters. NEAREST_EXIT.label is "Exit 86, I-73 and US 220", which
+     is right in a table and 24 characters too long in a description, so the
+     description takes the first clause of the same constant. */
+  description: `${BRAND.name} is at ${BRAND.addressLine}, ${milesLong(NEAREST_EXIT.miles)} from ${NEAREST_EXIT.label.split(",")[0]}. Call ${BRAND.phoneDisplay} for a price on your vehicle. Open ${BRAND.hoursShort}.`,
   alternates: { canonical: "/contact/" },
 };
 
@@ -30,6 +33,12 @@ export default function ContactPage() {
             <h1 className="ps-display ps-display-lg">Come by the shop.</h1>
 
             <div className="ps-prose mt-6">
+              <p>
+                {BRAND.name} is at {BRAND.street} in {BRAND.city},{" "}
+                {BRAND.stateName}. Auto detailing, paint correction, ceramic
+                coating, paint protection film, window tinting and dent
+                repair, all done in that one building.
+              </p>
               <p>
                 Call and talk it through, or send the vehicle through the form
                 and we will come back with a price for it.
@@ -98,7 +107,7 @@ export default function ContactPage() {
       </Section>
 
       <Section plane="shop" label="The shop">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-end lg:gap-14">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               title="One building, one address."

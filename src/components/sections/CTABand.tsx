@@ -34,13 +34,29 @@ export interface CTABandProps {
   className?: string;
 }
 
+/* ----------------------------------------------------------------------------
+   THE COPY, AFTER PRICING CAME OFF THE SITE
+
+   The band used to open "Published prices are starting prices", which read
+   correctly on a site that published prices. DIRECTION-V2 section 1 takes the
+   numbers off, so a sentence that points at a price ladder now points at
+   nothing and quietly reads as a broken promise.
+
+   What replaces it is the thing that matters more once the visitor has lost
+   the price anchor: what actually drives the number, and the fact that they
+   will see it in writing before anyone touches the car. That is section 5's
+   "reducing perceived risk", and in private pricing mode it matters more, not
+   less, because the visitor cannot check themselves against a published
+   figure and needs to know they will not be ambushed at pickup.
+   -------------------------------------------------------------------------- */
+
 const DEFAULT_TITLE = "Tell us the vehicle. We will tell you the number.";
 
 const DEFAULT_BODY =
-  "Published prices are starting prices. What your vehicle costs depends on its size and the condition of the paint, so we look at it before we quote it.";
+  "What your vehicle costs depends on its size and the condition of the paint, so we look at it before we quote it. The number goes to you in writing before any work starts.";
 
 const LINE_BODY =
-  "Send us the year, make and model and we will come back with a number for it.";
+  "Send us the year, make and model and we will come back with a number for it, in writing, before anything starts.";
 
 function quoteHref(service?: string, pkg?: string): string {
   if (!service) return "/quote/";
@@ -53,11 +69,12 @@ function quoteHref(service?: string, pkg?: string): string {
  * The repeating "get a price" moment.
  *
  * His Google Ads account converts 170 PPF clicks into 1 lead, on a site
- * that publishes no price and offers no form. Every band on this site
- * ends in a number or a way to get one, and the phone link goes out as
- * a plain tel: anchor so the delegated listener in
- * components/tracking/CtaClickTracking.tsx fires the call conversion,
- * which his account does not have today at all.
+ * that publishes no price and offers no form. The old site's failure was
+ * the missing form, not the missing number, and in private pricing mode
+ * this band is the whole answer to it: every one of them ends in a way to
+ * get a number, and the phone link goes out as a plain tel: anchor so the
+ * delegated listener in components/tracking/CtaClickTracking.tsx fires the
+ * call conversion, which his account does not have today at all.
  */
 export default function CTABand({
   variant = "band",

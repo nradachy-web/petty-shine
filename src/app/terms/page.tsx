@@ -12,7 +12,7 @@ import { BRAND } from "@/lib/constants";
  */
 export const metadata: Metadata = {
   title: "Terms and Conditions",
-  description: `Terms covering the use of the ${BRAND.name} website, the prices it publishes and the quotes it produces.`,
+  description: `Terms covering the use of the ${BRAND.name} website and the quotes it produces, including how a quote is confirmed and who backs the coating and film guarantees.`,
   alternates: { canonical: "/terms/" },
 };
 
@@ -27,7 +27,11 @@ export default function TermsPage() {
         {
           h: "Prices and quotes",
           p: [
-            "Every price on this site is a starting price for the work named, published in good faith and current as of the date above. What a vehicle actually needs decides the final figure, and we confirm that figure with you before anything starts.",
+            /* PRICING_MODE is "private", so this page may not describe the
+               site as publishing prices. It did, and the paragraph opened
+               "Every price on this site is a starting price", which was a
+               claim the rest of the site no longer made. */
+            "This site does not publish prices. What a vehicle actually needs decides the figure, so the number comes back on the vehicle in front of us and we confirm it with you before anything starts.",
             "A price you are given through the quote form is a quote on a described vehicle, not a binding offer. We confirm it in writing once we have seen the vehicle.",
           ],
         },

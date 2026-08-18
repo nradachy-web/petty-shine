@@ -15,11 +15,19 @@ import {
   CREDENTIALS,
   GTECHNIQ_FACTS,
   PPF_FILM,
+  REVIEWS,
 } from "@/lib/constants";
 
 const GTECHNIQ = CREDENTIALS.find((c) => c.id === "gtechniq")!;
+const STEK = CREDENTIALS.find((c) => c.id === "stek")!;
 
-/* 153 characters, inside what Google shows on a phone. */
+/* The review about durability rather than about a finish, which is the thing
+   a guarantee page is actually being read for. Matched on the review's own
+   words so it cannot drift if the order in constants changes. */
+const DURABILITY_REVIEW =
+  REVIEWS.find((r) => r.text.includes("durability")) ?? REVIEWS[0];
+
+/* 153 characters, inside what Google shows on a phone. No dollar figure. */
 const DESCRIPTION =
   "What a Gtechniq coating guarantee covers, in its own terms. Who issues it, how you register it, the inspection it requires, and why it does not transfer.";
 
@@ -45,15 +53,19 @@ export default function WarrantiesPage() {
             </h1>
 
             <div className="ps-prose mt-6">
+              {/* The who, what and where, in the first hundred words, as
+                  plain sentences that survive being quoted on their own. */}
               <p>
-                A ceramic coating guarantee is issued by the manufacturer, not
-                by the shop that applies it. It carries conditions, and the
-                conditions are where these things come apart.
+                {BRAND.name} applies Gtechniq ceramic coatings and{" "}
+                {PPF_FILM.brand} paint protection film at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}. A coating guarantee is issued
+                by the manufacturer, not by the shop that applies it.
               </p>
               <p>
-                Every term on this page is Gtechniq&rsquo;s own. We publish
-                them here so you can read them before you spend the money
-                rather than after.
+                It carries conditions, and the conditions are where these
+                things come apart. Every term on this page is Gtechniq&rsquo;s
+                own. We publish them here so you can read them before you spend
+                the money rather than after.
               </p>
             </div>
 
@@ -78,19 +90,21 @@ export default function WarrantiesPage() {
                   note={"subtitle" in coating ? coating.subtitle : undefined}
                 />
               ))}
+              <KeyValueRow k="Issued by" v="Gtechniq" />
+              <KeyValueRow k="Applied by" v={GTECHNIQ.label} />
             </KeyValueList>
 
             <div className="mt-7">
               <Button href="/ceramic-coating/" tone="ghost" size="sm">
-                Every coating tier and what it costs
+                What is in each ceramic coating
               </Button>
             </div>
           </div>
         </div>
       </Section>
 
-      <Section plane="shop" label="Accreditation" className="plane-arc">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-end lg:gap-14">
+      <Section plane="shop" label="Accreditation">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               size="md"
@@ -98,8 +112,24 @@ export default function WarrantiesPage() {
               intro={<p>{GTECHNIQ_FACTS.proOnly}</p>}
             />
 
-            <KeyValueList className="mt-8" label="Credential">
-              <KeyValueRow k="Listed as" v={GTECHNIQ.label} />
+            <div className="ps-prose mt-6">
+              <p>
+                That is the part worth checking rather than taking anyone&rsquo;s
+                word for. {BRAND.name} is listed at this address in{" "}
+                <a href={GTECHNIQ.source} target="_blank" rel="noopener noreferrer">
+                  Gtechniq&rsquo;s own detailer directory
+                </a>{" "}
+                and in{" "}
+                <a href={STEK.source} target="_blank" rel="noopener noreferrer">
+                  {PPF_FILM.brand} USA&rsquo;s installer directory
+                </a>
+                . Neither listing is ours to write.
+              </p>
+            </div>
+
+            <KeyValueList className="mt-8" label="Credentials">
+              <KeyValueRow k="Coating" v={GTECHNIQ.label} />
+              <KeyValueRow k="Film" v={STEK.label} />
               <KeyValueRow k="Shop" v={BRAND.addressLine} />
             </KeyValueList>
           </div>
@@ -110,44 +140,74 @@ export default function WarrantiesPage() {
               caption={`Ceramic coating, ${BRAND.city} ${BRAND.state}`}
               sizes="(min-width: 1024px) 40rem, 100vw"
             />
+
+            {/* Social proof next to the claim it supports: this is the one
+                review that talks about how the coating behaved a month
+                later, which is what a guarantee page is read for. */}
+            <blockquote className="mt-9 min-w-0 border-t border-rule-dark pt-7">
+              <span aria-hidden className="block h-px w-6 bg-cyan-500" />
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-spec-000">
+                {DURABILITY_REVIEW.text}
+              </p>
+              <footer className="mt-5 flex flex-wrap items-baseline gap-x-6 gap-y-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em]">
+                <span className="text-spec-000">{DURABILITY_REVIEW.name}</span>
+                <span className="text-ink-300">{DURABILITY_REVIEW.service}</span>
+                <a
+                  href={BRAND.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-24 text-cyan-300 underline underline-offset-4"
+                >
+                  Read it on Google
+                </a>
+              </footer>
+            </blockquote>
           </div>
         </div>
       </Section>
 
-      <Section plane="sheet" label="The conditions" className="plane-arc">
-        <SectionHead
-          title="Read these before you spend the money."
-          intro={
-            <p>
-              These are the conditions Gtechniq attaches to its coating
-              guarantee. None of them are ours to waive, so we would rather you
-              saw them here than found them at a claim.
-            </p>
-          }
-        />
-
-        <KeyValueList
-          className="mt-10 max-w-3xl"
-          label="Gtechniq guarantee terms"
-        >
-          {GTECHNIQ_FACTS.guaranteeTerms.map((term) => (
-            <KeyValueRow
-              key={term.key}
-              k={term.key}
-              v={term.value}
-              mono={false}
+      <Section plane="sheet" label="The conditions">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              size="md"
+              title="Read these before you spend the money."
+              intro={
+                <p>
+                  These are the conditions Gtechniq attaches to its coating
+                  guarantee. None of them are ours to waive, so we would rather
+                  you saw them here than found them at a claim.
+                </p>
+              }
             />
-          ))}
-        </KeyValueList>
 
-        <DatumRule label="What a guarantee is not" className="mt-14 mb-7" />
+            <div className="ps-prose mt-6">
+              <p>{GTECHNIQ_FACTS.maintenanceNote}</p>
+              <p>
+                The two that catch people out are the inspection and the
+                transfer. The guarantee is registered to you and not to the
+                car, so selling the vehicle ends it, and a missed annual
+                inspection ends the paint protection part of it outright.
+              </p>
+            </div>
+          </div>
 
-        <div className="ps-prose max-w-2xl">
-          <p>{GTECHNIQ_FACTS.maintenanceNote}</p>
+          <div className="min-w-0 lg:col-span-7">
+            <KeyValueList label="Gtechniq guarantee terms">
+              {GTECHNIQ_FACTS.guaranteeTerms.map((term) => (
+                <KeyValueRow
+                  key={term.key}
+                  k={term.key}
+                  v={term.value}
+                  mono={false}
+                />
+              ))}
+            </KeyValueList>
+          </div>
         </div>
       </Section>
 
-      <Section plane="shop" label="Paint protection film" className="plane-arc">
+      <Section plane="shop" label="Paint protection film">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -163,9 +223,19 @@ export default function WarrantiesPage() {
               }
             />
 
-            <div className="mt-7">
+            <div className="ps-prose mt-6">
+              <p>
+                Ask for it and it goes in writing with the quote, against the
+                film that is actually going on your car.
+              </p>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-3">
               <Button href="/paint-protection-film/" tone="ghost" size="sm">
                 What each coverage level covers
+              </Button>
+              <Button href="/paint-correction/" tone="ghost" size="sm">
+                Correction before protection
               </Button>
             </div>
           </div>
@@ -193,7 +263,7 @@ export default function WarrantiesPage() {
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get it in writing" className="plane-arc">
+      <Section plane="sheet" label="Get it in writing">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead

@@ -737,7 +737,12 @@ export default function QuoteForm({
                 <button
                   type="button"
                   onClick={() => setServiceUnlocked(true)}
-                  className="flex-none font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-cyan-ink underline underline-offset-4"
+                  /* py/-my rather than a taller box: this is the only way back
+                     out of a locked service, and at 18px it was under the
+                     minimum target size. The padding gives it a 34px hit area
+                     and the negative margin hands the space back, so the
+                     locked row does not change height. */
+                  className="-my-2 flex-none py-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-cyan-ink underline underline-offset-4"
                 >
                   Change
                 </button>

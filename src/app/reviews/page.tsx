@@ -9,10 +9,12 @@ import Plate from "@/components/ui/Plate";
 import Section, { SectionHead } from "@/components/ui/Section";
 import { BRAND, REVIEWS, REVIEW_SUMMARY } from "@/lib/constants";
 import { longDate } from "@/lib/utils";
+import { spell, spellCap } from "../areas/[city]/facts";
 
 export const metadata: Metadata = {
-  title: "Reviews",
-  description: `What customers of Petty Shine in ${BRAND.city}, ${BRAND.stateName} wrote on Google, quoted in full with the spelling and punctuation left exactly as written.`,
+  title: "Customer Reviews from Google",
+  /* 158 characters. */
+  description: `What ${spell(REVIEWS.length)} customers of ${BRAND.name} in ${BRAND.city}, ${BRAND.stateName} wrote on Google, quoted in full with the spelling and the punctuation left exactly as written.`,
   alternates: { canonical: "/reviews/" },
 };
 
@@ -58,14 +60,21 @@ export default function ReviewsPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                {REVIEWS.length} reviews are quoted on this page, in full, with
-                the spelling and the punctuation left exactly as they were
-                written. Nothing is trimmed to the good part.
+                {BRAND.name} is an auto detailing and ceramic coating shop at{" "}
+                {BRAND.street} in {BRAND.city}, {BRAND.stateName}. Its Google
+                profile shows {REVIEW_SUMMARY.rating} from{" "}
+                {REVIEW_SUMMARY.count} reviews, read on {CHECKED}.
               </p>
               <p>
-                The rating beside them is not ours. It is what his Google
-                profile showed on the date in the table, and review counts
-                move, so treat it as a reading rather than a badge.
+                {spellCap(REVIEWS.length)} of those reviews are quoted on this
+                page, in full, with the spelling and the punctuation left
+                exactly as they were written. Nothing is trimmed to the good
+                part.
+              </p>
+              <p>
+                The rating is not ours. It is what the profile showed on that
+                date, and review counts move, so treat it as a reading rather
+                than a badge.
               </p>
             </div>
 
@@ -106,21 +115,21 @@ export default function ReviewsPage() {
         </div>
       </Section>
 
-      <Section plane="shop" label="In their words" className="plane-arc">
+      <Section plane="shop" label="In their words">
         <SectionHead
           size="md"
           align="split"
           title="In their own words."
           intro={
             <p>
-              {COATING_JOBS} of the {REVIEWS.length} are coating jobs and the
-              rest are detailing. {NAME_HIM} of them name{" "}
-              {BRAND.owner.split(" ")[0]} rather than the shop.
+              {spellCap(COATING_JOBS)} of the {spell(REVIEWS.length)} are
+              coating jobs and the rest are detailing. {spellCap(NAME_HIM)} of
+              them name {BRAND.owner.split(" ")[0]} rather than the shop.
             </p>
           }
         />
 
-        <div className="mt-10">
+        <div className="mt-9">
           <Plate
             id="coating-g-wagon"
             caption="Mercedes-Benz G-Class, coated"
@@ -128,7 +137,7 @@ export default function ReviewsPage() {
           />
         </div>
 
-        <div className="mt-12 min-w-0 border-b border-rule-dark">
+        <div className="mt-10 min-w-0 border-b border-rule-dark">
           {REVIEWS.map((review) => (
             <figure
               key={review.name}
@@ -161,7 +170,7 @@ export default function ReviewsPage() {
         </p>
       </Section>
 
-      <Section plane="sheet" label="Next step" className="plane-arc">
+      <Section plane="sheet" label="Next step">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead

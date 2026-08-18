@@ -37,6 +37,14 @@ export interface CoverageDiagramProps<Id extends string> {
   /** panel to outline, while its row in the record is being pointed at */
   highlight?: Id | null;
   /**
+   * Is the highlighted panel covered in the tier on screen?
+   *
+   * Cyan means film on this drawing, so pointing at an UNCOVERED row has
+   * to highlight in the quiet tone instead. A cyan outline on a bare
+   * panel would say the opposite of what the row beside it says.
+   */
+  highlightCovered?: boolean;
+  /**
    * Per panel animation generation. Bumping a panel's number replays its
    * entrance: stroke draws first, then the fill arrives. Only ever bumped
    * for the panels a tier ADDS, so nothing already covered redraws.
@@ -56,6 +64,7 @@ export default function CoverageDiagram<Id extends string>({
   lit,
   stipple,
   highlight,
+  highlightCovered = true,
   generation,
   delays,
   title,
@@ -65,6 +74,7 @@ export default function CoverageDiagram<Id extends string>({
   const stipId = `${uid}-stipple`;
   const titleId = `${uid}-title`;
 
+  const viewWidth = Number(map.viewBox.split(/\s+/)[2]) || 1200;
   const byId = new Map(map.panels.map((p) => [p.id, p]));
   const sequence = order.filter((id) => byId.has(id));
 
@@ -145,23 +155,28 @@ export default function CoverageDiagram<Id extends string>({
         {bodyPanels.map((id) => draw(byId.get(id)!))}
       </g>
 
-      {map.decor?.map((d, i) =>
-        d.kind === "glass" ? (
-          <path
-            key={`decor-${i}`}
-            className="cov-glass-fill"
-            d={d.d}
-            strokeWidth="1.5"
-          />
-        ) : (
-          <path
-            key={`decor-${i}`}
-            className="cov-line"
-            d={d.d}
-            strokeWidth="1.4"
-          />
-        )
-      )}
+      {/* Clipped to the body for the same reason the panels are: a shut
+          line drawn a couple of units long then runs off the silhouette
+          and onto the ground, and it is invisible in the source. */}
+      <g clipPath={`url(#${clipId})`}>
+        {map.decor?.map((d, i) =>
+          d.kind === "glass" ? (
+            <path
+              key={`decor-${i}`}
+              className="cov-glass-fill"
+              d={d.d}
+              strokeWidth="1.5"
+            />
+          ) : (
+            <path
+              key={`decor-${i}`}
+              className="cov-line"
+              d={d.d}
+              strokeWidth="1.4"
+            />
+          )
+        )}
+      </g>
 
       <g clipPath={`url(#${clipId})`}>
         {detailPanels.map((id) => draw(byId.get(id)!))}
@@ -187,12 +202,39 @@ export default function CoverageDiagram<Id extends string>({
 
       {highlightShape ? (
         <g clipPath={highlightShape.layer === "free" ? undefined : `url(#${clipId})`}>
-          <path className="cov-hi" d={highlightShape.d} />
+          <path
+            className={highlightCovered ? "cov-hi" : "cov-hi cov-hi--quiet"}
+            d={highlightShape.d}
+          />
         </g>
       ) : null}
 
       {/* The outline drawn last, so it stays crisp over every fill. */}
       <path className="cov-edge" d={map.outline} strokeWidth="2.4" strokeLinejoin="round" />
+
+      {/* The ground. The site's datum rule, cyan for the first 24 units
+          and the quiet tone after it, so the car stands on something.
+          Drawn after the body so the tyres meet it exactly. */}
+      {typeof map.ground === "number" ? (
+        <g>
+          <line
+            className="cov-datum"
+            x1="0"
+            y1={map.ground}
+            x2={viewWidth}
+            y2={map.ground}
+            strokeWidth="1"
+          />
+          <line
+            className="cov-datum cov-datum--lead"
+            x1="0"
+            y1={map.ground}
+            x2="24"
+            y2={map.ground}
+            strokeWidth="1"
+          />
+        </g>
+      ) : null}
     </svg>
   );
 }

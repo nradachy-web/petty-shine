@@ -13,6 +13,86 @@
  * Read _plan/RECON.md for the full evidence file and the open questions.
  */
 
+import { money } from "./utils";
+
+/* ============================================================
+   PRICING MODE, the one switch
+
+   Judson does not publish his prices, so this site does not publish
+   them either. One line below decides that, and nothing else in the
+   codebase has to change when it moves.
+
+     PRICING_MODE = "private"   THE DEFAULT. Every price slot on the
+                                site renders the "Quoted on your
+                                vehicle" link into /quote/ with the
+                                service preselected. No dollar figure
+                                renders anywhere: not on the home page,
+                                not in the service index, not on a
+                                service page, not in schema, not in a
+                                meta description.
+
+     PRICING_MODE = "public"    The same slots print the real figure
+                                out of this file and the site is priced
+                                again. No page changes, no component
+                                changes, no copy changes.
+
+   THE REAL FIGURES STAY IN THIS FILE EITHER WAY. They are still the
+   truth, the quote form still needs them to qualify a lead, and the
+   internal record still prints them. Private mode keeps a number off
+   the page. It does not delete it from the business, and it is not a
+   reason to let one go stale.
+
+   HOW TO FLIP IT. Change the string, run `npm run build`, then
+   `npm run audit`. The audit reads this exact constant out of this
+   file and fails the build if a dollar figure reached the rendered
+   HTML while it says "private", so the flag cannot quietly drift away
+   from what actually ships.
+
+   PAGES MUST NOT BRANCH ON THIS BY HAND. Use <PriceOrQuote> from
+   @/components/ui, which reads the flag for you and renders the quote
+   link whenever the price is private or missing. priceIsPublic() and
+   publicMoney() are here for the cases a component cannot cover, a
+   sentence or a schema field that has to be written differently, for
+   example a meta description that names a starting price.
+
+   The type annotation on PRICING_MODE is deliberate. Written with
+   `as const` the type narrows to "private" and every comparison
+   against "public" becomes a compile error.
+   ============================================================ */
+
+export type PricingMode = "public" | "private";
+
+export const PRICING_MODE: PricingMode = "private";
+
+/** True when the site is allowed to print a dollar figure. */
+export function priceIsPublic(): boolean {
+  return PRICING_MODE === "public";
+}
+
+/**
+ * A price formatted for the page, or null when there is nothing the
+ * page is allowed to print. Null covers both cases that matter, the
+ * flag being private and the service having no published price at
+ * all, so a caller that handles null handles both.
+ *
+ * Use it for copy and for schema. For a slot in a table or a card use
+ * <PriceOrQuote>, because null in a slot has to become a tappable
+ * quote link and never an empty cell.
+ */
+export function publicMoney(value: number | null | undefined): string | null {
+  if (!priceIsPublic()) return null;
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  return money(value);
+}
+
+/**
+ * One wording for every unpriced slot on the site. Nine of these on
+ * one page have to read as one system rather than nine improvisations,
+ * and it is a promise rather than a warning: the visitor is being told
+ * what happens next, not told that something is missing.
+ */
+export const QUOTE_CTA_LABEL = "Quoted on your vehicle";
+
 /* ============================================================
    THE BUSINESS
    ============================================================ */

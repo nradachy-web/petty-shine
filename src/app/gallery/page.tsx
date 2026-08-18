@@ -7,15 +7,15 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
 import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
-import PriceFigure from "@/components/ui/PriceFigure";
-import QuoteLink from "@/components/ui/QuoteLink";
+import { PriceOrQuote } from "@/components/ui/PriceFigure";
 import { RevealGroup } from "@/components/ui/Reveal";
 import Section, { SectionHead } from "@/components/ui/Section";
-import { BRAND, SERVICES } from "@/lib/constants";
+import { BRAND, REVIEWS, REVIEW_SUMMARY, SERVICES } from "@/lib/constants";
 import type { PhotoId } from "@/lib/photos";
 
 export const metadata: Metadata = {
-  title: "Our Work",
+  title: "Ceramic Coating and Detailing Photos",
+  /* 158 characters. */
   description: `Real jobs photographed inside the shop in ${BRAND.city}, ${BRAND.stateName}. Ceramic coating, paint protection film, paint correction, interiors, trucks and one boat.`,
   alternates: { canonical: "/gallery/" },
 };
@@ -77,7 +77,7 @@ const GROUPS: Group[] = [
     intro:
       "Every car in this set left the shop with a coating on it. What you are looking at is polished paint under a coating, not a wax sitting on top of swirls.",
     href: "/ceramic-coating/",
-    hrefLabel: "Coating tiers and prices",
+    hrefLabel: "What is in each coating tier",
     lead: { id: "coating-corvette-c8", caption: "Corvette C8, Rapid Blue, coated" },
     frames: [
       { id: "coating-g-wagon", caption: "Mercedes-Benz G-Class, coated" },
@@ -149,7 +149,7 @@ const GROUPS: Group[] = [
     intro:
       "The first interior level comes with every exterior detail. The ones above it go further into the leather and the carpet.",
     href: "/interior-detailing/",
-    hrefLabel: "Interior levels and prices",
+    hrefLabel: "The three interior levels",
     frames: [
       { id: "interior-bmw-x5m", caption: "BMW X5 M, tan leather" },
       { id: "interior-bmw-door", caption: "BMW door panel and seat" },
@@ -186,9 +186,9 @@ const GROUPS: Group[] = [
     headline:
       "One boat, on its trailer.",
     intro:
-      "Gelcoat is not clearcoat, so boats get their own process and their own price list.",
+      "Gelcoat is not clearcoat, so a boat gets its own process rather than a car detail done on a trailer.",
     href: "/marine-detailing/",
-    hrefLabel: "Marine levels and prices",
+    hrefLabel: "How a boat is done",
     plate: { id: "marine-boat-trailer", caption: "Center console boat, marine detail" },
     frames: [],
     cols: 2,
@@ -213,6 +213,9 @@ const SHOWN = [
 ];
 
 const LADDER = SERVICES.filter((s) => SHOWN.includes(s.id));
+
+/** A detailing review, because this page is mostly detailing photographs. */
+const PROOF = REVIEWS.find((r) => r.name === "Jacob Freeman")!;
 
 /**
  * Two up on a phone, deliberately. The alternative is 23 full width
@@ -258,9 +261,10 @@ export default function GalleryPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                {TOTAL_FRAMES} photographs of work done at {BRAND.street} in{" "}
-                {BRAND.city}. There is no stock photography anywhere on this
-                site.
+                {TOTAL_FRAMES} photographs of ceramic coating, paint protection
+                film, paint correction and detailing done at {BRAND.street} in{" "}
+                {BRAND.city}, {BRAND.stateName}. There is no stock photography
+                anywhere on this site.
               </p>
               <p>
                 They are grouped by what the work was, so you can go straight
@@ -287,7 +291,7 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-9">
           <Plate id={HERO.id} caption={HERO.caption} bleed priority />
         </div>
       </Section>
@@ -327,40 +331,41 @@ export default function GalleryPage() {
       ))}
 
       {/* ---------- the record. What the work in these frames costs. ---------- */}
-      <Section plane="sheet" label="What it costs" className="plane-arc">
+      <Section plane="sheet" label="What it costs">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               size="md"
-              title="Starting prices for the work above."
+              title="What the work above costs."
               intro={
                 <p>
-                  Published prices are starting prices. What a vehicle costs
-                  depends on its size and the condition of the paint, so it
-                  gets looked at before it gets quoted.
+                  No car on this page cost the same as the one beside it. Size
+                  and the condition of the paint move the number more than the
+                  name of the service does, so a vehicle gets looked at before
+                  it gets quoted, and the number goes to you in writing before
+                  any work starts.
                 </p>
               }
             />
             <div className="mt-7">
               <Button href="/pricing/" tone="ghost" size="sm">
-                Every published price
+                How a job gets priced
               </Button>
             </div>
           </div>
 
           <div className="min-w-0 lg:col-span-7">
-            <KeyValueList capped label="Starting at">
+            <KeyValueList capped label="Quoted on your vehicle">
               {LADDER.map((s) => (
                 <KeyValueRow
                   key={s.id}
                   k={`${s.index} ${s.name}`}
-                  tone={s.fromPrice === null ? "pewter" : "default"}
                   v={
-                    s.fromPrice === null ? (
-                      <QuoteLink service={s.quoteKey} />
-                    ) : (
-                      <PriceFigure value={s.fromPrice} from size="sm" />
-                    )
+                    <PriceOrQuote
+                      service={s.quoteKey}
+                      value={s.fromPrice}
+                      size="sm"
+                    />
                   }
                 />
               ))}
@@ -370,14 +375,8 @@ export default function GalleryPage() {
       </Section>
 
       {/* ---------- groups 04 to 07 ---------- */}
-      {GROUPS.slice(3).map((g, i) => (
-        <Section
-          key={g.slug}
-          id={g.slug}
-          plane="shop"
-          label={`${g.index} ${g.title}`}
-          className={i === 0 ? "plane-arc" : undefined}
-        >
+      {GROUPS.slice(3).map((g) => (
+        <Section key={g.slug} id={g.slug} plane="shop" label={`${g.index} ${g.title}`}>
           <SectionHead
             size="md"
             align="split"
@@ -410,7 +409,7 @@ export default function GalleryPage() {
       ))}
 
       {/* ---------- the one primary action on this page ---------- */}
-      <Section plane="sheet" label="Next step" className="plane-arc">
+      <Section plane="sheet" label="Next step">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -440,7 +439,20 @@ export default function GalleryPage() {
               <span className="h-px w-6 flex-none bg-cyan-500" aria-hidden />
             </PhoneLink>
 
-            <p className="cta-meta mt-6">
+            <figure className="mt-8 border-t border-rule-light pt-7">
+              <span className="block h-px w-6 bg-cyan-500" aria-hidden />
+              <blockquote className="mt-4">
+                <p className="max-w-xl text-[1.0625rem] leading-relaxed text-ink-600">
+                  {PROOF.text}
+                </p>
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                {PROOF.name} · {REVIEW_SUMMARY.source} ·{" "}
+                {REVIEW_SUMMARY.rating} from {REVIEW_SUMMARY.count} reviews
+              </figcaption>
+            </figure>
+
+            <p className="cta-meta mt-7">
               {BRAND.street}
               <br />
               <span className="whitespace-nowrap">

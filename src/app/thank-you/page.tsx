@@ -24,9 +24,12 @@ const NEXT_STEPS = [
     note: "Every photo is a vehicle that came through this shop.",
   },
   {
+    /* PRICING_MODE is "private". /pricing/ is no longer a price list, it is
+       what moves the number and what happens at the walkthrough, so the
+       label and the note say that instead of promising figures. */
     href: "/pricing/",
-    label: "Read the price list",
-    note: "Starting prices for detailing, interior, marine and coatings.",
+    label: "See how we quote",
+    note: "What moves the number, and when you get it in writing.",
   },
   {
     href: "/ceramic-coating/",

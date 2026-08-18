@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import {
   BRAND,
@@ -6,6 +7,7 @@ import {
   NEAREST_EXIT,
   SERVICES,
 } from "@/lib/constants";
+import { asset } from "@/lib/asset";
 import { milesShort } from "@/lib/utils";
 import Wordmark from "./Wordmark";
 import CallLink from "./CallLink";
@@ -131,25 +133,70 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* where he works */}
-          <div className="min-w-0 md:col-span-3 lg:col-span-3">
-            <ColumnHead label="Service area" />
+          {/* ----------------------------------------------------------------
+              WHERE HE WORKS, AND THE ONLY PLACE THE SIXTEEN TOWNS ARE LINKED
+              FROM EVERY PAGE.
+
+              These were sixteen plain <span>s. Read as SEO that meant the town
+              pages had no inbound link from any service page at all: five of
+              the nine services named a handful of towns in their own copy,
+              four named none, and nine towns were reachable only from /areas/
+              and from each other. A town page nothing links to is a page
+              Google finds through the sitemap and then ranks like an orphan.
+
+              Linking them here fixes it in one place instead of nine, and it
+              is the honest version of the fix: the anchor is the town's own
+              name under a heading that says Service area, which is what the
+              page is about. No keyword stuffing, and the footer looks the
+              same. tap-24 is on each one because sixteen mono names at 13px
+              is a dense tap target on a phone.
+              ---------------------------------------------------------------- */}
+          <nav
+            aria-labelledby="footer-areas"
+            className="min-w-0 md:col-span-3 lg:col-span-3"
+          >
+            <ColumnHead label="Service area" id="footer-areas" />
             <p className="mt-5 font-mono text-[0.8125rem] leading-[1.9] text-spec-000">
               {CITIES.map((c, i) => (
-                <span key={c.slug}>
-                  {i > 0 && (
-                    <span aria-hidden className="tone-muted">
-                      {" · "}
-                    </span>
-                  )}
-                  <span className="whitespace-nowrap">{c.name}</span>
-                </span>
+                /* The separator rides with the town BEFORE it, inside one
+                   nowrap wrapper, and the only breakable space is between
+                   wrappers. Left on its own it is a breakable token with a
+                   space either side, so a wrapped line ended on a stranded
+                   dot and the next one opened on another. Now every wrapped
+                   line ends "Trinity ·" and the next starts on a name. */
+                <Fragment key={c.slug}>
+                  <span className="whitespace-nowrap">
+                    <Link
+                      href={`/areas/${c.slug}/`}
+                      className="tap-24 transition-colors hover:text-cyan-300"
+                    >
+                      {c.name}
+                    </Link>
+                    {i < CITIES.length - 1 && (
+                      <span aria-hidden className="tone-muted">
+                        {" ·"}
+                      </span>
+                    )}
+                  </span>
+                  {/* the one breakable space, deliberately outside the
+                      nowrap wrapper. Inside it, it stops being a break
+                      opportunity and the whole list becomes one long line. */}
+                  {i < CITIES.length - 1 && " "}
+                </Fragment>
               ))}
             </p>
             <p className="tone-muted mt-4 text-[0.8125rem] leading-relaxed">
               {countyLine()}, {BRAND.stateName}.
             </p>
-          </div>
+            <p className="mt-3 text-[0.8125rem] leading-relaxed">
+              <Link
+                href="/areas/"
+                className="tap-24 text-cyan-300 transition-colors hover:text-cyan-500"
+              >
+                Drive times from all {CITIES.length} towns
+              </Link>
+            </p>
+          </nav>
 
           {/* the rest of the site */}
           <nav
@@ -268,6 +315,22 @@ export default function Footer() {
             >
               Terms
             </Link>
+            {/* /llms.txt is the shop written out in plain sentences for an
+                assistant to quote: the address, the hours, the nine services,
+                both credentials with the directory URL behind each one, the
+                sixteen measured towns, and the things this shop does not
+                claim. It is generated from src/lib/constants.ts by
+                src/app/llms.txt/route.ts, so it cannot drift from the pages.
+
+                It is linked because an unlinked file is a file nothing
+                crawls. asset(), not <Link>: it is a flat file, not a route,
+                so the subpath preview has to rewrite it by hand. */}
+            <a
+              href={asset("/llms.txt")}
+              className="tap-24 transition-colors hover:text-spec-000"
+            >
+              llms.txt
+            </a>
             <a
               href="https://modernapexstrategies.com"
               target="_blank"
