@@ -1,0 +1,928 @@
+/* ============================================================
+   PETTY SHINE, shared primitive styles.
+
+   Owned by the primitives agent. Imported by the components in
+   this directory, never by a page. Nothing outside
+   src/components/ui/ needs to know this file exists.
+
+   WHY THIS FILE EXISTS AND NOT globals.css
+   globals.css belongs to another agent. The build contract says
+   that if you need a class that is not in the contract, you build
+   it inside your own owned files. Every class here is prefixed
+   (ps-, datum, kv, plate, price-fig, quote-link, crumbs) so it can
+   never collide with the design system file.
+
+   THE TAILWIND v4 LAYER TRAP
+   In Tailwind v4 utilities live in @layer utilities, and unlayered
+   CSS beats any layered rule no matter the specificity. So every
+   colour and text-align default below sits inside @layer
+   components, and only structural properties (display, font,
+   padding, border-width, border-style) are left unlayered. That is
+   the split the contract asks for, and it means a page can still
+   put text-cyan-500 or text-right on any of these elements and win.
+
+   The layer order is restated on the first line as a defensive
+   measure. Layer order is fixed by the first @layer statement the
+   document sees; globals.css normally gets there first with the
+   same order, and a second identical statement is a no-op.
+   ============================================================ */
+
+@layer theme, base, components, utilities;
+
+/* ============================================================
+   THE PLANE VARIABLE MAP
+
+   Every primitive reads its colours from these, never from a
+   literal. Drop a KeyValueRow on the shop plane and it turns
+   light on dark; drop the same row on the sheet and it turns dark
+   on paper, with no prop and no branch in the component.
+
+   Each value prefers the Tailwind theme token from globals.css and
+   falls back to the hex in _plan/DESIGN.md, so these render
+   correctly even if this file loads before the theme.
+
+   Nesting works for free: a .plane-sheet panel inside a
+   .plane-shop section inherits from the nearest ancestor, so a
+   paper card on a dark band gets paper colours automatically.
+   ============================================================ */
+
+:root,
+.plane-sheet {
+  --ps-ground: var(--color-sheet-000, #f2f4f5);
+  --ps-panel: var(--color-sheet-060, #e4e8ea);
+  --ps-band: var(--color-sheet-060, #e4e8ea);
+  --ps-rule: var(--color-rule-light, #c9d0d4);
+  --ps-heading: var(--color-ink-900, #0d1113);
+  --ps-value: var(--color-ink-900, #0d1113);
+  --ps-body: var(--color-ink-600, #444d52);
+  --ps-key: var(--color-ink-400, #5e686d);
+  /* The pewter role, carrying every honest negative.
+     #9BA7AE is 2.23:1 on #F2F4F5 and fails outright as text, the
+     same way cyan-500 does, so on paper the role maps to ink-400
+     (4.88:1). See the report note. */
+  --ps-quiet: var(--color-ink-400, #5e686d);
+  --ps-link: var(--color-cyan-ink, #006b93);
+  --ps-accent: var(--color-cyan-500, #00c1f3);
+  --ps-on-accent: var(--color-shop-000, #0a0b09);
+}
+
+.plane-shop {
+  --ps-ground: var(--color-shop-000, #0a0b09);
+  --ps-panel: var(--color-shop-060, #121410);
+  --ps-band: var(--color-shop-120, #1c1f1a);
+  --ps-rule: var(--color-rule-dark, #2c302a);
+  --ps-heading: var(--color-spec-000, #e8e4d8);
+  --ps-value: var(--color-spec-000, #e8e4d8);
+  --ps-body: var(--color-ink-300, #9aa5aa);
+  --ps-key: var(--color-ink-300, #9aa5aa);
+  --ps-quiet: var(--color-pewter, #9ba7ae);
+  --ps-link: var(--color-cyan-300, #48c8f5);
+  --ps-accent: var(--color-cyan-500, #00c1f3);
+  --ps-on-accent: var(--color-shop-000, #0a0b09);
+}
+
+/* Font stacks, with fallbacks so nothing depends on load order. */
+:root {
+  --ps-font-display: var(--font-display, "Archivo", system-ui, sans-serif);
+  --ps-font-body: var(--font-body, "Archivo", system-ui, sans-serif);
+  --ps-font-mono: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
+  --ps-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================================
+   SHELL AND SECTION
+
+   --ps-gutter is published by the shell so a bleed Plate can
+   cancel it with a negative margin. Full width shells set it to
+   zero, so the same Plate code works in both.
+   ============================================================ */
+
+.ps-shell {
+  --ps-gutter: 1.25rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 77.5rem; /* 1240px */
+  margin-inline: auto;
+  padding-inline: var(--ps-gutter);
+}
+.ps-shell--tight {
+  max-width: 55rem; /* 880px */
+}
+.ps-shell--wide {
+  max-width: 97.5rem; /* 1560px */
+}
+.ps-shell--full {
+  --ps-gutter: 0px;
+  max-width: none;
+}
+/* The mobile overflow guard. Grid and flex children default to
+   min-width:auto, so a wide table inflates its own container past
+   the viewport instead of scrolling inside it. */
+.ps-shell > *,
+.ps-shell [class*="grid-cols"] > * {
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .ps-shell {
+    --ps-gutter: 2rem;
+  }
+  .ps-shell--full {
+    --ps-gutter: 0px;
+  }
+}
+
+.ps-section {
+  position: relative;
+  padding-block: 4.5rem;
+  scroll-margin-top: 4.5rem;
+}
+@media (min-width: 768px) {
+  .ps-section {
+    padding-block: 6.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  .ps-section {
+    padding-block: 7.5rem;
+  }
+}
+.ps-section--flush {
+  padding-block: 0;
+}
+.ps-section--snug {
+  padding-block: 2.75rem;
+}
+
+@layer components {
+  .ps-section {
+    background: var(--ps-ground);
+    color: var(--ps-body);
+  }
+  .ps-section h1,
+  .ps-section h2,
+  .ps-section h3,
+  .ps-section h4,
+  .ps-section h5 {
+    color: var(--ps-heading);
+  }
+}
+
+/* ============================================================
+   TYPE
+
+   The display voice is Archivo pulled to width 82 and italic,
+   which is as close as a text face gets to the condensed italic
+   wordmark on his own shop banner. Archivo must be loaded with the
+   wdth axis for this to do anything; if it is not, font-stretch is
+   simply ignored and the type falls back to upright width 100,
+   which is still correct, just less like the banner.
+   ============================================================ */
+
+.ps-display {
+  font-family: var(--ps-font-display);
+  font-weight: 700;
+  font-stretch: 82%;
+  letter-spacing: -0.005em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+@layer components {
+  /* Layered so a heading that reads better in sentence case or upright
+     can say so with normal-case or not-italic. */
+  .ps-display {
+    font-style: italic;
+    text-transform: uppercase;
+  }
+}
+.ps-display-xl {
+  font-size: clamp(2.4rem, 7.6vw, 4.75rem);
+}
+.ps-display-lg {
+  font-size: clamp(1.85rem, 4.8vw, 3.15rem);
+}
+.ps-display-md {
+  font-size: clamp(1.45rem, 3.1vw, 2.1rem);
+}
+.ps-display-sm {
+  font-size: clamp(1.15rem, 2.1vw, 1.4rem);
+}
+
+/* Upright width-100 heading, for subheads inside body copy where
+   the italic condensed voice would be too loud. */
+.ps-heading {
+  font-family: var(--ps-font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+@layer components {
+  .ps-display,
+  .ps-heading {
+    color: var(--ps-heading);
+  }
+}
+
+.ps-prose {
+  font-family: var(--ps-font-body);
+  line-height: 1.7;
+}
+.ps-prose > * + * {
+  margin-top: 1.15rem;
+}
+@layer components {
+  /* max-width is layered on purpose, so a page can widen a column with
+     max-w-none. The measure caps that must not move, like the 720px on
+     a framed Plate, are left unlayered so no utility can lift them. */
+  .ps-prose {
+    max-width: 40rem;
+    color: var(--ps-body);
+  }
+  .ps-prose strong {
+    color: var(--ps-heading);
+  }
+}
+.ps-prose strong {
+  font-weight: 600;
+}
+.ps-prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+@layer components {
+  .ps-prose a {
+    color: var(--ps-link);
+    text-decoration-color: var(--ps-accent);
+  }
+}
+
+/* ============================================================
+   RULE LABEL
+   Mono, uppercase, wide tracking. The sourced-fact voice used for
+   eyebrows, captions and metadata.
+   ============================================================ */
+
+.ps-rule-label {
+  display: inline-block;
+  font-family: var(--ps-font-mono);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+@layer components {
+  .ps-rule-label {
+    color: var(--ps-key);
+  }
+  .ps-rule-label--strong {
+    color: var(--ps-heading);
+  }
+  .ps-rule-label--quiet {
+    color: var(--ps-quiet);
+  }
+  /* Cyan-as-text is only ever legal through the link token, which
+     is cyan-ink on paper. cyan-500 is 2.2:1 on the sheet. */
+  .ps-rule-label--accent {
+    color: var(--ps-link);
+  }
+}
+
+/* ============================================================
+   THE DATUM RULE, the motif
+
+   Full width 1px hairline, first 24px solid cyan, the rest the
+   plane's rule colour. Two spans rather than a gradient, because
+   the design rules forbid gradients and this is literally what the
+   rule is: a cyan tick and a hairline.
+
+   The scaleX draw-in is added by JS after mount and only when the
+   user has not asked for reduced motion, so the resting state in
+   the static HTML is a fully drawn rule. See useEnterOnce.ts.
+   ============================================================ */
+
+.datum {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.datum__label {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.datum__line {
+  display: flex;
+  width: 100%;
+  height: 1px;
+  transform-origin: left center;
+}
+.datum__tick {
+  display: block;
+  flex: 0 0 24px;
+  height: 100%;
+}
+.datum__rest {
+  display: block;
+  flex: 1 1 auto;
+  height: 100%;
+}
+@layer components {
+  .datum__tick {
+    background: var(--ps-accent);
+  }
+  .datum__rest {
+    background: var(--ps-rule);
+  }
+}
+[data-ps-rule="pending"] .datum__line {
+  transform: scaleX(0);
+}
+[data-ps-rule="in"] .datum__line {
+  transform: scaleX(1);
+  transition: transform 500ms var(--ps-ease) var(--ps-delay, 0s);
+}
+
+/* ============================================================
+   REVEAL
+
+   Never server rendered hidden. [data-ps-reveal] only ever appears
+   because JS put it there in a layout effect. Worst case for any
+   failure is content visible with no animation.
+   ============================================================ */
+
+[data-ps-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+[data-ps-reveal="in"] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s var(--ps-ease) var(--ps-delay, 0s),
+    transform 0.55s var(--ps-ease) var(--ps-delay, 0s);
+}
+.ps-reveal-group[data-ps-reveal="pending"] > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.ps-reveal-group[data-ps-reveal="in"] > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s var(--ps-ease), transform 0.55s var(--ps-ease);
+}
+.ps-reveal-group[data-ps-reveal="in"] > *:nth-child(2) {
+  transition-delay: 0.07s;
+}
+.ps-reveal-group[data-ps-reveal="in"] > *:nth-child(3) {
+  transition-delay: 0.14s;
+}
+.ps-reveal-group[data-ps-reveal="in"] > *:nth-child(4) {
+  transition-delay: 0.21s;
+}
+.ps-reveal-group[data-ps-reveal="in"] > *:nth-child(5) {
+  transition-delay: 0.28s;
+}
+.ps-reveal-group[data-ps-reveal="in"] > *:nth-child(n + 6) {
+  transition-delay: 0.35s;
+}
+
+/* Belt and braces. The hook already does nothing under reduced
+   motion, so these states should never exist there, but if one
+   ever does it must not hide anything. */
+@media (prefers-reduced-motion: reduce) {
+  [data-ps-reveal="pending"],
+  .ps-reveal-group[data-ps-reveal="pending"] > * {
+    opacity: 1;
+    transform: none;
+  }
+  [data-ps-rule="pending"] .datum__line {
+    transform: none;
+  }
+  [data-ps-reveal="in"],
+  .ps-reveal-group[data-ps-reveal="in"] > *,
+  [data-ps-rule="in"] .datum__line {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   KEY AND VALUE ROW
+
+   The workhorse. Every price table, coverage list, spec table and
+   warranty term on this site is built from it.
+
+   Two layouts out of one component:
+     figure  key left, value hard right, tabular figures, mono.
+     prose   key in a fixed left column, value left aligned, body
+             face. Right aligned ragged-left paragraphs are close
+             to unreadable, so a prose value does not get the
+             figure treatment.
+   ============================================================ */
+
+.kv-list {
+  width: 100%;
+  min-width: 0;
+}
+.kv-list > * {
+  min-width: 0;
+}
+/* A closing hairline under the last row, so a table reads as
+   finished rather than trailing off. */
+.kv-list--capped {
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+@layer components {
+  .kv-list--capped {
+    border-top-color: var(--ps-rule);
+  }
+}
+
+.kv {
+  display: grid;
+  /* THE KEY COLUMN IS SIZED FIRST, AND IT NEVER BREAKS A WORD.
+     This was minmax(0, 1fr) auto, which gave the VALUE its max-content
+     width and left the key whatever remained. A long value then crushed
+     the key to nothing, and because body carries overflow-wrap:
+     break-word the key came apart one letter per line. It shipped that
+     way on the PPF page, where the SPECIFICATION PENDING block rendered
+     "Warranty" as eight stacked characters.
+     fit-content(45%) caps the key at 45% of the row but never squeezes
+     it below min-content, so the longest word in a key always fits, and
+     the value takes the rest and wraps against the right edge. */
+  grid-template-columns: fit-content(45%) minmax(0, 1fr);
+  column-gap: 1.5rem;
+  align-items: baseline;
+  padding-block: 0.72rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  min-width: 0;
+}
+/* A row whose value is a tappable quote link carries a 44px target
+   already, so it sheds some of its own padding. */
+.kv:has(.quote-link) {
+  padding-block: 0.25rem;
+}
+
+.kv__k {
+  font-family: var(--ps-font-mono);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  letter-spacing: 0.015em;
+  line-height: 1.45;
+  min-width: 0;
+}
+.kv__note {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.kv__v {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+}
+.kv__v--mono {
+  font-family: var(--ps-font-mono);
+  font-weight: 500;
+}
+
+@layer components {
+  .kv {
+    border-bottom-color: var(--ps-rule);
+  }
+  .kv__k {
+    color: var(--ps-key);
+    text-align: left;
+  }
+  .kv__note {
+    color: var(--ps-quiet);
+  }
+  .kv__v {
+    color: var(--ps-value);
+    text-align: right;
+  }
+}
+
+/* prose layout */
+.kv--prose {
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 0.3rem;
+}
+.kv--prose .kv__v {
+  font-variant-numeric: normal;
+  font-family: var(--ps-font-body);
+  line-height: 1.6;
+}
+@media (min-width: 640px) {
+  .kv--prose {
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    column-gap: 2rem;
+  }
+}
+@layer components {
+  .kv--prose .kv__v {
+    text-align: left;
+    color: var(--ps-body);
+  }
+}
+
+/* tones. Declared last so a tone wins over the layout default. */
+@layer components {
+  .kv--pewter .kv__v {
+    color: var(--ps-quiet);
+  }
+  .kv--cyan .kv__v {
+    color: var(--ps-link);
+  }
+}
+
+/* An emphasised row, for a total or a featured tier. */
+.kv--strong .kv__v {
+  font-size: 1.0625rem;
+}
+@layer components {
+  .kv--strong .kv__k {
+    color: var(--ps-heading);
+  }
+}
+
+/* ============================================================
+   PLATE
+
+   Framed is the default and caps at 720 CSS px, because 17 of the
+   29 source photos stop at 1024 and 4 stop at 640. Bleed is only
+   reachable for the eight ids in BLEED_CLEARED, and that is
+   enforced in Plate.tsx, not here.
+   ============================================================ */
+
+.plate {
+  display: block;
+  min-width: 0;
+}
+@layer components {
+  /* Only a reset of the UA <figure> margin, layered so mx-auto still
+     works on a framed plate. The bleed margin below is unlayered on
+     purpose: nothing should be able to cancel it. */
+  .plate {
+    margin: 0;
+  }
+}
+.plate--framed {
+  max-width: 720px;
+}
+/* Cancels the shell gutter so the photo runs to the edge of its
+   container. In a .ps-shell--full section the gutter is 0 and this
+   is a no-op, which is the intended behaviour. */
+.plate--bleed {
+  width: auto;
+  max-width: none;
+  margin-inline: calc(-1 * var(--ps-gutter, 0px));
+}
+.plate__frame {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-width: 1px;
+  border-style: solid;
+}
+@layer components {
+  .plate__frame {
+    border-color: var(--ps-rule);
+    background: var(--ps-panel);
+  }
+}
+.plate--bleed .plate__frame {
+  border-width: 0;
+}
+.plate__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.plate__img--cover {
+  height: 100%;
+  object-fit: cover;
+}
+.plate__caption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.plate__caption::before {
+  content: "";
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 1px;
+  transform: translateY(-0.35em);
+}
+@layer components {
+  .plate__caption {
+    color: var(--ps-key);
+  }
+  .plate__caption::before {
+    background: var(--ps-accent);
+  }
+}
+.plate--bleed .plate__caption {
+  padding-inline: var(--ps-gutter, 0px);
+}
+
+/* ============================================================
+   PRICE FIGURE
+   ============================================================ */
+
+.price-fig {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-family: var(--ps-font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.price-fig__from {
+  font-weight: 400;
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.price-fig__n {
+  font-weight: 500;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+}
+.price-fig--sm .price-fig__n {
+  font-size: 0.9375rem;
+}
+.price-fig--sm .price-fig__from {
+  font-size: 0.5625rem;
+}
+.price-fig--lg .price-fig__n {
+  font-size: clamp(1.75rem, 4vw, 2.375rem);
+}
+@layer components {
+  .price-fig__from {
+    color: var(--ps-key);
+  }
+  .price-fig__n {
+    color: var(--ps-value);
+  }
+}
+
+/* ============================================================
+   QUOTE LINK
+   The answer to every unpriced service. Never a dead grey label,
+   always a 44px tap target.
+   ============================================================ */
+
+.quote-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-family: var(--ps-font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: color 0.18s var(--ps-ease);
+}
+.quote-link__text {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 2px;
+}
+.quote-link__arrow {
+  font-size: 0.95em;
+  transition: transform 0.18s var(--ps-ease);
+}
+.quote-link:hover .quote-link__arrow {
+  transform: translateX(3px);
+}
+@layer components {
+  .quote-link {
+    color: var(--ps-link);
+  }
+  .quote-link__text {
+    border-bottom-color: var(--ps-accent);
+  }
+  .quote-link:hover {
+    color: var(--ps-heading);
+  }
+}
+
+/* ============================================================
+   BUTTON
+
+   One solid cyan button per screen. That rule is not enforceable
+   from inside a component, so it is enforced by only ever putting
+   tone="cyan" on a page's single primary action.
+   ============================================================ */
+
+.ps-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding-inline: 1.75rem;
+  font-family: var(--ps-font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+  transition: background-color 0.18s var(--ps-ease),
+    border-color 0.18s var(--ps-ease), color 0.18s var(--ps-ease);
+}
+.ps-btn--block {
+  width: 100%;
+}
+.ps-btn--sm {
+  min-height: 2.75rem;
+  padding-inline: 1.15rem;
+  font-size: 0.8125rem;
+}
+@layer components {
+  .ps-btn--cyan {
+    background: var(--ps-accent);
+    border-color: var(--ps-accent);
+    color: var(--ps-on-accent);
+  }
+  .ps-btn--cyan:hover {
+    background: color-mix(in srgb, var(--ps-accent) 84%, #000000);
+    border-color: color-mix(in srgb, var(--ps-accent) 84%, #000000);
+  }
+  .ps-btn--ghost {
+    background: transparent;
+    border-color: var(--ps-rule);
+    color: var(--ps-heading);
+  }
+  .ps-btn--ghost:hover {
+    border-color: var(--ps-accent);
+  }
+}
+.ps-btn[aria-disabled="true"],
+.ps-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   BREADCRUMBS
+   ============================================================ */
+
+.crumbs {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+@layer components {
+  .crumbs {
+    background: var(--ps-ground);
+    border-bottom-color: var(--ps-rule);
+  }
+}
+.crumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.5rem;
+  /* 0.6rem top and bottom plus the 1.5rem link below is the same 43.2px
+     bar the 0.85rem padding gave a 16px link. The bar did not grow, the
+     target inside it did. */
+  padding-block: 0.6rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+.crumbs__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.crumbs__sep {
+  user-select: none;
+}
+/* WCAG 2.2 target size. The link is a flex item, so it is already
+   blockified and min-height applies to it. Centring keeps the label on
+   exactly the baseline it sat on before. */
+.crumbs__link {
+  display: flex;
+  align-items: center;
+  min-height: 1.5rem;
+  text-decoration: none;
+  transition: color 0.18s var(--ps-ease);
+}
+@layer components {
+  .crumbs__list {
+    color: var(--ps-key);
+  }
+  /* The rule colour is a 1px hairline value: as a glyph it measured
+     1.41:1 on paper, which is a separator nobody can see. The quiet
+     tone is the same voice the trail is set in and clears 4.5:1 on
+     both planes. */
+  .crumbs__sep {
+    color: var(--ps-quiet);
+  }
+  .crumbs__link:hover {
+    color: var(--ps-link);
+  }
+  .crumbs__current {
+    color: var(--ps-heading);
+  }
+}
+
+/* ============================================================
+   CTA BAND, quiet line variant
+   ============================================================ */
+
+.cta-line {
+  width: 100%;
+  min-width: 0;
+}
+.cta-line__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-top: 1.1rem;
+}
+.cta-line__text {
+  font-family: var(--ps-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: 34rem;
+}
+.cta-line__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.75rem;
+}
+.cta-line__tel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--ps-font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.18s var(--ps-ease);
+}
+@layer components {
+  .cta-line__text {
+    color: var(--ps-body);
+  }
+  .cta-line__tel {
+    color: var(--ps-key);
+  }
+  .cta-line__tel:hover {
+    color: var(--ps-link);
+  }
+}
+@media (min-width: 768px) {
+  .cta-line__row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+.cta-meta {
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+@layer components {
+  .cta-meta {
+    color: var(--ps-key);
+  }
+}

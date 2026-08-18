@@ -1,118 +1,341 @@
 @import "tailwindcss";
 
-/* ============================================================
-   HD AUTO STUDIO, "Studio Wall" design system
+/* ==========================================================================
+   PETTY SHINE, "The Build Sheet"
 
-   Derived from the shop's own mark: a heavy grotesk wordmark
-   bracketed by two red rules. That bracket is the signature
-   motif of the whole site (see .rule-label).
+   The site is two ground surfaces and one motif.
 
-   The site alternates two surfaces:
-     PAPER  = warm gallery white, where information lives
-     WALL   = near-black photographic bands, where the work lives
-   ============================================================ */
+     .plane-shop    near black, warm, green dominant. His photography lives
+                    here. This is where the site is proud.
+     .plane-sheet   cool off white paper. Every price, product name, coverage
+                    line and warranty term lives here. This is where the site
+                    is trusted.
+
+     .datum-rule    a 1px hairline whose first 24px is solid cyan and whose
+                    remainder is the plane's own rule color. It introduces
+                    every section, the way a datum line introduces a drawing.
+
+   Two rules govern this file and both of them shipped as real bugs on the
+   previous site.
+
+   1. THE TAILWIND v4 LAYER TRAP. Utilities live in @layer utilities, and any
+      unlayered rule beats a layered one no matter the specificity. So every
+      color, background, border color and text alignment default in this file
+      sits inside @layer components (element defaults sit in @layer base), and
+      a text-* or bg-* utility on the element always wins. Structural
+      properties stay unlayered on purpose so they stick.
+
+   2. NEVER SHIP A HIDDEN RESTING STATE. Nothing here hides content by
+      default. The reveal and draw states below are applied by JS after mount
+      (see the Reveal primitive), so with JavaScript off the page is simply
+      visible without animation.
+   ========================================================================== */
 
 @theme {
-  /* wall (dark) */
-  --color-ink: #0b0b0c;
-  --color-ink-2: #131315;
-  --color-graphite: #1d1e21;
-  --color-slate: #2c2d31;
+  /* ---------- the shop plane, warm near black ---------- */
+  --color-shop-000: #0A0B09;
+  --color-shop-060: #121410;
+  --color-shop-120: #1C1F1A;
+  --color-rule-dark: #2C302A;
 
-  /* paper (light) */
-  --color-paper: #f7f5f2;
-  --color-paper-2: #efece7;
-  --color-paper-3: #e5e1da;
-  --color-line: #d9d4cc;
+  /* ---------- the record plane, cool paper ---------- */
+  --color-sheet-000: #F2F4F5;
+  --color-sheet-060: #E4E8EA;
+  --color-rule-light: #C9D0D4;
 
-  /* type */
-  --color-ink-text: #17171a;
-  --color-body: #3b3a37;
-  --color-muted: #75726c;
-  --color-light: #f4f2ef;
-  --color-light-2: #bdbab4;
-  --color-dim: #86837d;
+  /* ---------- type ---------- */
+  --color-spec-000: #E8E4D8; /* warm specular white, sampled from his paint */
+  --color-ink-300: #9AA5AA;
+  --color-ink-900: #0D1113;
+  --color-ink-600: #444D52;
+  /* Mono keys and metadata on paper. Darkened from the sampled #626C71 by a
+     hair, because paper has TWO surfaces and the sampled value only cleared
+     one of them: #626C71 is 4.88:1 on sheet-000 but 4.37:1 on the sheet-060
+     band, and half of everything this colour sets (every field label in the
+     quote form, every key in a banded spec row, the SPECIFICATION PENDING
+     block on the PPF and tint pages) sits on the band. #5E686D is 5.18:1 on
+     sheet-000 and 4.63:1 on sheet-060, so it clears AA on both. */
+  --color-ink-400: #5E686D;
 
-  /* brand red, sampled from the HD Auto Studio mark */
-  --color-red: #e01b22;
-  --color-red-bright: #ff2b31;
-  --color-red-deep: #99080d;
-  --color-red-wash: #fdeceb;
+  /* ---------- brand ----------
+     The cyan namespace is emptied first so Tailwind's stock cyan ramp cannot
+     be reached by accident. bg-cyan-700 must resolve to nothing rather than
+     to an off brand blue that passes review unnoticed. Cyan is a 1px rule, a
+     stroke, a chip border, a small mark and exactly one solid button per
+     screen. Never a wash, never a gradient, never body text. */
+  --color-cyan-*: initial;
+  --color-cyan-500: #00C1F3;
+  --color-cyan-300: #48C8F5;
+  --color-cyan-ink: #006B93; /* required on paper, #00C1F3 is 2.2:1 there */
+  --color-pewter: #9BA7AE;
 
-  /* semantic */
-  --color-good: #1f7a4d;
-  --color-warn: #b8791a;
-  --color-error: #c4141b;
-  --color-star: #f5a623;
-
+  /* ---------- radius ----------
+     Industrial, so effectively square. The contract lists no radius tokens,
+     these are additive and deliberately tiny. */
   --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 14px;
   --radius-pill: 999px;
 
+  /* ---------- fonts ----------
+     Archivo carries both roles. The wdth axis is the reason it won, see
+     .display-condensed. IBM Plex Mono is the sourced fact voice. */
   --font-display: var(--font-display-raw), "Archivo", system-ui, sans-serif;
-  --font-body: var(--font-body-raw), "Inter", system-ui, sans-serif;
+  --font-body: var(--font-body-raw), "Archivo", system-ui, sans-serif;
   --font-mono: var(--font-mono-raw), "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ==========================================================================
+   PLANE VARIABLES
+
+   Every plane declares the same set of variables. Components read the
+   variables, never the raw tokens, which is why one class works on both
+   planes without the markup changing.
+
+   Three of these are contrast corrections, not style choices:
+     --plane-link    cyan-500 is 2.2:1 on paper and fails outright, so paper
+                     links are cyan-ink.
+     --plane-focus   a focus ring needs 3:1 against its surround. cyan-500
+                     misses that on paper, cyan-ink clears it.
+     --plane-pewter  pewter is 2.0:1 on paper. It keeps the "honest negative"
+                     job on both planes but resolves to ink-400 on paper so
+                     the words can actually be read.
+   ========================================================================== */
+
+:root,
+.plane-shop {
+  --plane-bg: var(--color-shop-000);
+  --plane-panel: var(--color-shop-060);
+  --plane-stripe: var(--color-shop-120);
+  --plane-rule: var(--color-rule-dark);
+  --plane-border-strong: var(--color-ink-300);
+  --plane-text: var(--color-spec-000);
+  --plane-heading: var(--color-spec-000);
+  --plane-muted: var(--color-ink-300);
+  --plane-mono: var(--color-ink-300);
+  --plane-link: var(--color-cyan-300);
+  --plane-focus: var(--color-cyan-500);
+  --plane-pewter: var(--color-pewter);
+  --plane-chip: var(--color-cyan-500);
+  --plane-field-bg: var(--color-shop-060);
+}
+
+.plane-sheet {
+  --plane-bg: var(--color-sheet-000);
+  --plane-panel: var(--color-sheet-060);
+  --plane-stripe: var(--color-sheet-060);
+  --plane-rule: var(--color-rule-light);
+  --plane-border-strong: var(--color-ink-600);
+  --plane-text: var(--color-ink-600);
+  --plane-heading: var(--color-ink-900);
+  --plane-muted: var(--color-ink-400);
+  --plane-mono: var(--color-ink-400);
+  --plane-link: var(--color-cyan-ink);
+  --plane-focus: var(--color-cyan-ink);
+  --plane-pewter: var(--color-ink-400);
+  --plane-chip: var(--color-cyan-ink);
+  --plane-field-bg: var(--color-sheet-000);
 }
 
 :root {
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --shadow-plate: 0 1px 2px rgba(23, 23, 26, 0.06),
-    0 12px 28px -18px rgba(23, 23, 26, 0.4);
-  --shadow-lift: 0 2px 4px rgba(23, 23, 26, 0.07),
-    0 24px 48px -24px rgba(23, 23, 26, 0.45);
-  --shadow-wall: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+  /* section rhythm, read by .section */
+  --section-pad-y: 4.5rem;
+
+  /* the plane change arc, see .plane-arc */
+  --arc-rise: 10px;
+
+  /* sticky chrome. The layout agent owns the components, these are the
+     numbers the contract fixes so scroll padding and clearance agree. */
+  --nav-h: 64px;
+  --rail-h: 56px;
+  --rail-reserve: 88px;
 }
 
-/* ---------- base ---------- */
+/* ==========================================================================
+   BASE
+   Element level defaults. Color lives in @layer base so that any text-*
+   utility on an <h2> or an <a> still wins, see the layer trap above.
+   ========================================================================== */
+
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  scroll-padding-top: calc(var(--nav-h) + 1.5rem);
   -webkit-text-size-adjust: 100%;
 }
+
+/* Overflow guards.
+   overflow-x: hidden is the baseline because it is universally supported.
+   overflow-x: clip is the same clip without turning the element into a
+   scroll container, which is what keeps position: sticky working, so modern
+   browsers get the upgrade.
+
+   NOTE FOR EVERY OTHER FILE: these guards hide the symptom, they do not fix
+   the cause. A grid or flex child defaults to min-width: auto, so a wide
+   table inside one inflates its container past the viewport instead of
+   scrolling inside it, and with overflow hidden the columns are simply gone
+   off screen on a phone while every numeric audit looks clean. Put
+   min-width: 0 on grid and flex children, and give wide tables their own
+   overflow-x: auto wrapper. The guards at the bottom of this file do that
+   structurally for containers and grids. */
 html,
 body {
   max-width: 100vw;
-}
-body {
-  background: var(--color-paper);
-  color: var(--color-body);
-  overflow-wrap: break-word;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: var(--font-display);
-  color: var(--color-ink-text);
-  letter-spacing: -0.02em;
-  line-height: 1.04;
-  text-wrap: balance;
-}
-::selection {
-  background: var(--color-red);
-  color: #fff;
-}
-:focus-visible {
-  outline: 2px solid var(--color-red);
-  outline-offset: 3px;
-}
-img {
-  display: block;
-  max-width: 100%;
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
-/* ---------- layout ---------- */
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-stretch: 100%;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  body {
+    background-color: var(--plane-bg);
+    color: var(--plane-text);
+  }
+  /* Headings take their color from the plane variable rather than from a
+     .plane-shop h2 descendant rule. Variables inherit, so a sheet section
+     nested inside a shop section resolves correctly in both directions.
+
+     All of this sits in the base layer, including the tracking and the
+     leading, so tracking-* and leading-* utilities still win on a heading
+     that needs tuning. The .display-* classes below are unlayered and beat
+     these by specificity. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-stretch: 100%;
+    letter-spacing: -0.02em;
+    line-height: 1.06;
+    text-wrap: balance;
+    color: var(--plane-heading);
+  }
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background-color: var(--color-cyan-500);
+    color: var(--color-shop-000);
+  }
+  :focus-visible {
+    outline: 2px solid var(--plane-focus);
+    outline-offset: 3px;
+  }
+}
+
+/* ==========================================================================
+   THE TWO PLANES
+
+   Each plane sets its own background AND its own text color, so a section is
+   self sufficient wherever it is dropped. Never two plane changes inside one
+   screen height. Any section under 400px tall belongs on the plane above it.
+   ========================================================================== */
+
+.plane-shop,
+.plane-sheet {
+  position: relative;
+}
+
+@layer components {
+  .plane-shop,
+  .plane-sheet {
+    background-color: var(--plane-bg);
+    color: var(--plane-text);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   THE PLANE CHANGE ARC
+
+   One very shallow curve, roughly a 2000px radius, so the paper enters under
+   a whisper of the swoosh in his logo. Put .plane-arc on the section that
+   sits directly under a plane of the other color. Once per plane change,
+   never twice in a screen.
+
+   Mechanics: a pseudo element sitting entirely above the section, painted in
+   the section's own ground color, with an elliptical top radius of half the
+   width by its full height. It overlaps the section above by exactly
+   --arc-rise, so the curve reads as this plane arriving over that one.
+
+   Why a pseudo element and not a border radius plus a negative margin: the
+   negative margin version has to be paid back in padding, which means it has
+   to know what class owns the section's vertical rhythm. This version knows
+   nothing about the section it is attached to, so it works on any section
+   component, keeps that section's rhythm untouched, and cannot overflow
+   horizontally at any width.
+
+   --arc-rise is the sagitta of a 2000px circle at that viewport width,
+   s = w squared / 16000, stepped at breakpoints and capped so it stays a
+   whisper on an ultrawide monitor. Stepped rather than a fixed percentage so
+   the curvature is the same physical arc on a phone and on a desktop.
+   -------------------------------------------------------------------------- */
+
+.plane-arc {
+  position: relative;
+}
+.plane-arc::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Overlapped by 1px so subpixel layout can never open a hairline seam
+     between the curve and the top edge of the section it belongs to. */
+  bottom: calc(100% - 1px);
+  height: calc(var(--arc-rise) + 1px);
+  border-start-start-radius: 50% 100%;
+  border-start-end-radius: 50% 100%;
+  pointer-events: none;
+  /* Sits over the tail of the section above. Equal z-index paints in tree
+     order, and this element comes later, so it wins without turning the
+     section into a stacking context. */
+  z-index: 1;
+}
+
+@layer components {
+  .plane-arc::before {
+    background-color: var(--plane-bg);
+  }
+}
+
+@media (min-width: 480px) {
+  :root { --arc-rise: 15px; }
+}
+@media (min-width: 640px) {
+  :root { --arc-rise: 26px; }
+}
+@media (min-width: 768px) {
+  :root { --arc-rise: 37px; }
+}
+@media (min-width: 1024px) {
+  :root { --arc-rise: 66px; }
+}
+@media (min-width: 1280px) {
+  :root { --arc-rise: 102px; }
+}
+@media (min-width: 1536px) {
+  :root { --arc-rise: 148px; }
+}
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
 .container-site {
   width: 100%;
   max-width: 1240px;
@@ -121,7 +344,7 @@ img {
 }
 .container-tight {
   width: 100%;
-  max-width: 880px;
+  max-width: 860px;
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
@@ -131,518 +354,743 @@ img {
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
-.section {
-  position: relative;
-  padding-block: 4.5rem;
-}
+
 @media (min-width: 768px) {
   .container-site,
   .container-tight,
   .container-wide {
     padding-inline: 2rem;
   }
-  .section {
-    padding-block: 6.5rem;
-  }
+  :root { --section-pad-y: 6.5rem; }
 }
 @media (min-width: 1200px) {
+  :root { --section-pad-y: 7.5rem; }
+}
+
+/* Section rhythm. The padding sits in @layer components so a py-* utility
+   can still tune a single section without a fight. */
+@layer components {
   .section {
-    padding-block: 7.5rem;
+    padding-block: var(--section-pad-y);
+  }
+  .section-sm {
+    padding-block: calc(var(--section-pad-y) * 0.62);
+  }
+  .section-lg {
+    padding-block: calc(var(--section-pad-y) * 1.35);
   }
 }
 
-/* ---------- SIGNATURE: the red rule bracket ---------- */
-/* Two hairline red rules bracketing wide-tracked caps, lifted
-   straight off the shop's logo lockup. Used for every eyebrow. */
-.rule-label {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--rule-color, var(--color-red));
+/* Edge to edge inside a padded page. Prefer putting full bleed photography
+   outside .container-site entirely, this is the escape hatch for when it has
+   to live inside one. */
+.bleed-out {
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
 }
-.rule-label::before,
-.rule-label::after {
-  content: "";
+
+/* ==========================================================================
+   THE MOTIF: THE DATUM RULE
+
+   A full width 1px hairline. The first 24px is solid cyan, the remainder is
+   whatever the current plane calls a rule. The markup never changes between
+   planes, the color comes from --plane-rule.
+
+   The two hard stops are a paint instruction, not a gradient in the design
+   sense. There is no blend anywhere in it.
+   ========================================================================== */
+
+.datum-rule {
   display: block;
-  height: 2px;
   width: 100%;
-  background: var(--rule-color, var(--color-red));
-}
-.rule-label > span {
-  padding-inline: 0.1em 0;
-}
-
-/* single top rule, for tighter spots */
-.rule-top {
-  border-top: 2px solid var(--color-red);
-  padding-top: 0.6rem;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  transform-origin: left center;
 }
 
-/* ---------- eyebrow (no rules) ---------- */
+@layer components {
+  .datum-rule {
+    background-color: transparent;
+    background-image: linear-gradient(
+      to right,
+      var(--color-cyan-500) 0,
+      var(--color-cyan-500) 24px,
+      var(--plane-rule) 24px,
+      var(--plane-rule) 100%
+    );
+  }
+}
+
+/* The draw. Resting state is fully drawn, so the rule is visible with
+   JavaScript off. The Reveal primitive sets data-draw="pending" in a
+   useLayoutEffect before paint and flips it to "in" on intersect. */
+.datum-rule[data-draw="pending"] {
+  transform: scaleX(0);
+}
+.datum-rule[data-draw="in"] {
+  transform: scaleX(1);
+  transition: transform 500ms var(--ease-out);
+}
+
+/* Section head: the rule, then its mono label riding under it at the left,
+   the way a callout rides a dimension line. */
+.datum-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.datum-label,
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.28em;
+  line-height: 1.4;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-muted);
-}
-.on-wall .eyebrow {
-  color: var(--color-dim);
 }
 
-/* ---------- display sizes ---------- */
+@layer components {
+  .datum-label,
+  .eyebrow {
+    color: var(--plane-muted);
+    text-align: left;
+  }
+}
+
+/* Plain hairline, no cyan, for rules inside a block. */
+.hairline {
+  height: 1px;
+  border: 0;
+  margin: 0;
+}
+@layer components {
+  .hairline {
+    background-color: var(--plane-rule);
+  }
+}
+
+/* ==========================================================================
+   TYPE
+
+   Display and body are both Archivo. The split that matters is Archivo
+   versus IBM Plex Mono: mono means a sourced fact. Mono sets prices,
+   coverage keys, spec values, the address, hours, warranty terms and
+   citations. It never sets a paragraph, a heading, a review quote or the
+   About section.
+   ========================================================================== */
+
+/* The brand voice in the type. Archivo pulled to width 82 and italic is
+   within a hair of the condensed italic wordmark on his shop banner, which
+   is how the logo shows up in the headings without ever setting the logo as
+   a headline. Display only. Never body, never mono, never a paragraph. */
+.display-condensed {
+  font-family: var(--font-display);
+  font-stretch: 82%;
+  font-style: italic;
+}
+
 .display-xl {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.75rem, 8vw, 5.75rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 7.6vw, 5.25rem);
+  line-height: 0.96;
+  letter-spacing: -0.028em;
 }
 .display-lg {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.875rem, 5.2vw, 3.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  font-weight: 700;
+  font-size: clamp(1.875rem, 5vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
 }
 .display-md {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
-  line-height: 1.06;
-  letter-spacing: -0.022em;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
 }
 .display-sm {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  font-size: clamp(1.1875rem, 2vw, 1.4375rem);
+  line-height: 1.18;
+  letter-spacing: -0.014em;
 }
 
-/* ---------- surfaces ---------- */
-.on-wall {
-  background: var(--color-ink);
-  color: var(--color-light-2);
-}
-.on-wall h1,
-.on-wall h2,
-.on-wall h3,
-.on-wall h4,
-.on-wall h5 {
-  color: var(--color-light);
+/* Opening paragraph. Body face, never mono. */
+.lede {
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 62ch;
 }
 
-.plate {
-  background: #fff;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-plate);
+.prose-block {
+  max-width: 68ch;
+}
+.prose-block p + p {
+  margin-top: 1.1em;
 }
 
-/* A paper plate sitting inside a dark band keeps paper type colors,
-   without this, .on-wall's heading rule bleaches headings inside the
-   hero's price card to near-white on white. */
-.on-wall .plate,
-.on-wall .plate-flat {
-  color: var(--color-body);
-}
-.on-wall .plate h1,
-.on-wall .plate h2,
-.on-wall .plate h3,
-.on-wall .plate h4,
-.on-wall .plate h5,
-.on-wall .plate-flat h1,
-.on-wall .plate-flat h2,
-.on-wall .plate-flat h3,
-.on-wall .plate-flat h4,
-.on-wall .plate-flat h5 {
-  color: var(--color-ink-text);
-}
-.plate-flat {
-  background: #fff;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-}
-.plate-dark {
-  background: var(--color-ink-2);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: var(--radius-sm);
-}
-
-/* card hover lift */
-.lift {
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out),
-    border-color 0.35s var(--ease-out);
-}
-.lift:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lift);
-  border-color: var(--color-red);
-}
-
-/* ---------- buttons ---------- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9375rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 0.95rem 1.6rem;
-  border-radius: var(--radius-xs);
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: background-color 0.2s var(--ease-out),
-    color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
-    transform 0.12s var(--ease-out);
-  text-align: center;
-  line-height: 1.1;
-}
-.btn:active {
-  transform: translateY(1px);
-}
-.btn-primary {
-  background: var(--color-red);
-  color: #fff;
-  border-color: var(--color-red);
-}
-.btn-primary:hover {
-  background: #c2151b;
-  border-color: #c2151b;
-}
-.btn-ink {
-  background: var(--color-ink);
-  color: #fff;
-  border-color: var(--color-ink);
-}
-.btn-ink:hover {
-  background: var(--color-red);
-  border-color: var(--color-red);
-}
-.btn-outline {
-  background: transparent;
-  color: var(--color-ink-text);
-  border-color: var(--color-ink-text);
-}
-.btn-outline:hover {
-  background: var(--color-ink-text);
-  color: #fff;
-}
-.btn-outline-light {
-  background: transparent;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.55);
-}
-.btn-outline-light:hover {
-  background: #fff;
-  color: var(--color-ink);
-  border-color: #fff;
-}
-.btn-sm {
-  padding: 0.65rem 1.1rem;
-  font-size: 0.8125rem;
-}
-.btn-lg {
-  padding: 1.1rem 2rem;
-  font-size: 1rem;
-}
-.btn-block {
-  width: 100%;
-}
-
-/* ---------- exhibition placard (photo caption) ---------- */
-.placard {
+/* The sourced fact voice. */
+.mono {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.placard-line {
-  display: flex;
-  gap: 0.55rem;
-  align-items: baseline;
-}
-.placard-line::before {
-  content: "";
-  width: 14px;
-  height: 2px;
-  background: var(--color-red);
-  flex: none;
-  transform: translateY(-3px);
-}
-
-/* ---------- price tokens ---------- */
-.price {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  letter-spacing: 0;
 }
-/* Colour defaults are wrapped in :where() so they carry zero specificity and
-   any text-* utility wins. Without this, .price and .num silently override
-   text-red and the ceramic column loses its accent. */
-/* These colour defaults sit in @layer components so Tailwind's utilities,
-   which live in the later @layer utilities, can override them. Unlayered CSS
-   beats any layered rule regardless of specificity, which is why text-red was
-   silently losing to .price before. */
+.mono-key {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
 @layer components {
-  .price {
-    color: var(--color-ink-text);
+  .mono-key {
+    color: var(--plane-mono);
+    text-align: left;
   }
-  .on-wall .price {
-    color: #fff;
-  }
-}
-.price-from {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-muted);
 }
 
-/* ---------- form fields ---------- */
-.field {
+/* Tone helpers. tone-pewter carries every honest negative on the site:
+   not included, quoted on your vehicle, confirmed at consultation.
+   Never red, never warning yellow. */
+@layer components {
+  .tone-muted { color: var(--plane-muted); }
+  .tone-pewter { color: var(--plane-pewter); }
+  .tone-cyan { color: var(--plane-link); }
+  .tone-heading { color: var(--plane-heading); }
+}
+
+/* ==========================================================================
+   RECORDS: the ruled key and value row, and the spec table
+
+   THE primitive behind every price table, coverage list, spec table and
+   warranty term on the site.
+   ========================================================================== */
+
+.kv-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-width: 0;
+  padding-block: 0.75rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+@layer components {
+  .kv-row {
+    border-bottom-color: var(--plane-rule);
+  }
+}
+
+.kv-key {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  min-width: 0;
+}
+@layer components {
+  .kv-key {
+    color: var(--plane-mono);
+    text-align: left;
+  }
+}
+
+.kv-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.5;
+  min-width: 0;
+}
+@layer components {
+  .kv-value {
+    color: var(--plane-heading);
+    text-align: right;
+  }
+}
+
+/* Wide tables get their own scroll wrapper. Read the min-width note at the
+   top of this file before using it inside a grid. */
+.table-scroll {
   width: 100%;
-  border-radius: var(--radius-xs);
-  background: #fff;
-  border: 1px solid var(--color-line);
-  padding: 0.8rem 0.95rem;
-  color: var(--color-ink-text);
-  font-size: 1rem;
-  transition: border-color 0.18s, box-shadow 0.18s;
-  font-family: var(--font-body);
-}
-.field::placeholder {
-  color: #a8a49d;
-}
-.field:focus {
-  outline: none;
-  border-color: var(--color-red);
-  box-shadow: 0 0 0 3px rgba(224, 27, 34, 0.14);
-}
-select.field {
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2375726c' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  padding-right: 2.2rem;
-}
-select.field:disabled {
-  background-color: var(--color-paper-2);
-  color: var(--color-muted);
-  cursor: not-allowed;
-}
-.field-label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-muted);
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
-/* ---------- data table ---------- */
-/* Grid and flex children default to min-width:auto, so a wide table makes
-   its own container inflate past the viewport instead of scrolling inside
-   it. These two rules make that structurally impossible sitewide. */
-.container-site > *,
-.container-wide > *,
-.container-tight > * {
-  min-width: 0;
-}
-[class*="grid-cols"] > *,
-.section [class*="col-span"] {
-  min-width: 0;
-}
-
-.data-table {
+.spec-table {
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
   font-size: 0.9375rem;
-  table-layout: auto;
 }
-.data-table th {
+.spec-table th {
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 2px solid var(--color-ink-text);
-  line-height: 1.35;
+  line-height: 1.4;
+  padding: 0.65rem 0.75rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
-@layer components {
-  .data-table th {
-    color: var(--color-muted);
-    text-align: left;
-  }
-}
-.data-table td {
+.spec-table td {
   padding: 0.85rem 0.75rem;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  vertical-align: baseline;
 }
-@layer components {
-  .data-table td {
-    color: var(--color-body);
-  }
-}
-.data-table tbody tr:hover {
-  background: var(--color-paper-2);
-}
-.data-table .num {
+.spec-table .num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   white-space: nowrap;
 }
 @layer components {
-  .data-table .num {
-    color: var(--color-ink-text);
+  .spec-table th {
+    color: var(--plane-muted);
+    border-bottom-color: var(--plane-border-strong);
+    text-align: left;
+  }
+  .spec-table td {
+    color: var(--plane-text);
+    border-bottom-color: var(--plane-rule);
+  }
+  .spec-table .num {
+    color: var(--plane-heading);
+    text-align: right;
+  }
+  .spec-table tbody tr:nth-child(even) {
+    background-color: var(--plane-stripe);
   }
 }
 
-/* ---------- misc ---------- */
-.hairline {
-  height: 1px;
-  border: 0;
-  background: var(--color-line);
+/* Price. Mono, because a price is a sourced fact. */
+.price {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  white-space: nowrap;
 }
-.hairline-red {
-  height: 2px;
-  border: 0;
-  background: var(--color-red);
+.price-from {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.4;
 }
-.link-underline {
-  color: var(--color-ink-text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--color-red);
-  text-decoration-thickness: 2px;
-  transition: color 0.18s;
-}
-.link-underline:hover {
-  color: var(--color-red);
+@layer components {
+  .price {
+    color: var(--plane-heading);
+  }
+  .price-from {
+    color: var(--plane-muted);
+  }
 }
 
+/* ==========================================================================
+   SURFACES
+   No card shadows, no gradients. A panel is a change of ground plus a
+   hairline, nothing else.
+   ========================================================================== */
+
+.panel {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-xs);
+  padding: 1.25rem;
+  min-width: 0;
+}
+.panel-flush {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-xs);
+  min-width: 0;
+}
+@layer components {
+  .panel,
+  .panel-flush {
+    background-color: var(--plane-panel);
+    border-color: var(--plane-rule);
+  }
+}
+
+/* Selected state for a package or tier. A 1px cyan stroke, never a fill. */
+@layer components {
+  .panel-active,
+  .panel-flush.panel-active {
+    border-color: var(--plane-chip);
+  }
+}
+
+/* Photography frame. Everything not cleared for full bleed caps here, the
+   Plate primitive enforces which ids those are. */
+.plate-frame {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 0;
+}
+.plate-frame img {
+  width: 100%;
+  height: auto;
+}
+@layer components {
+  .plate-frame {
+    border-color: var(--plane-rule);
+  }
+}
+
+.plate-caption {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  padding-top: 0.625rem;
+}
+@layer components {
+  .plate-caption {
+    color: var(--plane-muted);
+    text-align: left;
+  }
+}
+
+/* Legibility scrims for type set over photography. Neutral black only,
+   never a brand color, never decorative. */
 .scrim-b {
-  background: linear-gradient(
+  background-image: linear-gradient(
     180deg,
-    rgba(11, 11, 12, 0) 0%,
-    rgba(11, 11, 12, 0.15) 35%,
-    rgba(11, 11, 12, 0.72) 72%,
-    rgba(11, 11, 12, 0.95) 100%
+    rgba(10, 11, 9, 0) 0%,
+    rgba(10, 11, 9, 0.2) 40%,
+    rgba(10, 11, 9, 0.78) 76%,
+    rgba(10, 11, 9, 0.96) 100%
   );
 }
 .scrim-l {
-  background: linear-gradient(
+  background-image: linear-gradient(
     100deg,
-    rgba(11, 11, 12, 0.94) 0%,
-    rgba(11, 11, 12, 0.82) 34%,
-    rgba(11, 11, 12, 0.4) 62%,
-    rgba(11, 11, 12, 0.12) 100%
+    rgba(10, 11, 9, 0.94) 0%,
+    rgba(10, 11, 9, 0.8) 34%,
+    rgba(10, 11, 9, 0.42) 62%,
+    rgba(10, 11, 9, 0.1) 100%
   );
 }
 
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
-  mix-blend-mode: overlay;
+/* Chip. 1px stroke, mono label, no fill. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.375rem 0.6rem;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+}
+@layer components {
+  .chip {
+    background-color: transparent;
+    border-color: var(--plane-chip);
+    color: var(--plane-heading);
+  }
+  .chip-quiet {
+    border-color: var(--plane-rule);
+    color: var(--plane-muted);
+  }
 }
 
-/* slow cinematic drift on hero stills */
-@keyframes slow-zoom {
-  from {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1.13);
-  }
+/* ==========================================================================
+   ACTIONS
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  font-stretch: 100%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  padding: 0.95rem 1.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+    transform 0.12s var(--ease-out);
 }
-.slow-zoom {
-  animation: slow-zoom 24s ease-out forwards;
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-sm {
+  padding: 0.6rem 1rem;
+  font-size: 0.8125rem;
+}
+.btn-lg {
+  padding: 1.1rem 1.9rem;
+  font-size: 1rem;
+}
+.btn-block {
+  width: 100%;
 }
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
+@layer components {
+  .btn {
+    text-align: center;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  /* The only solid cyan on the site, and only one per screen. */
+  .btn-primary {
+    background-color: var(--color-cyan-500);
+    border-color: var(--color-cyan-500);
+    color: var(--color-shop-000);
   }
-}
-.fade-up {
-  animation: fade-up 0.7s var(--ease-out) both;
+  .btn-primary:hover {
+    background-color: var(--color-cyan-300);
+    border-color: var(--color-cyan-300);
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    border-color: var(--plane-border-strong);
+    color: var(--plane-heading);
+  }
+  .btn-outline:hover {
+    background-color: var(--plane-heading);
+    color: var(--plane-bg);
+    border-color: var(--plane-heading);
+  }
 }
 
-/* ---------- scroll reveals ----------
-   These states are applied by JS after mount (see components/ui/Reveal.tsx),
-   never server rendered, so content is visible even if scripting fails. */
+/* Inline link. Underlined at all times, cyan on the plane's own terms. */
+.link-inline {
+  text-decoration-line: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.18s var(--ease-out);
+}
+@layer components {
+  .link-inline {
+    color: var(--plane-link);
+    text-decoration-color: var(--plane-rule);
+  }
+  .link-inline:hover {
+    text-decoration-color: var(--plane-link);
+  }
+}
+
+/* "Quoted on your vehicle". Every service without a published price ends
+   here, tappable, never a dead grey label. */
+.quote-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-decoration-line: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  min-height: 44px;
+}
+@layer components {
+  .quote-link {
+    color: var(--plane-link);
+    text-decoration-color: var(--plane-rule);
+    text-align: left;
+  }
+  .quote-link:hover {
+    text-decoration-color: var(--plane-link);
+  }
+}
+
+/* WCAG 2.2 target size, 24 by 24 CSS pixels, for a small link.
+
+   The footer's mono and 15px links sit on a 16px to 20px line box, which
+   is a real box under the minimum, not a rounding error. This gives them
+   a real 24px box rather than an invisible pseudo element, because a hit
+   area a measuring tool cannot see is a fix nobody can check. The type
+   does not move: the label is centred in the taller box, and the two
+   lists that use it drop their gap by the same 8px the boxes gained.
+
+   `display` is layered on purpose. The footer phone number is `block` and
+   right aligned inside its record row, and a Tailwind display utility has
+   to keep winning against this. Everything else has no display utility,
+   so it takes the inline-flex and shrinks to its label. */
+.tap-24 {
+  min-height: 1.5rem;
+}
+@layer components {
+  .tap-24 {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   FORM FIELDS
+   The quote form is inline on the page, so these are used on both planes.
+   ========================================================================== */
+
+.field {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.4;
+  padding: 0.8rem 0.9rem;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-xs);
+  transition: border-color 0.18s var(--ease-out),
+    box-shadow 0.18s var(--ease-out);
+}
+.field:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--plane-focus) 24%, transparent);
+}
+select.field {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.2rem;
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+}
+textarea.field {
+  min-height: 7.5rem;
+  resize: vertical;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.field-hint {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  margin-top: 0.35rem;
+}
+
+@layer components {
+  .field {
+    background-color: var(--plane-field-bg);
+    border-color: var(--plane-rule);
+    color: var(--plane-heading);
+    text-align: left;
+  }
+  .field::placeholder {
+    color: var(--plane-muted);
+  }
+  .field:focus {
+    border-color: var(--plane-focus);
+  }
+  select.field {
+    /* stroke matches --color-ink-400, the mono metadata color */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235E686D' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+  .field-label {
+    color: var(--plane-muted);
+    text-align: left;
+  }
+  .field-hint {
+    color: var(--plane-pewter);
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   REVEALS
+
+   Applied by JS after mount, never server rendered. With JavaScript off,
+   nothing here ever runs and every element is simply visible. Do not add an
+   opacity: 0 resting state to any selector in this file.
+   ========================================================================== */
+
 [data-reveal="pending"] {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(16px);
 }
 [data-reveal="in"] {
   opacity: 1;
   transform: none;
-  transition:
-    opacity 0.6s var(--ease-out) var(--reveal-delay, 0s),
+  transition: opacity 0.6s var(--ease-out) var(--reveal-delay, 0s),
     transform 0.6s var(--ease-out) var(--reveal-delay, 0s);
 }
 
 .reveal-group[data-reveal="pending"] > * {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(18px);
 }
 .reveal-group[data-reveal="in"] > * {
   opacity: 1;
   transform: none;
-  transition:
-    opacity 0.6s var(--ease-out),
-    transform 0.6s var(--ease-out);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
 }
-.reveal-group[data-reveal="in"] > *:nth-child(2) {
-  transition-delay: 0.07s;
+.reveal-group[data-reveal="in"] > *:nth-child(2) { transition-delay: 0.07s; }
+.reveal-group[data-reveal="in"] > *:nth-child(3) { transition-delay: 0.14s; }
+.reveal-group[data-reveal="in"] > *:nth-child(4) { transition-delay: 0.21s; }
+.reveal-group[data-reveal="in"] > *:nth-child(5) { transition-delay: 0.28s; }
+.reveal-group[data-reveal="in"] > *:nth-child(n + 6) { transition-delay: 0.35s; }
+
+/* ==========================================================================
+   MOBILE OVERFLOW GUARDS
+
+   Grid and flex children default to min-width: auto, so a wide child makes
+   its own container inflate past the viewport instead of scrolling inside
+   it. With overflow-x hidden the symptom is invisible in a numeric audit
+   while the columns are simply gone off screen on a phone. These two rules
+   make that structurally impossible sitewide, but put min-width: 0 on your
+   own grid and flex children too rather than relying on the selector match.
+   ========================================================================== */
+
+.container-site > *,
+.container-tight > *,
+.container-wide > * {
+  min-width: 0;
 }
-.reveal-group[data-reveal="in"] > *:nth-child(3) {
-  transition-delay: 0.14s;
-}
-.reveal-group[data-reveal="in"] > *:nth-child(4) {
-  transition-delay: 0.21s;
-}
-.reveal-group[data-reveal="in"] > *:nth-child(5) {
-  transition-delay: 0.28s;
-}
-.reveal-group[data-reveal="in"] > *:nth-child(6) {
-  transition-delay: 0.35s;
-}
-.reveal-group[data-reveal="in"] > *:nth-child(n + 7) {
-  transition-delay: 0.42s;
+[class*="grid-cols"] > *,
+[class*="col-span"] {
+  min-width: 0;
 }
 
-/* hide scrollbar on horizontal rails */
+/* Horizontal rails without a visible scrollbar. */
 .no-bar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -650,73 +1098,6 @@ select.field:disabled {
 }
 .no-bar::-webkit-scrollbar {
   display: none;
-}
-
-/* ---------- shade selector range ---------- */
-.shade-range {
-  appearance: none;
-  -webkit-appearance: none;
-  height: 22px;
-  background: transparent;
-  cursor: pointer;
-}
-.shade-range::-webkit-slider-runnable-track {
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-slate) 100%);
-}
-.shade-range::-moz-range-track {
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-slate) 100%);
-}
-.shade-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  margin-top: -8.5px;
-  height: 20px;
-  width: 10px;
-  border-radius: 2px;
-  background: var(--color-red);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  transition: transform 0.15s var(--ease-out);
-}
-.shade-range::-moz-range-thumb {
-  height: 20px;
-  width: 10px;
-  border-radius: 2px;
-  background: var(--color-red);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-.shade-range:active::-webkit-slider-thumb {
-  transform: scaleY(1.2);
-}
-
-/* ---------- work ticker ---------- */
-.ticker {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-}
-.ticker-track {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
-  white-space: nowrap;
-  animation: ticker-scroll 46s linear infinite;
-}
-.ticker:hover .ticker-track {
-  animation-play-state: paused;
-}
-@keyframes ticker-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -727,5 +1108,11 @@ select.field:disabled {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .datum-rule[data-draw="pending"] {
+    transform: none;
   }
 }

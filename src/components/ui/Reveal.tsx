@@ -1,111 +1,85 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { useEnterOnce } from "./useEnterOnce";
+import "./primitives.css";
 
 /**
- * Scroll-in reveals.
+ * The safe scroll reveal.
  *
- * The important property here is that the hidden state is NEVER server
- * rendered. An earlier version used framer-motion's `initial` + `whileInView`
- * with `once: true`, which shipped `opacity: 0` inline in the static HTML and
- * left the content dependent on one IntersectionObserver callback firing. If
- * JS failed, hydration stalled, or that single callback was missed, published
- * pricing simply never appeared.
+ * READ THIS BEFORE HAND ROLLING MOTION ANYWHERE ON THIS SITE.
  *
- * Now the markup renders visible, and JS *adds* the pre-animation state in a
- * layout effect (before paint, so there is no flash) then removes it when the
- * element scrolls in. Worst case for any failure is that content is visible
- * with no animation, which is the correct way round.
+ * `initial={{opacity:0}}` plus `whileInView` plus `viewport={{once:true}}`
+ * server renders `style="opacity:0"` into the static HTML. The content
+ * then exists only if one IntersectionObserver callback fires. On the
+ * previous build that hid every coating tier and its price on the page
+ * whose only job was quoting them, and it shipped that way for weeks
+ * because it looks fine in a browser with working JavaScript.
+ *
+ * This component renders its children visible. The pre-animation state
+ * is ADDED by JS in a layout effect, before paint so there is no flash,
+ * and removed on intersect. Under prefers-reduced-motion it does nothing
+ * at all. See useEnterOnce.ts for the full failure table.
+ *
+ * Verify by loading any page with JavaScript disabled: every price, every
+ * coverage line and every warranty term must be on the screen.
  */
-
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
-function useReveal<T extends HTMLElement>(delay = 0) {
-  const ref = useRef<T>(null);
-
-  useIsoLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // Respect reduced motion, and never hide content we cannot observe.
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      !("IntersectionObserver" in window)
-    ) {
-      return;
-    }
-
-    if (delay) el.style.setProperty("--reveal-delay", `${delay}s`);
-    el.dataset.reveal = "pending";
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            el.dataset.reveal = "in";
-            io.disconnect();
-          }
-        }
-      },
-      { rootMargin: "0px 0px -60px 0px" }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [delay]);
-
-  return ref;
-}
-
 export default function Reveal({
   children,
   delay = 0,
   className,
+  id,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
+  /** seconds */
   delay?: number;
-  /** kept for API compatibility; distance is set in CSS */
-  y?: number;
   className?: string;
+  id?: string;
 }) {
-  const ref = useReveal<HTMLDivElement>(delay);
+  const ref = useEnterOnce<HTMLDivElement>("data-ps-reveal", delay);
   return (
-    <div ref={ref} className={className}>
+    <div id={id} ref={ref} className={className}>
       {children}
     </div>
   );
 }
 
 /**
- * Staggers its children off a single observer, so a row of cards reads as one
- * gesture. The per-child delay is pure CSS (nth-child), which keeps the DOM
- * free of any index bookkeeping.
+ * Staggers its direct children off a single observer, so a row of tiers
+ * reads as one gesture rather than six. The per child delay is pure CSS
+ * nth-child, so there is no index bookkeeping in the DOM and no risk of
+ * a child being left behind in the hidden state.
  */
 export function RevealGroup({
   children,
   className,
+  id,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
-  /** kept for API compatibility; cadence is set in CSS */
-  stagger?: number;
+  id?: string;
 }) {
-  const ref = useReveal<HTMLDivElement>();
+  const ref = useEnterOnce<HTMLDivElement>("data-ps-reveal");
   return (
-    <div ref={ref} className={`reveal-group ${className ?? ""}`}>
+    <div id={id} ref={ref} className={cn("ps-reveal-group", className)}>
       {children}
     </div>
   );
 }
 
-/** A child of RevealGroup. Purely structural; the parent drives the motion. */
+/**
+ * A direct child of RevealGroup. Purely structural, the parent drives the
+ * motion. Kept so a group can wrap fragments without losing the stagger.
+ */
 export function RevealItem({
   children,
   className,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
-  y?: number;
 }) {
   return <div className={className}>{children}</div>;
 }
+
+export { Reveal };

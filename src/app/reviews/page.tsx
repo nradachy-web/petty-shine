@@ -1,127 +1,225 @@
 import type { Metadata } from "next";
-import { Star, ExternalLink } from "lucide-react";
-import PageHero from "@/components/sections/PageHero";
+
+import QuoteForm from "@/components/quote/QuoteForm";
+import PhoneLink from "@/components/tracking/PhoneLink";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { Section, SectionHead, Prose } from "@/components/ui/Section";
-import CTABand from "@/components/sections/CTABand";
-import { BRAND, RATING, REVIEWS } from "@/lib/constants";
+import Button from "@/components/ui/Button";
+import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
+import Plate from "@/components/ui/Plate";
+import Section, { SectionHead } from "@/components/ui/Section";
+import { BRAND, REVIEWS, REVIEW_SUMMARY } from "@/lib/constants";
+import { longDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Customer Reviews, 5.0 Across 105 Google Reviews",
-  description:
-    "5.0 from 105 Google reviews as of August 2026, and 98% recommend on Facebook from 41 reviews. Verbatim customer reviews of HD Auto Studio in Whitmore Lake, Michigan.",
+  title: "Reviews",
+  description: `What customers of Petty Shine in ${BRAND.city}, ${BRAND.stateName} wrote on Google, quoted in full with the spelling and punctuation left exactly as written.`,
   alternates: { canonical: "/reviews/" },
 };
+
+/* ============================================================================
+   NO REVIEW MARKUP ON THIS PAGE, ON PURPOSE.
+
+   Google treats review and aggregateRating markup about your own business,
+   published on your own site, as self serving. It is ineligible for a rich
+   result and has been since 2019. Emitting it would add risk and buy nothing,
+   so this page carries breadcrumbs and nothing else, and the rating below is
+   presented as what it is: a number read off his Google profile on a stated
+   date.
+
+   The quotes are verbatim. The capitalisation, the run on sentences and the
+   missing full stops are the customers' own and are left alone, because a
+   tidied up review is not a quote any more.
+   ========================================================================== */
+
+/**
+ * One presentation of the check date, used everywhere it appears on this
+ * page. It used to print as the raw ISO string in the table and as a written
+ * date in the footnote, which read as two different readings of the profile.
+ * The ISO string in constants.ts is storage, not display.
+ */
+const CHECKED = longDate(REVIEW_SUMMARY.checkedOn);
+
+/** Derived from the spine, so these can never drift from the quotes below. */
+const COATING_JOBS = REVIEWS.filter((r) =>
+  r.service.toLowerCase().includes("ceramic")
+).length;
+
+const NAME_HIM = REVIEWS.filter((r) => r.text.includes(BRAND.owner.split(" ")[0])).length;
 
 export default function ReviewsPage() {
   return (
     <>
-      <Breadcrumbs trail={[{ label: "Reviews", href: "/reviews/" }]} />
+      <Breadcrumbs plane="sheet" trail={[{ label: "Reviews", href: "/reviews/" }]} />
 
-      <PageHero
-        eyebrow="Reputation"
-        title={
-          <>
-            5.0 across
-            <br />
-            105 Google reviews
-          </>
-        }
-        sub="103 of them are five stars, one is four, and one is one. That last one is a complaint about how long a windshield took. We're leaving all three numbers on the page."
-        photo="tint-chevelle-blue"
-        compact
-        ctaLabel="Get your quote"
-      />
+      <Section plane="sheet" label="Reviews">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-6">
+            <h1 className="ps-display ps-display-lg">What customers said</h1>
 
-      <Section>
-        <div className="grid gap-8 sm:grid-cols-3">
-          {[
-            { n: RATING.value.toFixed(1), l: `Google rating · ${RATING.count} reviews` },
-            { n: `${RATING.fiveStar}`, l: "five-star reviews" },
-            {
-              n: `${RATING.facebook.recommendPct}%`,
-              l: `recommend on Facebook · ${RATING.facebook.count} reviews`,
-            },
-          ].map((s) => (
-            <div key={s.l} className="plate p-6">
-              <p className="price text-[3rem] leading-none">{s.n}</p>
-              <p className="mt-3 font-mono text-[0.625rem] uppercase leading-relaxed tracking-[0.14em] text-muted">
-                {s.l}
+            <div className="ps-prose mt-6">
+              <p>
+                {REVIEWS.length} reviews are quoted on this page, in full, with
+                the spelling and the punctuation left exactly as they were
+                written. Nothing is trimmed to the good part.
+              </p>
+              <p>
+                The rating beside them is not ours. It is what his Google
+                profile showed on the date in the table, and review counts
+                move, so treat it as a reading rather than a badge.
               </p>
             </div>
-          ))}
+
+            <div className="mt-8">
+              <a
+                href={BRAND.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ps-btn ps-btn--ghost ps-btn--sm"
+              >
+                Read them on Google
+              </a>
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:col-span-6">
+            <KeyValueList capped label="Google profile">
+              <KeyValueRow
+                k="Rating"
+                v={`${REVIEW_SUMMARY.rating} out of 5`}
+                strong
+              />
+              <KeyValueRow k="Reviews" v={String(REVIEW_SUMMARY.count)} />
+              <KeyValueRow k="Source" v={REVIEW_SUMMARY.source} />
+              <KeyValueRow
+                k="Checked"
+                v={CHECKED}
+                tone="pewter"
+                note="Read off the profile, not calculated here"
+              />
+              <KeyValueRow
+                k="Quoted here"
+                v={`${REVIEWS.length} in full`}
+                tone="pewter"
+              />
+            </KeyValueList>
+          </div>
         </div>
-        <p className="mt-6 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted">
-          Figures verified {RATING.asOf}. Reviews below are transcribed verbatim,
-          including the typos.
-        </p>
       </Section>
 
-      <Section tone="paper-2">
+      <Section plane="shop" label="In their words" className="plane-arc">
         <SectionHead
-          eyebrow="In their words"
-          title="Reviews, unedited."
-          intro="Pulled from the Google Business Profile. We haven't tidied the grammar or cut the parts that don't flatter us."
+          size="md"
+          align="split"
+          title="In their own words."
+          intro={
+            <p>
+              {COATING_JOBS} of the {REVIEWS.length} are coating jobs and the
+              rest are detailing. {NAME_HIM} of them name{" "}
+              {BRAND.owner.split(" ")[0]} rather than the shop.
+            </p>
+          }
         />
 
-        <div className="mt-10 columns-1 gap-5 md:columns-2 lg:columns-3">
-          {REVIEWS.map((r) => (
-            <figure key={r.name} className="plate mb-5 break-inside-avoid p-6">
-              <span className="flex" aria-hidden>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-star text-star" />
-                ))}
-              </span>
-              <blockquote className="mt-4 text-[0.9375rem] leading-relaxed text-body">
-                &ldquo;{r.text}&rdquo;
-              </blockquote>
-              <figcaption className="mt-5 border-t border-line pt-4">
-                <span className="block font-display text-sm font-bold uppercase tracking-wide text-ink-text">
-                  {r.name}
+        <div className="mt-10">
+          <Plate
+            id="coating-g-wagon"
+            caption="Mercedes-Benz G-Class, coated"
+            bleed
+          />
+        </div>
+
+        <div className="mt-12 min-w-0 border-b border-rule-dark">
+          {REVIEWS.map((review) => (
+            <figure
+              key={review.name}
+              className="grid min-w-0 gap-4 border-t border-rule-dark py-8 md:grid-cols-12 md:gap-10 md:py-10"
+            >
+              <figcaption className="min-w-0 md:col-span-4">
+                <span className="block h-px w-6 bg-cyan-500" aria-hidden />
+                <span className="ps-heading mt-4 block text-lg text-spec-000">
+                  {review.name}
                 </span>
-                <span className="mt-0.5 block font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted">
-                  {r.meta} · {r.when}
+                <span className="mt-3 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-300">
+                  {review.stars} of 5
+                </span>
+                <span className="mt-1 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-pewter">
+                  {review.service}
                 </span>
               </figcaption>
+
+              <blockquote className="min-w-0 md:col-span-8">
+                <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-spec-000">
+                  {review.text}
+                </p>
+              </blockquote>
             </figure>
           ))}
         </div>
 
-        <a
-          href={BRAND.mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-ink mt-6 inline-flex"
-        >
-          Read all {RATING.count} on Google
-          <ExternalLink className="h-4 w-4" aria-hidden />
-        </a>
+        <p className="cta-meta mt-8">
+          Quoted verbatim from Google, {CHECKED}
+        </p>
       </Section>
 
-      <Section>
-        <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <SectionHead eyebrow="How we ask" title="No gates, no incentives." />
+      <Section plane="sheet" label="Next step" className="plane-arc">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              size="md"
+              title="Been here before?"
+              intro={
+                <p>
+                  If we did work on your vehicle, the review goes on the same
+                  Google profile the rating above came from. Say what you
+                  brought in and what we did to it, because that is the part
+                  the next person reads.
+                </p>
+              }
+            />
+
+            <div className="mt-7">
+              <a
+                href={BRAND.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ps-btn ps-btn--ghost"
+              >
+                Leave a review on Google
+              </a>
+            </div>
+
+            <PhoneLink
+              placement="reviews-page"
+              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
+            >
+              <span className="min-w-0">
+                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                  Call the shop
+                </span>
+                <span className="mt-1 block font-mono text-2xl tabular-nums text-ink-900">
+                  {BRAND.phoneDisplay}
+                </span>
+              </span>
+              <span className="h-px w-6 flex-none bg-cyan-500" aria-hidden />
+            </PhoneLink>
+
+            <div className="mt-7">
+              <Button href="/gallery/" tone="ghost" size="sm">
+                See the work
+              </Button>
+            </div>
           </div>
-          <div className="md:col-span-7">
-            <Prose>
-              <p>
-                Every customer gets the same request after pickup, with a direct link.
-                We don&apos;t pre-screen anyone with a satisfaction survey, we
-                don&apos;t route unhappy customers somewhere private, and we
-                don&apos;t offer discounts or free add-ons in exchange for a review.
-              </p>
-              <p>
-                All three of those are against Google&apos;s policies, and all three
-                are common in this trade. A five-star average built that way
-                isn&apos;t worth anything to you as a buyer.
-              </p>
-            </Prose>
+
+          <div className="min-w-0 lg:col-span-7">
+            <QuoteForm
+              heading="Get a price for your vehicle"
+              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              source="/reviews/"
+              id="quote-form"
+            />
           </div>
         </div>
       </Section>
-
-      <CTABand />
     </>
   );
 }

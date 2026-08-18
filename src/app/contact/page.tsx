@@ -1,165 +1,163 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Phone, Mail, MapPin, Clock, MessageSquare, Car } from "lucide-react";
+
+import QuoteForm from "@/components/quote/QuoteForm";
+import PhoneLink from "@/components/tracking/PhoneLink";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { Section, SectionHead, Prose } from "@/components/ui/Section";
-import RuleLabel from "@/components/ui/RuleLabel";
-import Photo from "@/components/ui/Photo";
-import { BRAND, CITIES, SEO } from "@/lib/constants";
+import Button from "@/components/ui/Button";
+import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
+import Plate from "@/components/ui/Plate";
+import Section, { SectionHead } from "@/components/ui/Section";
+import { BRAND, CITIES, NEAREST_EXIT } from "@/lib/constants";
+import { driveTimeShort, milesLong, milesShort } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Contact and Directions | 10170 Industrial Dr, Whitmore Lake MI 48189",
-  description: SEO.contact.description,
+  title: "Contact and Directions",
+  description: `Petty Shine is at ${BRAND.addressLine}. Call ${BRAND.phoneDisplay} or send your vehicle through for a price. Open ${BRAND.hoursShort}.`,
   alternates: { canonical: "/contact/" },
 };
+
+/** CITIES is already ordered by measured road distance from the shop door. */
+const NEARBY = CITIES.slice(0, 8);
 
 export default function ContactPage() {
   return (
     <>
-      <Breadcrumbs trail={[{ label: "Contact", href: "/contact/" }]} />
+      <Breadcrumbs plane="sheet" trail={[{ label: "Contact", href: "/contact/" }]} />
 
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <RuleLabel>Contact</RuleLabel>
-            <h1 className="display-lg mt-6">Talk to the shop</h1>
-            <p className="mt-5 leading-relaxed text-body">
-              You get Justin, not a call centre. Text is often fastest, send a photo
-              of the vehicle with what you want done and you&apos;ll usually have a
-              number back the same day.
-            </p>
+      <Section plane="sheet" label="Contact">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <h1 className="ps-display ps-display-lg">Come by the shop.</h1>
 
-            <div className="mt-9 space-y-3">
-              <a
-                href={`tel:${BRAND.phoneTel}`}
-                className="plate flex items-center gap-4 p-5 transition-colors hover:border-red"
-              >
-                <Phone className="h-5 w-5 shrink-0 text-red" aria-hidden />
-                <span>
-                  <span className="block font-display text-xl font-bold uppercase tracking-tight text-ink-text">
-                    {BRAND.phoneDisplay}
-                  </span>
-                  <span className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted">
-                    Call or text
-                  </span>
+            <div className="ps-prose mt-6">
+              <p>
+                Call and talk it through, or send the vehicle through the form
+                and we will come back with a price for it.
+              </p>
+            </div>
+
+            <PhoneLink
+              placement="contact-page"
+              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
+            >
+              <span className="min-w-0">
+                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
+                  Call the shop
                 </span>
-              </a>
-
-              <a
-                href={`sms:${BRAND.phoneTel}`}
-                className="plate flex items-center gap-4 p-5 transition-colors hover:border-red"
-              >
-                <MessageSquare className="h-5 w-5 shrink-0 text-red" aria-hidden />
-                <span>
-                  <span className="block font-display text-lg font-bold uppercase tracking-tight text-ink-text">
-                    Send a text
-                  </span>
-                  <span className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted">
-                    Photos welcome
-                  </span>
+                <span className="mt-1 block font-mono text-2xl tabular-nums text-ink-900">
+                  {BRAND.phoneDisplay}
                 </span>
-              </a>
+              </span>
+              <span className="h-px w-6 flex-none bg-cyan-500" aria-hidden />
+            </PhoneLink>
 
+            <KeyValueList className="mt-8" label="Shop details">
+              <KeyValueRow k="Address" v={BRAND.street} />
+              <KeyValueRow k="City" v={`${BRAND.city}, ${BRAND.state} ${BRAND.zip}`} />
+              <KeyValueRow k="County" v={BRAND.county} tone="pewter" />
+              {BRAND.hours.map((h) => (
+                <KeyValueRow key={h.days} k={h.days} v={h.time} />
+              ))}
+              <KeyValueRow k="Nearest exit" v={NEAREST_EXIT.label} />
+              <KeyValueRow
+                k="From the exit"
+                v={milesLong(NEAREST_EXIT.miles)}
+                tone="pewter"
+              />
+            </KeyValueList>
+
+            <div className="mt-6">
               <a
-                href={`mailto:${BRAND.email}`}
-                className="plate flex items-center gap-4 p-5 transition-colors hover:border-red"
+                href={BRAND.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ps-btn ps-btn--ghost ps-btn--sm"
               >
-                <Mail className="h-5 w-5 shrink-0 text-red" aria-hidden />
-                <span className="min-w-0">
-                  <span className="block break-all font-display text-base font-bold uppercase leading-tight tracking-tight text-ink-text sm:text-lg">
-                    {BRAND.email}
-                  </span>
-                  <span className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted">
-                    Email the shop
-                  </span>
-                </span>
+                Open in Google Maps
               </a>
+            </div>
 
-              <Link href="/quote/" className="btn btn-primary btn-lg btn-block">
-                <Car className="h-4 w-4" aria-hidden />
-                Build a quote instead
-              </Link>
+            <div className="ps-prose mt-7">
+              <p>
+                The shop is on Branson Mill Road in {BRAND.city}. The closest
+                interchange is {NEAREST_EXIT.label},{" "}
+                {milesLong(NEAREST_EXIT.miles)} out.
+              </p>
             </div>
           </div>
 
-          <div className="lg:col-span-7">
-            <div className="aspect-[16/10] overflow-hidden bg-graphite">
-              <Photo id="shop-exterior" sizes="(min-width: 1024px) 60vw, 100vw" />
-            </div>
-
-            <div className="mt-6 grid gap-px bg-line sm:grid-cols-2">
-              <div className="bg-white p-6">
-                <h2 className="flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
-                  <MapPin className="h-4 w-4 text-red" aria-hidden /> The shop
-                </h2>
-                <address className="mt-4 not-italic leading-relaxed text-ink-text">
-                  {BRAND.street}
-                  <br />
-                  {BRAND.city}, {BRAND.state} {BRAND.zip}
-                </address>
-                <a
-                  href={BRAND.mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline mt-4 inline-block text-[0.875rem]"
-                >
-                  Directions on Google Maps
-                </a>
-              </div>
-
-              <div className="bg-white p-6">
-                <h2 className="flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
-                  <Clock className="h-4 w-4 text-red" aria-hidden /> Hours
-                </h2>
-                <dl className="mt-4 space-y-2 text-[0.9375rem]">
-                  {BRAND.hours.map((h) => (
-                    <div key={h.days}>
-                      <dt className="font-medium text-ink-text">{h.days}</dt>
-                      <dd className="text-muted">{h.time}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </div>
-
-            <Prose className="mt-8 max-w-none">
-              <h3>Dropping off</h3>
-              <p>
-                All work is by appointment so every vehicle gets the time it needs.
-                Shorter services, most front-window tint, you can wait for in the
-                lobby. Longer work stays with us for the day or overnight.
-              </p>
-              <p>
-                For after-hours drop-off, park in the rear lot and use the secure key
-                drop box on the side of the building. For after-hours pickup we&apos;ll
-                give you a code to get your keys.
-              </p>
-            </Prose>
+          <div className="min-w-0 lg:col-span-7">
+            <QuoteForm
+              heading="Send us the vehicle"
+              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              source="/contact/"
+              id="quote-form"
+            />
           </div>
         </div>
       </Section>
 
-      <Section tone="paper-2">
-        <SectionHead
-          eyebrow="Getting here"
-          title="Measured from each town centre."
-          intro="We're just off Main Street in Whitmore Lake, minutes from US-23."
-        />
-        <div className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {CITIES.map((c) => (
-            <div key={c.slug} className="bg-paper-2 p-5">
-              <span className="font-display text-lg font-bold uppercase tracking-tight text-ink-text">
-                {c.name}
-              </span>
-              <span className="mt-2 block font-mono text-[0.625rem] uppercase tracking-[0.14em] text-red">
-                {c.miles} mi · about {c.minutes} min
-              </span>
-              <span className="mt-2 block text-[0.8125rem] leading-snug text-muted">
-                {c.route}
-              </span>
+      <Section plane="shop" label="The shop">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-end lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              title="One building, one address."
+              intro={
+                <p>
+                  Every photo on this site is a real job that came through here.
+                  No stock photography anywhere on it.
+                </p>
+              }
+            />
+            <div className="mt-7">
+              <Button href="/gallery/" tone="ghost">
+                See the work
+              </Button>
             </div>
-          ))}
-          <div className="hidden bg-paper-2 sm:block" aria-hidden />
+          </div>
+
+          <div className="min-w-0 lg:col-span-7">
+            <Plate
+              id="detail-jeep-orange"
+              caption="Inside the shop, Randleman NC"
+              sizes="(min-width: 1024px) 45rem, 100vw"
+            />
+          </div>
+        </div>
+      </Section>
+
+      <Section plane="sheet" label="Getting here">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              size="md"
+              title="Measured, not estimated."
+              intro={
+                <p>
+                  Road distance and drive time from the shop door, along the
+                  route people actually take.
+                </p>
+              }
+            />
+            <div className="mt-7">
+              <Button href="/areas/" tone="ghost" size="sm">
+                Every town we cover
+              </Button>
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:col-span-7">
+            <KeyValueList label="Drive times from the shop">
+              {NEARBY.map((c) => (
+                <KeyValueRow
+                  key={c.slug}
+                  k={c.name}
+                  v={`${milesShort(c.miles)}, about ${driveTimeShort(c.minutes)}`}
+                  note={c.route}
+                />
+              ))}
+            </KeyValueList>
+          </div>
         </div>
       </Section>
     </>

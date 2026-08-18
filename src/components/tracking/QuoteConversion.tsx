@@ -1,18 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { gtagEvent, adsConversion } from "@/lib/gtag";
-import { GADS } from "@/lib/constants";
+import { flushQuoteConversion } from "@/lib/gtag";
 
 /**
- * /thank-you is only reachable after a successful quote submit, so mounting
- * here is the form-lead conversion trigger. Fires on both SPA navigation
- * from the form and a direct page load.
+ * Mounted on /thank-you/ only.
+ *
+ * The quote form already fires the conversion the moment Web3Forms accepts
+ * the lead. This is the safety net for the case where the form fired before
+ * gtag.js was ready to receive it: flushQuoteConversion() fires only when a
+ * submit was recorded in this session and not yet counted.
+ *
+ * A bookmark, a reload, or someone landing on /thank-you/ directly fires
+ * nothing. The old site's version fired on every mount, which is how a
+ * conversion column fills up with visits that were never leads.
  */
 export default function QuoteConversion() {
   useEffect(() => {
-    adsConversion(GADS.labels.quoteForm);
-    gtagEvent("generate_lead", { form: "quote" });
+    flushQuoteConversion();
   }, []);
+
   return null;
 }

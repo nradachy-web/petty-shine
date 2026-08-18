@@ -1,212 +1,491 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, ChevronDown, MapPin } from "lucide-react";
 import { BRAND, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Wordmark from "./Wordmark";
-import ScrollProgress from "@/components/fx/ScrollProgress";
+import { trackCall } from "./callTracking";
+
+/**
+ * THE HEADER IS THE BANNER.
+ *
+ * His shop banner is a black field carrying the cyan wordmark, the phone
+ * number, and RESTORE PROTECT RESTYLE MAINTAIN in letterspaced caps over an
+ * edge to edge hairline rule. So the header is always the shop plane, the nav
+ * labels are always upright letterspaced caps, and the bottom edge is always
+ * the datum rule. It never goes transparent and it never changes height,
+ * which means there is no scroll listener in here at all: one less thing to
+ * jank on a phone and one less source of layout shift.
+ *
+ * No icon set anywhere, per the design direction. The menu control is three
+ * hairlines in a hairline box, the caret is a stroke, and the call control is
+ * the word CALL. Nothing here is a glyph out of a library.
+ *
+ * Keyboard: every dropdown is a real disclosure button with aria-expanded,
+ * openable with Enter, Space or ArrowDown and closable with Escape. Nothing
+ * on this site is reachable by hover only.
+ */
+
+function Caret({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="9"
+      height="6"
+      viewBox="0 0 9 6"
+      aria-hidden
+      focusable="false"
+      className={cn("transition-transform duration-200", open && "rotate-180")}
+    >
+      <path
+        d="M0.8 1.1 4.5 4.6 8.2 1.1"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+      />
+    </svg>
+  );
+}
+
+const NAV_LABEL =
+  "font-display text-[0.8125rem] font-medium uppercase tracking-[0.14em]";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const groupBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
+  /* close everything on route change */
   useEffect(() => {
-    setOpen(false);
+    setMenuOpen(false);
     setOpenGroup(null);
   }, [pathname]);
 
+  /* Scroll lock. The scrollbar width is paid back as body padding, otherwise
+     locking the body reflows the whole page sideways the moment the menu
+     opens on a trackpad machine. */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!menuOpen) return;
+    const { body } = document;
+    const prevOverflow = body.style.overflow;
+    const prevPad = body.style.paddingRight;
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    body.style.overflow = "hidden";
+    if (gap > 0) body.style.paddingRight = `${gap}px`;
     return () => {
-      document.body.style.overflow = "";
+      body.style.overflow = prevOverflow;
+      body.style.paddingRight = prevPad;
     };
-  }, [open]);
+  }, [menuOpen]);
+
+  /* Focus trap, Escape to close, focus handed back to the control that
+     opened the menu. */
+  useEffect(() => {
+    if (!menuOpen) return;
+    closeRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      const panel = panelRef.current;
+      if (!panel) return;
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMenuOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (!panel.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      toggleRef.current?.focus();
+    };
+  }, [menuOpen]);
+
+  const isActive = (href: string, children?: readonly { href: string }[]) => {
+    if (pathname === href) return true;
+    if (href !== "/" && pathname.startsWith(href)) return true;
+    return Boolean(children?.some((c) => pathname.startsWith(c.href)));
+  };
 
   return (
     <>
-      {/* utility strip, local proof before anything else loads */}
-      <div className="hidden bg-ink text-light-2 md:block">
-        <div className="container-wide flex h-9 items-center justify-between font-mono text-[0.6875rem] uppercase tracking-[0.16em]">
-          <span className="flex items-center gap-2">
-            <MapPin className="h-3 w-3 text-red" aria-hidden />
-            {BRAND.street}, {BRAND.city}, {BRAND.state}
+      {/* The utility strip is the banner itself: his tagline in letterspaced
+          caps on black, with the address, the hours and the number. */}
+      <div className="hidden bg-shop-060 text-ink-300 md:block">
+        <div className="container-site flex h-8 items-center justify-between gap-6 font-mono text-[0.6875rem] uppercase tracking-[0.16em]">
+          <span className="truncate text-spec-000">
+            {BRAND.taglineWords.join(" · ")}
           </span>
-          <span className="flex items-center gap-6">
-            <span className="text-dim">{BRAND.hoursShort}</span>
+          <span className="flex shrink-0 items-center gap-6">
+            <span className="tone-muted hidden xl:inline">
+              {BRAND.street}, {BRAND.city}, {BRAND.state} {BRAND.zip}
+            </span>
+            <span className="tone-muted">{BRAND.hoursShort}</span>
             <a
               href={`tel:${BRAND.phoneTel}`}
-              className="text-white transition-colors hover:text-red"
+              onClick={() => trackCall("header_utility")}
+              className="text-spec-000 transition-colors hover:text-cyan-300"
             >
-              Call or text {BRAND.phoneDisplay}
+              {BRAND.phoneDisplay}
             </a>
           </span>
         </div>
       </div>
 
-      <header
-        className={cn(
-          "sticky top-0 z-50 border-b transition-all duration-300",
-          scrolled
-            ? "border-line bg-paper/95 backdrop-blur-md"
-            : "border-transparent bg-paper"
-        )}
-      >
-        <ScrollProgress />
-        <div className="container-wide flex h-[68px] items-center justify-between gap-6 md:h-[76px]">
-          <Link href="/" aria-label="HD Auto Studio home" className="shrink-0">
-            <Wordmark size="md" />
+      <header className="sticky top-0 z-50 bg-shop-000 text-spec-000">
+        <div className="container-site flex h-[60px] items-center justify-between gap-4 lg:h-[72px]">
+          <Link href="/" aria-label="Petty Shine, home" className="shrink-0">
+            <Wordmark size="sm" decorative className="lg:hidden" />
+            <Wordmark size="md" decorative className="hidden lg:block" />
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex">
-            {NAV_LINKS.map((link) => {
-              const children = "children" in link ? link.children : undefined;
-              const active = pathname.startsWith(link.href);
-              if (!children) {
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      "px-3 py-2 font-display text-[0.9375rem] font-semibold uppercase tracking-[0.02em] transition-colors",
-                      active ? "text-red" : "text-ink-text hover:text-red"
-                    )}
-                  >
+          {/* desktop navigation */}
+          <nav aria-label="Main" className="hidden min-w-0 self-stretch lg:block">
+            <ul className="flex h-full items-center gap-1">
+              {NAV_LINKS.map((link) => {
+                const children = "children" in link ? link.children : undefined;
+                const active = isActive(link.href, children);
+                const groupOpen = openGroup === link.href;
+                const menuId = `nav-menu-${link.label.toLowerCase()}`;
+
+                const label = (extra: string) => (
+                  <>
                     {link.label}
-                  </Link>
+                    {active && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute bottom-1.5 block h-px bg-cyan-500",
+                          extra,
+                        )}
+                      />
+                    )}
+                  </>
                 );
-              }
-              return (
-                <div
-                  key={link.href}
-                  className="relative"
-                  onMouseEnter={() => setOpenGroup(link.href)}
-                  onMouseLeave={() => setOpenGroup(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "flex items-center gap-1 px-3 py-2 font-display text-[0.9375rem] font-semibold uppercase tracking-[0.02em] transition-colors",
-                      active ? "text-red" : "text-ink-text hover:text-red"
-                    )}
+
+                if (!children) {
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          NAV_LABEL,
+                          "relative block px-3 py-3 transition-colors",
+                          active
+                            ? "text-cyan-300"
+                            : "text-spec-000 hover:text-cyan-300",
+                        )}
+                      >
+                        {label("inset-x-3")}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li
+                    key={link.href}
+                    className="relative flex h-full items-center"
+                    onMouseEnter={() => setOpenGroup(link.href)}
+                    onMouseLeave={() => setOpenGroup(null)}
+                    onBlur={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setOpenGroup((g) => (g === link.href ? null : g));
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape" && groupOpen) {
+                        e.stopPropagation();
+                        setOpenGroup(null);
+                        groupBtnRefs.current[link.href]?.focus();
+                      }
+                    }}
                   >
-                    {link.label}
-                    <ChevronDown className="h-3.5 w-3.5" aria-hidden />
-                  </Link>
-                  {openGroup === link.href && (
-                    <div className="absolute left-0 top-full w-[268px] border-t-2 border-red bg-white shadow-[0_24px_48px_-24px_rgba(23,23,26,0.45)]">
-                      {children.map((c) => (
-                        <Link
-                          key={c.href}
-                          href={c.href}
-                          className="block border-b border-line px-4 py-3 text-sm text-body transition-colors last:border-0 hover:bg-paper-2 hover:text-red"
-                        >
-                          {c.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    <span className="flex items-center">
+                      <Link
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          NAV_LABEL,
+                          "relative block py-3 pl-3 pr-1 transition-colors",
+                          active
+                            ? "text-cyan-300"
+                            : "text-spec-000 hover:text-cyan-300",
+                        )}
+                      >
+                        {label("left-3 right-1")}
+                      </Link>
+                      <button
+                        type="button"
+                        ref={(el) => {
+                          groupBtnRefs.current[link.href] = el;
+                        }}
+                        aria-expanded={groupOpen}
+                        /* The panel is only in the DOM while it is open, and
+                           aria-controls pointing at an id that does not exist
+                           is an invalid reference, so it is only written while
+                           there is something to point at. Same rule as the
+                           mobile toggle below. */
+                        aria-controls={groupOpen ? menuId : undefined}
+                        aria-label={`${link.label} services`}
+                        onClick={() =>
+                          setOpenGroup(groupOpen ? null : link.href)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "ArrowDown") {
+                            e.preventDefault();
+                            setOpenGroup(link.href);
+                            requestAnimationFrame(() => {
+                              document
+                                .getElementById(menuId)
+                                ?.querySelector<HTMLAnchorElement>("a")
+                                ?.focus();
+                            });
+                          }
+                        }}
+                        className={cn(
+                          "px-2 py-3 transition-colors",
+                          active
+                            ? "text-cyan-300"
+                            : "text-ink-300 hover:text-cyan-300",
+                        )}
+                      >
+                        <Caret open={groupOpen} />
+                      </button>
+                    </span>
+
+                    {groupOpen && (
+                      <ul
+                        id={menuId}
+                        className="absolute left-0 top-full w-[270px] border border-rule-dark border-t-cyan-500 bg-shop-060"
+                      >
+                        {children.map((c) => (
+                          <li key={c.href}>
+                            <Link
+                              href={c.href}
+                              className="block border-b border-rule-dark px-4 py-3 text-[0.875rem] text-spec-000 transition-colors last:border-b-0 hover:bg-shop-120 hover:text-cyan-300"
+                            >
+                              {c.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+            {/* THE NUMBER COMES DOWN TO 1024, NOT 1280.
+                The utility strip above scrolls away after 32px, the mobile
+                CALL control stops at 1024 and the call rail used to stop
+                there too, so a laptop at 1024 to 1279 had no phone number
+                on screen from the moment it started scrolling. The header
+                is the one thing that is sticky at that width, so the number
+                lives here from 1024 up. There is no room for the number and
+                the GET A QUOTE button side by side at 1024, so the button
+                waits for 1280 and the call rail carries the quote action in
+                between. See StickyCallBar. */}
             <a
               href={`tel:${BRAND.phoneTel}`}
-              className="hidden items-center gap-2 font-mono text-sm font-medium text-ink-text transition-colors hover:text-red md:flex lg:hidden xl:flex"
+              onClick={() => trackCall("header")}
+              className="hidden font-mono text-[0.8125rem] tabular-nums text-spec-000 transition-colors hover:text-cyan-300 lg:block"
             >
-              <Phone className="h-4 w-4 text-red" aria-hidden />
               {BRAND.phoneDisplay}
             </a>
-            <Link href="/quote/" className="btn btn-primary btn-sm hidden sm:inline-flex">
-              Get my price
-            </Link>
+
+            {/* Mobile call control. Not a glyph: the word, in a 44px box.
+                The responsive display sits on the wrapper because .btn sets
+                display: inline-flex unlayered, which beats a `lg:hidden`
+                utility no matter the specificity. */}
+            <span className="lg:hidden">
+              <a
+                href={`tel:${BRAND.phoneTel}`}
+                onClick={() => trackCall("header_mobile")}
+                aria-label={`Call Petty Shine on ${BRAND.phoneDisplay}`}
+                className="btn btn-sm btn-outline h-11"
+              >
+                Call
+              </a>
+            </span>
+
+            <span className="hidden xl:block">
+              <Link href="/quote/" className="btn btn-sm btn-outline">
+                Get a quote
+              </Link>
+            </span>
+
             <button
-              onClick={() => setOpen(true)}
-              className="p-2 text-ink-text lg:hidden"
+              type="button"
+              ref={toggleRef}
+              onClick={() => setMenuOpen(true)}
+              aria-expanded={menuOpen}
+              aria-controls={menuOpen ? "mobile-menu" : undefined}
               aria-label="Open menu"
+              className="flex h-11 w-11 items-center justify-center border border-rule-dark transition-colors hover:border-cyan-500 lg:hidden"
             >
-              <Menu className="h-6 w-6" />
+              <span aria-hidden className="flex flex-col gap-[5px]">
+                <span className="block h-px w-5 bg-cyan-500" />
+                <span className="block h-px w-5 bg-spec-000" />
+                <span className="block h-px w-5 bg-spec-000" />
+              </span>
             </button>
           </div>
         </div>
+
+        {/* the motif, running edge to edge under the lockup, exactly the
+            hairline that runs under the tagline on his banner */}
+        <span
+          aria-hidden
+          className="datum-rule pointer-events-none absolute inset-x-0 bottom-0"
+        />
       </header>
 
-      {/* mobile panel */}
-      {open && (
-        <div className="fixed inset-0 z-[60] flex flex-col bg-ink text-light lg:hidden">
-          <div className="container-site flex h-[68px] shrink-0 items-center justify-between">
-            <Wordmark size="md" tone="light" />
-            <button onClick={() => setOpen(false)} aria-label="Close menu" className="p-2">
-              <X className="h-6 w-6" />
-            </button>
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          className="fixed inset-0 z-[60] flex flex-col bg-shop-000 text-spec-000 lg:hidden"
+        >
+          <div className="relative shrink-0">
+            <div className="container-site flex h-[60px] items-center justify-between">
+              <Link href="/" aria-label="Petty Shine, home">
+                <Wordmark size="sm" decorative />
+              </Link>
+              <button
+                type="button"
+                ref={closeRef}
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="flex h-11 w-11 items-center justify-center border border-rule-dark text-spec-000 transition-colors hover:border-cyan-500 hover:text-cyan-300"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  aria-hidden
+                  focusable="false"
+                >
+                  <path
+                    d="M1 1 15 15M15 1 1 15"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                  />
+                </svg>
+              </button>
+            </div>
+            <span
+              aria-hidden
+              className="datum-rule pointer-events-none absolute inset-x-0 bottom-0"
+            />
           </div>
 
-          <nav className="container-site flex-1 overflow-y-auto pb-8 pt-2">
-            {NAV_LINKS.map((link) => {
-              const children = "children" in link ? link.children : undefined;
-              return (
-                <div key={link.href} className="border-b border-white/10 py-1">
-                  <Link
-                    href={link.href}
-                    className="block py-3 font-display text-2xl font-bold uppercase tracking-tight text-white"
-                  >
-                    {link.label}
-                  </Link>
-                  {children && (
-                    <div className="pb-3">
-                      {children.map((c) => (
-                        <Link
-                          key={c.href}
-                          href={c.href}
-                          className="block py-1.5 pl-4 text-[0.9375rem] text-light-2"
-                        >
-                          {c.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            <Link
-              href="/contact/"
-              className="block border-b border-white/10 py-4 font-display text-2xl font-bold uppercase tracking-tight text-white"
-            >
-              Contact
-            </Link>
+          <div className="container-site min-h-0 flex-1 overflow-y-auto overscroll-contain pb-10 pt-2">
+            <nav aria-label="Main">
+              <ul>
+                {NAV_LINKS.map((link) => {
+                  const children =
+                    "children" in link ? link.children : undefined;
+                  const active = isActive(link.href, children);
+                  return (
+                    <li
+                      key={link.href}
+                      className="border-b border-rule-dark py-1"
+                    >
+                      <Link
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "block py-3 font-display text-[1.375rem] font-medium uppercase tracking-[0.1em]",
+                          active ? "text-cyan-300" : "text-spec-000",
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                      {children && (
+                        <ul className="pb-3">
+                          {children.map((c) => (
+                            <li key={c.href}>
+                              <Link
+                                href={c.href}
+                                className="block py-2 pl-4 text-[0.9375rem] text-ink-300"
+                              >
+                                {c.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
-            <div className="mt-7 grid gap-3">
+            <div className="mt-8 grid gap-3">
               <Link href="/quote/" className="btn btn-primary btn-block btn-lg">
-                Get my price
+                Get a quote
               </Link>
               <a
                 href={`tel:${BRAND.phoneTel}`}
-                className="btn btn-outline-light btn-block btn-lg"
+                onClick={() => trackCall("mobile_menu")}
+                className="btn btn-outline btn-block btn-lg"
               >
-                <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
+                {BRAND.phoneDisplay}
               </a>
             </div>
-            <p className="mt-6 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-dim">
-              {BRAND.street}
-              <br />
-              {BRAND.city}, {BRAND.state} {BRAND.zip}
-              <br />
-              {BRAND.hoursShort}
-            </p>
-          </nav>
+
+            <dl className="mt-9 border-t border-rule-dark pt-5">
+              <div className="kv-row">
+                <dt className="kv-key">Shop</dt>
+                <dd className="kv-value">
+                  {BRAND.street}
+                  <br />
+                  {BRAND.city}, {BRAND.state} {BRAND.zip}
+                </dd>
+              </div>
+              <div className="kv-row">
+                <dt className="kv-key">Hours</dt>
+                <dd className="kv-value">{BRAND.hoursShort}</dd>
+              </div>
+            </dl>
+          </div>
         </div>
       )}
     </>

@@ -1,4 +1,5 @@
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import Section from "@/components/ui/Section";
 import RuleLabel from "@/components/ui/RuleLabel";
 
 export interface LegalBlock {
@@ -6,6 +7,14 @@ export interface LegalBlock {
   p: string[];
 }
 
+/**
+ * The shell both legal pages share.
+ *
+ * Paper plane, narrow measure, one ruled heading per block. Legal copy
+ * is prose, so none of it is set in mono: on this site mono means a
+ * sourced fact, and a policy paragraph is not one. The only mono here
+ * is the "last updated" line, which is a date.
+ */
 export default function LegalPage({
   title,
   updated,
@@ -21,32 +30,34 @@ export default function LegalPage({
 }) {
   return (
     <>
-      <Breadcrumbs trail={[{ label: title, href: crumb }]} />
-      <section className="section">
-        <div className="container-tight">
-          <RuleLabel>Legal</RuleLabel>
-          <h1 className="display-lg mt-6">{title}</h1>
-          <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-muted">
-            Last updated {updated}
-          </p>
-          <p className="mt-7 text-lg leading-relaxed text-body">{intro}</p>
+      <Breadcrumbs plane="sheet" trail={[{ label: title, href: crumb }]} />
 
-          <div className="mt-12 space-y-10">
-            {blocks.map((b) => (
-              <div key={b.h}>
-                <h2 className="border-t-2 border-ink-text pt-4 font-display text-xl font-bold uppercase tracking-tight text-ink-text">
-                  {b.h}
-                </h2>
-                <div className="mt-4 space-y-4 leading-relaxed text-body">
-                  {b.p.map((para) => (
-                    <p key={para.slice(0, 40)}>{para}</p>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      <Section plane="sheet" width="tight" label="Legal">
+        <h1 className="ps-display ps-display-lg">{title}</h1>
+
+        <RuleLabel className="mt-4 block">Last updated {updated}</RuleLabel>
+
+        <div className="ps-prose mt-7">
+          <p>{intro}</p>
         </div>
-      </section>
+
+        <div className="mt-12 space-y-11">
+          {blocks.map((b) => (
+            <div key={b.h}>
+              <h2 className="ps-heading border-t border-rule-light pt-4 text-xl">
+                {b.h}
+              </h2>
+              <div className="ps-prose mt-4">
+                {b.p.map((para) => (
+                  <p key={para.slice(0, 40)}>{para}</p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
     </>
   );
 }
+
+export { LegalPage };

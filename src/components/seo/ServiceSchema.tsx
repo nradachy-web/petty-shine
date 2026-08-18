@@ -1,10 +1,20 @@
-import { BRAND } from "@/lib/constants";
+import { BRAND, CITIES } from "@/lib/constants";
 
 /**
  * Service node tied back to the business @id declared in the root layout.
- * Deliberately minimal: no aggregateRating (self-serving ratings are
- * ineligible for stars), no FAQPage (deprecated May 2026). The parts that
- * still do work are the entity graph and BreadcrumbList.
+ *
+ * Deliberately minimal: no aggregateRating, because a rating a business
+ * marks up about itself is ineligible, and no FAQPage, because it no
+ * longer earns a result. What still works is the entity graph and the
+ * BreadcrumbList the Breadcrumbs primitive emits.
+ *
+ * areaServed is derived from CITIES rather than typed. The previous
+ * version of this file listed seven Michigan towns, which is exactly the
+ * template leak this rebuild exists to remove.
+ *
+ * `price` takes a raw starting price straight from constants, never a
+ * formatted string, and is omitted entirely for a service with no
+ * published price. Do not invent one to fill the field.
  */
 export default function ServiceSchema({
   name,
@@ -15,7 +25,9 @@ export default function ServiceSchema({
 }: {
   name: string;
   description: string;
+  /** site relative, with the trailing slash, for example "/ceramic-coating/" */
   url: string;
+  /** published starting price, omitted when nothing is published */
   price?: number;
   serviceType?: string;
 }) {
@@ -27,15 +39,11 @@ export default function ServiceSchema({
     serviceType: serviceType ?? name,
     url: `${BRAND.siteUrl}${url}`,
     provider: { "@id": `${BRAND.siteUrl}/#business` },
-    areaServed: [
-      "Whitmore Lake",
-      "Ann Arbor",
-      "Brighton",
-      "South Lyon",
-      "Pinckney",
-      "Hamburg",
-      "Dexter",
-    ].map((n) => ({ "@type": "City", name: n, addressRegion: "MI" })),
+    areaServed: CITIES.map((c) => ({
+      "@type": "City",
+      name: c.name,
+      addressRegion: BRAND.state,
+    })),
     ...(price
       ? {
           offers: {
@@ -60,3 +68,5 @@ export default function ServiceSchema({
     />
   );
 }
+
+export { ServiceSchema };

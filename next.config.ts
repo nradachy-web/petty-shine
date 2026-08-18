@@ -22,7 +22,11 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   images: { unoptimized: true },
-  typescript: { ignoreBuildErrors: true },
+  /* Type errors fail the build on purpose. The whole contract, the PhotoId
+     union, the Section plane prop, the KeyValueRow tone, is enforced by the
+     type system, and a build that ships past it enforces nothing. The tree
+     is clean under `npx tsc --noEmit` as of the integration pass. */
+  typescript: { ignoreBuildErrors: false },
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
 };
 
