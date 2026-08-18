@@ -142,8 +142,9 @@
   /* section rhythm, read by .section */
   --section-pad-y: 4.5rem;
 
-  /* the plane change arc, see .plane-arc */
-  --arc-rise: 10px;
+  /* retired, see THE PLANE CHANGE. Kept at 0 so nothing can
+     reintroduce a curve by reading it. */
+  --arc-rise: 0px;
 
   /* sticky chrome. The layout agent owns the components, these are the
      numbers the contract fixes so scroll padding and clearance agree. */
@@ -261,75 +262,27 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   THE PLANE CHANGE ARC
+   THE PLANE CHANGE
 
-   One very shallow curve, roughly a 2000px radius, so the paper enters under
-   a whisper of the swoosh in his logo. Put .plane-arc on the section that
-   sits directly under a plane of the other color. Once per plane change,
-   never twice in a screen.
+   Planes meet on a HARD EDGE. There is no curve.
 
-   Mechanics: a pseudo element sitting entirely above the section, painted in
-   the section's own ground color, with an elliptical top radius of half the
-   width by its full height. It overlaps the section above by exactly
-   --arc-rise, so the curve reads as this plane arriving over that one.
+   This used to be a very shallow dome, a pseudo element painted in the
+   section's own ground colour arcing up over the plane above it. On a phone
+   it read as intended. On a desktop the arc rise grew to 102px and the
+   thing stopped reading as a whisper of the logo swoosh and started reading
+   as a bubble sitting behind the layout. Nick called it on 2026-08-18 and he
+   was right: it cheapened the page. The reference sites this work is held
+   against, Vasso Law and Top Choice, are hard edged rectangles throughout,
+   and that is what reads as expensive.
 
-   Why a pseudo element and not a border radius plus a negative margin: the
-   negative margin version has to be paid back in padding, which means it has
-   to know what class owns the section's vertical rhythm. This version knows
-   nothing about the section it is attached to, so it works on any section
-   component, keeps that section's rhythm untouched, and cannot overflow
-   horizontally at any width.
-
-   --arc-rise is the sagitta of a 2000px circle at that viewport width,
-   s = w squared / 16000, stepped at breakpoints and capped so it stays a
-   whisper on an ultrawide monitor. Stepped rather than a fixed percentage so
-   the curvature is the same physical arc on a phone and on a desktop.
+   .plane-arc is kept as a no-op class rather than removed, because it is
+   applied on roughly forty sections across the site and the plane change is
+   already carried by the colour change itself. If a plane change ever needs
+   more emphasis, add a datum rule to the section, never a curve.
    -------------------------------------------------------------------------- */
 
 .plane-arc {
   position: relative;
-}
-.plane-arc::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  /* Overlapped by 1px so subpixel layout can never open a hairline seam
-     between the curve and the top edge of the section it belongs to. */
-  bottom: calc(100% - 1px);
-  height: calc(var(--arc-rise) + 1px);
-  border-start-start-radius: 50% 100%;
-  border-start-end-radius: 50% 100%;
-  pointer-events: none;
-  /* Sits over the tail of the section above. Equal z-index paints in tree
-     order, and this element comes later, so it wins without turning the
-     section into a stacking context. */
-  z-index: 1;
-}
-
-@layer components {
-  .plane-arc::before {
-    background-color: var(--plane-bg);
-  }
-}
-
-@media (min-width: 480px) {
-  :root { --arc-rise: 15px; }
-}
-@media (min-width: 640px) {
-  :root { --arc-rise: 26px; }
-}
-@media (min-width: 768px) {
-  :root { --arc-rise: 37px; }
-}
-@media (min-width: 1024px) {
-  :root { --arc-rise: 66px; }
-}
-@media (min-width: 1280px) {
-  :root { --arc-rise: 102px; }
-}
-@media (min-width: 1536px) {
-  :root { --arc-rise: 148px; }
 }
 
 /* ==========================================================================
