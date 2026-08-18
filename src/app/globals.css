@@ -1,0 +1,731 @@
+@import "tailwindcss";
+
+/* ============================================================
+   HD AUTO STUDIO, "Studio Wall" design system
+
+   Derived from the shop's own mark: a heavy grotesk wordmark
+   bracketed by two red rules. That bracket is the signature
+   motif of the whole site (see .rule-label).
+
+   The site alternates two surfaces:
+     PAPER  = warm gallery white, where information lives
+     WALL   = near-black photographic bands, where the work lives
+   ============================================================ */
+
+@theme {
+  /* wall (dark) */
+  --color-ink: #0b0b0c;
+  --color-ink-2: #131315;
+  --color-graphite: #1d1e21;
+  --color-slate: #2c2d31;
+
+  /* paper (light) */
+  --color-paper: #f7f5f2;
+  --color-paper-2: #efece7;
+  --color-paper-3: #e5e1da;
+  --color-line: #d9d4cc;
+
+  /* type */
+  --color-ink-text: #17171a;
+  --color-body: #3b3a37;
+  --color-muted: #75726c;
+  --color-light: #f4f2ef;
+  --color-light-2: #bdbab4;
+  --color-dim: #86837d;
+
+  /* brand red, sampled from the HD Auto Studio mark */
+  --color-red: #e01b22;
+  --color-red-bright: #ff2b31;
+  --color-red-deep: #99080d;
+  --color-red-wash: #fdeceb;
+
+  /* semantic */
+  --color-good: #1f7a4d;
+  --color-warn: #b8791a;
+  --color-error: #c4141b;
+  --color-star: #f5a623;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --font-display: var(--font-display-raw), "Archivo", system-ui, sans-serif;
+  --font-body: var(--font-body-raw), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-mono-raw), "IBM Plex Mono", ui-monospace, monospace;
+}
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-plate: 0 1px 2px rgba(23, 23, 26, 0.06),
+    0 12px 28px -18px rgba(23, 23, 26, 0.4);
+  --shadow-lift: 0 2px 4px rgba(23, 23, 26, 0.07),
+    0 24px 48px -24px rgba(23, 23, 26, 0.45);
+  --shadow-wall: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ---------- base ---------- */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+html,
+body {
+  max-width: 100vw;
+}
+body {
+  background: var(--color-paper);
+  color: var(--color-body);
+  overflow-wrap: break-word;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-display);
+  color: var(--color-ink-text);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+::selection {
+  background: var(--color-red);
+  color: #fff;
+}
+:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 3px;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- layout ---------- */
+.container-site {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+.container-tight {
+  width: 100%;
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+.container-wide {
+  width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+.section {
+  position: relative;
+  padding-block: 4.5rem;
+}
+@media (min-width: 768px) {
+  .container-site,
+  .container-tight,
+  .container-wide {
+    padding-inline: 2rem;
+  }
+  .section {
+    padding-block: 6.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  .section {
+    padding-block: 7.5rem;
+  }
+}
+
+/* ---------- SIGNATURE: the red rule bracket ---------- */
+/* Two hairline red rules bracketing wide-tracked caps, lifted
+   straight off the shop's logo lockup. Used for every eyebrow. */
+.rule-label {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--rule-color, var(--color-red));
+}
+.rule-label::before,
+.rule-label::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--rule-color, var(--color-red));
+}
+.rule-label > span {
+  padding-inline: 0.1em 0;
+}
+
+/* single top rule, for tighter spots */
+.rule-top {
+  border-top: 2px solid var(--color-red);
+  padding-top: 0.6rem;
+}
+
+/* ---------- eyebrow (no rules) ---------- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.on-wall .eyebrow {
+  color: var(--color-dim);
+}
+
+/* ---------- display sizes ---------- */
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 8vw, 5.75rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.875rem, 5.2vw, 3.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+}
+.display-sm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+/* ---------- surfaces ---------- */
+.on-wall {
+  background: var(--color-ink);
+  color: var(--color-light-2);
+}
+.on-wall h1,
+.on-wall h2,
+.on-wall h3,
+.on-wall h4,
+.on-wall h5 {
+  color: var(--color-light);
+}
+
+.plate {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-plate);
+}
+
+/* A paper plate sitting inside a dark band keeps paper type colors,
+   without this, .on-wall's heading rule bleaches headings inside the
+   hero's price card to near-white on white. */
+.on-wall .plate,
+.on-wall .plate-flat {
+  color: var(--color-body);
+}
+.on-wall .plate h1,
+.on-wall .plate h2,
+.on-wall .plate h3,
+.on-wall .plate h4,
+.on-wall .plate h5,
+.on-wall .plate-flat h1,
+.on-wall .plate-flat h2,
+.on-wall .plate-flat h3,
+.on-wall .plate-flat h4,
+.on-wall .plate-flat h5 {
+  color: var(--color-ink-text);
+}
+.plate-flat {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+.plate-dark {
+  background: var(--color-ink-2);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-sm);
+}
+
+/* card hover lift */
+.lift {
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--color-red);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  border-radius: var(--radius-xs);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+    transform 0.12s var(--ease-out);
+  text-align: center;
+  line-height: 1.1;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--color-red);
+  color: #fff;
+  border-color: var(--color-red);
+}
+.btn-primary:hover {
+  background: #c2151b;
+  border-color: #c2151b;
+}
+.btn-ink {
+  background: var(--color-ink);
+  color: #fff;
+  border-color: var(--color-ink);
+}
+.btn-ink:hover {
+  background: var(--color-red);
+  border-color: var(--color-red);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--color-ink-text);
+  border-color: var(--color-ink-text);
+}
+.btn-outline:hover {
+  background: var(--color-ink-text);
+  color: #fff;
+}
+.btn-outline-light {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.btn-outline-light:hover {
+  background: #fff;
+  color: var(--color-ink);
+  border-color: #fff;
+}
+.btn-sm {
+  padding: 0.65rem 1.1rem;
+  font-size: 0.8125rem;
+}
+.btn-lg {
+  padding: 1.1rem 2rem;
+  font-size: 1rem;
+}
+.btn-block {
+  width: 100%;
+}
+
+/* ---------- exhibition placard (photo caption) ---------- */
+.placard {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.placard-line {
+  display: flex;
+  gap: 0.55rem;
+  align-items: baseline;
+}
+.placard-line::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  background: var(--color-red);
+  flex: none;
+  transform: translateY(-3px);
+}
+
+/* ---------- price tokens ---------- */
+.price {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+/* Colour defaults are wrapped in :where() so they carry zero specificity and
+   any text-* utility wins. Without this, .price and .num silently override
+   text-red and the ceramic column loses its accent. */
+/* These colour defaults sit in @layer components so Tailwind's utilities,
+   which live in the later @layer utilities, can override them. Unlayered CSS
+   beats any layered rule regardless of specificity, which is why text-red was
+   silently losing to .price before. */
+@layer components {
+  .price {
+    color: var(--color-ink-text);
+  }
+  .on-wall .price {
+    color: #fff;
+  }
+}
+.price-from {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---------- form fields ---------- */
+.field {
+  width: 100%;
+  border-radius: var(--radius-xs);
+  background: #fff;
+  border: 1px solid var(--color-line);
+  padding: 0.8rem 0.95rem;
+  color: var(--color-ink-text);
+  font-size: 1rem;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  font-family: var(--font-body);
+}
+.field::placeholder {
+  color: #a8a49d;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 3px rgba(224, 27, 34, 0.14);
+}
+select.field {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2375726c' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.2rem;
+}
+select.field:disabled {
+  background-color: var(--color-paper-2);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---------- data table ---------- */
+/* Grid and flex children default to min-width:auto, so a wide table makes
+   its own container inflate past the viewport instead of scrolling inside
+   it. These two rules make that structurally impossible sitewide. */
+.container-site > *,
+.container-wide > *,
+.container-tight > * {
+  min-width: 0;
+}
+[class*="grid-cols"] > *,
+.section [class*="col-span"] {
+  min-width: 0;
+}
+
+.data-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  table-layout: auto;
+}
+.data-table th {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid var(--color-ink-text);
+  line-height: 1.35;
+}
+@layer components {
+  .data-table th {
+    color: var(--color-muted);
+    text-align: left;
+  }
+}
+.data-table td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+}
+@layer components {
+  .data-table td {
+    color: var(--color-body);
+  }
+}
+.data-table tbody tr:hover {
+  background: var(--color-paper-2);
+}
+.data-table .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  white-space: nowrap;
+}
+@layer components {
+  .data-table .num {
+    color: var(--color-ink-text);
+  }
+}
+
+/* ---------- misc ---------- */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: var(--color-line);
+}
+.hairline-red {
+  height: 2px;
+  border: 0;
+  background: var(--color-red);
+}
+.link-underline {
+  color: var(--color-ink-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-red);
+  text-decoration-thickness: 2px;
+  transition: color 0.18s;
+}
+.link-underline:hover {
+  color: var(--color-red);
+}
+
+.scrim-b {
+  background: linear-gradient(
+    180deg,
+    rgba(11, 11, 12, 0) 0%,
+    rgba(11, 11, 12, 0.15) 35%,
+    rgba(11, 11, 12, 0.72) 72%,
+    rgba(11, 11, 12, 0.95) 100%
+  );
+}
+.scrim-l {
+  background: linear-gradient(
+    100deg,
+    rgba(11, 11, 12, 0.94) 0%,
+    rgba(11, 11, 12, 0.82) 34%,
+    rgba(11, 11, 12, 0.4) 62%,
+    rgba(11, 11, 12, 0.12) 100%
+  );
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  mix-blend-mode: overlay;
+}
+
+/* slow cinematic drift on hero stills */
+@keyframes slow-zoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1.13);
+  }
+}
+.slow-zoom {
+  animation: slow-zoom 24s ease-out forwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fade-up 0.7s var(--ease-out) both;
+}
+
+/* ---------- scroll reveals ----------
+   These states are applied by JS after mount (see components/ui/Reveal.tsx),
+   never server rendered, so content is visible even if scripting fails. */
+[data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+[data-reveal="in"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.6s var(--ease-out) var(--reveal-delay, 0s),
+    transform 0.6s var(--ease-out) var(--reveal-delay, 0s);
+}
+
+.reveal-group[data-reveal="pending"] > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.reveal-group[data-reveal="in"] > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+.reveal-group[data-reveal="in"] > *:nth-child(2) {
+  transition-delay: 0.07s;
+}
+.reveal-group[data-reveal="in"] > *:nth-child(3) {
+  transition-delay: 0.14s;
+}
+.reveal-group[data-reveal="in"] > *:nth-child(4) {
+  transition-delay: 0.21s;
+}
+.reveal-group[data-reveal="in"] > *:nth-child(5) {
+  transition-delay: 0.28s;
+}
+.reveal-group[data-reveal="in"] > *:nth-child(6) {
+  transition-delay: 0.35s;
+}
+.reveal-group[data-reveal="in"] > *:nth-child(n + 7) {
+  transition-delay: 0.42s;
+}
+
+/* hide scrollbar on horizontal rails */
+.no-bar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+.no-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- shade selector range ---------- */
+.shade-range {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 22px;
+  background: transparent;
+  cursor: pointer;
+}
+.shade-range::-webkit-slider-runnable-track {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-slate) 100%);
+}
+.shade-range::-moz-range-track {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-slate) 100%);
+}
+.shade-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8.5px;
+  height: 20px;
+  width: 10px;
+  border-radius: 2px;
+  background: var(--color-red);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s var(--ease-out);
+}
+.shade-range::-moz-range-thumb {
+  height: 20px;
+  width: 10px;
+  border-radius: 2px;
+  background: var(--color-red);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.shade-range:active::-webkit-slider-thumb {
+  transform: scaleY(1.2);
+}
+
+/* ---------- work ticker ---------- */
+.ticker {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+}
+.ticker-track {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  white-space: nowrap;
+  animation: ticker-scroll 46s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
