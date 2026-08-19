@@ -1,7 +1,10 @@
-node_modules/
-.next/
-out/
+node_modules
+.next
+out
 .DS_Store
 *.tsbuildinfo
 .env*.local
 scripts/source/
+
+# iCloud sync guard: real dirs are *.nosync, tracked names are symlinks
+*.nosync

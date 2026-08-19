@@ -128,7 +128,8 @@ export default function HomeHero({ id, className }: HomeHeroProps) {
           <p className="hero__eyebrow">{EYEBROW}</p>
 
           <h1 className="ps-display ps-display-xl hero__title">
-            Not every shop is allowed to do this work.
+            Not every shop is <span className="hero__hl">allowed</span> to do
+            this work.
           </h1>
 
           <div className="hero__prose">

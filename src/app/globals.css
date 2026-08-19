@@ -1131,9 +1131,121 @@ textarea.field {
   inset: 0;
 }
 @layer components {
-  .hero__scrim {
-    /* shop-000 #0A0B09 */
-    background-color: rgb(10 11 9 / 0.66);
+  .hero__scrim,
+  .hero-scrim {
+    /* THE SCRIM IS DIRECTIONAL, 2026-08-19.
+
+       The flat 0.66 fill held AA everywhere and made the whole frame the
+       same murky mid grey: the photograph lost its depth AND the type still
+       sat on the busy part of the banner. Nick's verdict on the page was
+       "not as clean as Midwest Tint or Top Choice", and both of those run
+       the standard photographic treatment: heavy where the copy sits,
+       light where the subject sits, heavy again at the base so the next
+       band lands on near black.
+
+       This is a tonal ramp on a photograph, not a decorative gradient.
+       The blob and arc rules from DIRECTION-V2 still stand everywhere
+       else: no glows, no color washes, no soft shapes on flat ground.
+
+       Alphas, measured against coating-huracan's brightest region under
+       each stop: the copy column sits left of 46rem where the ramp floor
+       is 0.78 over the base 0.30, which clears AA for the 16px paragraph
+       with more margin than the old flat fill had. */
+    background-image: linear-gradient(
+        to bottom,
+        rgb(10 11 9 / 0.62) 0%,
+        rgb(10 11 9 / 0.18) 26%,
+        rgb(10 11 9 / 0.14) 55%,
+        rgb(10 11 9 / 0.78) 100%
+      ),
+      linear-gradient(
+        to right,
+        rgb(10 11 9 / 0.84) 0%,
+        rgb(10 11 9 / 0.72) 34%,
+        rgb(10 11 9 / 0.34) 68%,
+        rgb(10 11 9 / 0.22) 100%
+      );
+    background-color: rgb(10 11 9 / 0.30);
+  }
+}
+
+/* A hero shared by the interior pages: same element shape, hand rolled
+   markup. Give their overlay div this class instead of a flat bg-*. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+/* Under 768 the copy spans the whole width, so the lateral ramp would put
+   the last words of every line on its thin end. The ramp flattens toward
+   a uniform fill and the vertical ramp carries the depth. */
+@media (max-width: 767px) {
+  @layer components {
+    .hero__scrim,
+    .hero-scrim {
+      background-image: linear-gradient(
+          to bottom,
+          rgb(10 11 9 / 0.66) 0%,
+          rgb(10 11 9 / 0.38) 34%,
+          rgb(10 11 9 / 0.42) 62%,
+          rgb(10 11 9 / 0.82) 100%
+        );
+      background-color: rgb(10 11 9 / 0.38);
+    }
+  }
+}
+
+/* THE SETTLE. The photograph opens a breath too large and eases home over
+   six seconds. Transform only, composited, cheap on a phone. CSS animation
+   rather than a JS reveal, so it runs with JavaScript off and the resting
+   state without animation support is simply the finished frame. */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.045);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.hero__media img,
+.hero-media-settle img {
+  animation: hero-settle 6s var(--ease-out) both;
+  transform-origin: 50% 60%;
+}
+
+/* THE ARRIVAL. Eyebrow, heading, paragraph, actions rise in sequence on
+   load. Same rules as the settle: CSS only, transform and opacity only. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero__copy > * {
+  animation: hero-rise 0.65s var(--ease-out) both;
+}
+.hero__copy > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.hero__copy > *:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.hero__copy > *:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.hero__copy > *:nth-child(n + 5) {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media img,
+  .hero-media-settle img,
+  .hero__copy > * {
+    animation: none;
   }
 }
 
@@ -1165,6 +1277,20 @@ textarea.field {
 .hero__title {
   max-width: 42rem;
   margin-top: 1.5rem;
+}
+@layer components {
+  /* Near white, deliberately brighter than the plane's spec-000. The warm
+     specular white is right on flat near black and reads dingy over a lit
+     photograph; the heading is the one element that has to cut through
+     the picture. Body copy in the hero stays spec-000. */
+  .hero__title {
+    color: #f7f5ee;
+  }
+  /* One emphasised word, the way the reference heroes carry one. Cyan-300
+     on the dark frame, never on paper. */
+  .hero__hl {
+    color: var(--color-cyan-300);
+  }
 }
 .hero__prose {
   max-width: 34rem;

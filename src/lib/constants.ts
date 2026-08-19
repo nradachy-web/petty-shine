@@ -258,6 +258,15 @@ export interface ServiceLine {
   fromPrice: number | null;
   /** quote form service key when fromPrice is null */
   quoteKey: string;
+  /**
+   * A real job photo for this service's card, from the registry in
+   * src/lib/photos.ts. null when no photograph of this service exists
+   * in the 29, and the card renders typographic instead. Never a stock
+   * photo and never a photo of a different service captioned as this
+   * one: the id chosen must show work that is honestly adjacent to the
+   * service it sells.
+   */
+  photoId: import("./photos").PhotoId | null;
 }
 
 export const SERVICES: ServiceLine[] = [
@@ -269,6 +278,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Five levels, from a maintenance wash to a full paint correction.",
     fromPrice: 100,
     quoteKey: "detailing",
+    photoId: "wash-f250-foam",
   },
   {
     id: "ceramic-coating",
@@ -278,6 +288,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Three tiers of Gtechniq protection, up to a nine year guarantee.",
     fromPrice: 700,
     quoteKey: "ceramic",
+    photoId: "coating-g-wagon",
   },
   {
     id: "paint-protection-film",
@@ -287,6 +298,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "STEK film over the panels that take the damage. Four coverage levels.",
     fromPrice: null,
     quoteKey: "ppf",
+    photoId: "ppf-install-closeup",
   },
   {
     id: "paint-correction",
@@ -296,6 +308,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Swirls, scratches, water spots and oxidation, cut and polished out.",
     fromPrice: 400,
     quoteKey: "correction",
+    photoId: "correction-red-panel",
   },
   {
     id: "interior-detailing",
@@ -305,6 +318,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Three levels, from a deep vacuum to full leather restoration.",
     fromPrice: 75,
     quoteKey: "interior",
+    photoId: "interior-bmw-x5m",
   },
   {
     id: "paintless-dent-repair",
@@ -314,6 +328,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Dents, door dings and hail damage, out without touching the paint.",
     fromPrice: null,
     quoteKey: "pdr",
+    photoId: null,
   },
   {
     id: "window-tinting",
@@ -323,6 +338,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Laminate and ceramic film, installed to the North Carolina limit.",
     fromPrice: null,
     quoteKey: "tint",
+    photoId: null,
   },
   {
     id: "wheel-repair",
@@ -332,6 +348,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "Curb rash repaired, plus wheel and brake caliper refinishing.",
     fromPrice: null,
     quoteKey: "wheel",
+    photoId: "wheels-mustang",
   },
   {
     id: "marine-detailing",
@@ -341,6 +358,7 @@ export const SERVICES: ServiceLine[] = [
     blurb: "The same process, on the water. Three levels plus marine coatings.",
     fromPrice: 250,
     quoteKey: "marine",
+    photoId: "marine-boat-trailer",
   },
 ];
 

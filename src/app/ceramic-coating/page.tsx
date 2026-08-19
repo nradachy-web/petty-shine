@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import CoatingTiers from "@/components/sections/CoatingTiers";
 import CTABand from "@/components/sections/CTABand";
 import TrustBar from "@/components/sections/TrustBar";
 import QuoteForm from "@/components/quote/QuoteForm";
@@ -169,101 +170,10 @@ function Hero() {
   );
 }
 
-/* ---------------------------------------------------------------------------
-   One tier of the ladder.
-
-   Only the five and nine year coatings name a base and a top coat, because
-   his own price list names a product for those two and names none for the
-   three year tier. Rather than leave that tier's specification a row short,
-   which reads as an omission, it carries `chemistryPending` from constants
-   and says out loud that no product is published for it.
-
-   THE PRICE SLOT IS THE TIER'S ACTION. <PriceOrQuote> reads PRICING_MODE
-   itself, so this file never branches on the flag: in private mode it is a
-   tappable link into /quote/ carrying this tier's package key, and if the
-   prices ever go back on the site the same call prints the figure.
-   ------------------------------------------------------------------------- */
-function CoatingTier({ coating, index }: { coating: Coating; index: number }) {
-  const subtitle = "subtitle" in coating ? coating.subtitle : null;
-  const base = "base" in coating ? coating.base : null;
-  const top = "top" in coating ? coating.top : null;
-  const pending =
-    "chemistryPending" in coating ? coating.chemistryPending : null;
-  const named = "proOnly" in coating;
-  const ruleLabel = `Tier ${String(index + 1).padStart(2, "0")} of ${String(
-    COATINGS.length
-  ).padStart(2, "0")}`;
-
-  return (
-    <div className="mt-12 min-w-0 first:mt-0">
-      <DatumRule label={ruleLabel} labelTone={named ? "accent" : "default"} />
-
-      {/* THE TWO COLUMNS ARE BALANCED ON PURPOSE. The first pass put the
-          heading and one line of prose on the left against a specification
-          and a five row process on the right, which left a third of the band
-          empty on every desktop screenshot. The specification now sits under
-          the heading it belongs to, and the process stands beside it. */}
-      <div className="mt-7 grid min-w-0 gap-8 lg:grid-cols-12 lg:gap-14">
-        <div className="min-w-0 lg:col-span-5">
-          <h3 className="ps-display ps-display-md">{coating.name}</h3>
-          {subtitle ? (
-            <p className="mt-2">
-              <RuleLabel tone="quiet">{subtitle}</RuleLabel>
-            </p>
-          ) : null}
-
-          <p className="ps-prose mt-4">{coating.bestFor}.</p>
-
-          <KeyValueList
-            className="mt-6"
-            label={`${coating.name} specification`}
-          >
-            <KeyValueRow k="Guarantee" v={coating.guarantee} />
-            {base ? <KeyValueRow k="Base coat" v={base} /> : null}
-            {top ? <KeyValueRow k="Top coat" v={top} /> : null}
-            {pending ? (
-              <KeyValueRow
-                k={pending.key}
-                note={pending.note}
-                v={pending.value}
-                tone="pewter"
-              />
-            ) : null}
-          </KeyValueList>
-
-          {/* The tier goes with the click. Without the package key a lead off
-              the nine year row and a lead off the three year row land in the
-              shop inbox as the same lead. */}
-          <div className="mt-6">
-            <PriceOrQuote
-              service={SERVICE.quoteKey}
-              package={coating.id}
-              value={coating.fromPrice}
-              size="lg"
-            />
-          </div>
-        </div>
-
-        <div className="min-w-0 lg:col-span-7">
-          <p>
-            <RuleLabel>What is in it</RuleLabel>
-          </p>
-
-          <KeyValueList className="mt-3" label={`${coating.name}, what is included`}>
-            {coating.includes.map((step, i) => (
-              <KeyValueRow
-                key={step}
-                k={`Step ${String(i + 1).padStart(2, "0")}`}
-                v={step}
-                mono={false}
-              />
-            ))}
-          </KeyValueList>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* The tier ladder itself is <CoatingTiers> from the sections directory:
+   three cards on one screen, every fact from the same COATINGS constants,
+   the nine year tier carrying the accent stroke. This page only decides
+   where it sits. */
 
 export default function CeramicCoatingPage() {
   return (
@@ -296,11 +206,7 @@ export default function CeramicCoatingPage() {
           }
         />
 
-        <div className="mt-9 md:mt-11">
-          {COATINGS.map((c, i) => (
-            <CoatingTier key={c.id} coating={c} index={i} />
-          ))}
-        </div>
+        <CoatingTiers className="mt-9 md:mt-11" />
 
         <CTABand
           variant="line"

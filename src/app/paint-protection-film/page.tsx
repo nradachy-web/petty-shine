@@ -138,7 +138,7 @@ export default function PaintProtectionFilmPage() {
         className="plane-shop relative isolate flex min-h-[29rem] flex-col overflow-hidden md:min-h-[34rem]"
         aria-label={`${SERVICE.name}, ${BRAND.name}`}
       >
-        <picture>
+        <picture className="hero-media-settle">
           <source type="image/avif" srcSet={heroSrcSet("avif")} sizes="100vw" />
           <source type="image/webp" srcSet={heroSrcSet("webp")} sizes="100vw" />
           <img
@@ -152,10 +152,10 @@ export default function PaintProtectionFilmPage() {
             className="absolute inset-0 h-full w-full object-cover object-[50%_46%]"
           />
         </picture>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-shop-000/[0.68]"
-        />
+        {/* The shared directional scrim: heavy where the copy sits, light
+            over the car, heavy again at the base. Same class the home hero
+            reads, so the two treatments cannot drift. */}
+        <div aria-hidden="true" className="hero-scrim" />
 
         <div className="container-site relative flex flex-1 items-center py-14 md:py-20">
           <div className="min-w-0 max-w-[48rem]">

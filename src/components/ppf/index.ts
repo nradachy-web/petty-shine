@@ -34,4 +34,5 @@
 
 export { default as PpfCoveragePlan } from "./PpfCoveragePlan";
 export { default as CoverageMatrix } from "./CoverageMatrix";
+export { default as CoverageLadder } from "./CoverageLadder";
 export { default as SpecificationPending } from "./SpecificationPending";
