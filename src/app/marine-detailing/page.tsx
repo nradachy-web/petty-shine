@@ -18,7 +18,7 @@ import {
   MARINE_PACKAGES,
   NEAREST_EXIT,
   priceIsPublic,
-  QUOTE_CTA_LABEL,
+  REVIEWS,
   SERVICES,
 } from "@/lib/constants";
 import { milesLong } from "@/lib/utils";
@@ -39,6 +39,14 @@ import { milesLong } from "@/lib/utils";
 
 const SERVICE = SERVICES.find((s) => s.id === "marine-detailing")!;
 const LOWEST = MARINE_PACKAGES[0];
+
+/** The one review that names the whole run, quote to final inspection.
+    Verbatim from REVIEWS, with its real service label. */
+const REVIEW = REVIEWS.find((r) => r.name === "Scott Fischer")!;
+
+/** The page's pitch is that a boat is priced off the boat, so no quote
+    slot on it may read "vehicle". One wording, used everywhere here. */
+const BOAT_QUOTE_LABEL = "Quoted on your boat";
 
 /** Schema may only carry a price the site is allowed to print. */
 const SCHEMA_PRICE = priceIsPublic() ? LOWEST.fromPrice : undefined;
@@ -137,6 +145,7 @@ export default function MarineDetailingPage() {
                   <PriceOrQuote
                     service={SERVICE.quoteKey}
                     value={LOWEST.fromPrice}
+                    quoteLabel={BOAT_QUOTE_LABEL}
                   />
                 }
                 strong
@@ -149,21 +158,10 @@ export default function MarineDetailingPage() {
               <KeyValueRow k="Shop" v={BRAND.addressLine} />
               <KeyValueRow k="Hours" v={BRAND.hoursShort} />
             </KeyValueList>
-
-            <PhoneLink
-              placement="marine-panel"
-              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
-            >
-              <span className="min-w-0">
-                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
-                  Call the shop
-                </span>
-                <span className="mt-1 block font-mono text-2xl tabular-nums text-ink-900">
-                  {BRAND.phoneDisplay}
-                </span>
-              </span>
-              <span className="h-px w-6 flex-none bg-cyan-500" aria-hidden />
-            </PhoneLink>
+            {/* The bordered phone panel used to sit here too, which put
+                the number on this screen twice. It lives in the quote
+                section now; the ghost button beside the headline is the
+                hero's one way to call. */}
           </div>
         </div>
       </Section>
@@ -247,6 +245,20 @@ export default function MarineDetailingPage() {
                 How we quote everything else
               </Button>
             </div>
+
+            {/* One photograph in the back half, so the levels do not
+                read as a wall of text. The registry has exactly one
+                marine photo and it already ran full in the section
+                above, so this is a wide crop of it: a different
+                framing reads as a second moment, not a copy. It also
+                squares this column against the two lists beside it. */}
+            <Plate
+              id="marine-boat-trailer"
+              ratio="21 / 9"
+              caption="The same center console, on the trailer it arrived on"
+              sizes="(min-width: 1024px) 34rem, 100vw"
+              className="mt-10"
+            />
           </div>
 
           <div className="min-w-0 lg:col-span-6">
@@ -264,7 +276,7 @@ export default function MarineDetailingPage() {
                       value={p.fromPrice}
                       quoteLabel={
                         <>
-                          {QUOTE_CTA_LABEL}
+                          {BOAT_QUOTE_LABEL}
                           <span className="sr-only">
                             , marine {p.name.toLowerCase()}
                           </span>
@@ -290,7 +302,7 @@ export default function MarineDetailingPage() {
                       value={extra.value}
                       quoteLabel={
                         <>
-                          {QUOTE_CTA_LABEL}
+                          {BOAT_QUOTE_LABEL}
                           <span className="sr-only">
                             , marine {extra.key.toLowerCase()}
                           </span>
@@ -320,6 +332,10 @@ export default function MarineDetailingPage() {
 
       {/* ---------------------------------------------------------------
           One primary action, one solid cyan button: the form submit.
+          A real review sits beside it, because the decision point is
+          the place proof is worth anything, and the phone panel from
+          the hero lives down here now so each screen carries the
+          number once.
           --------------------------------------------------------------- */}
       <Section plane="shop" label="Get a price" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
@@ -352,14 +368,43 @@ export default function MarineDetailingPage() {
               </p>
             </div>
 
-            <div className="mt-8">
-              <PhoneLink
-                placement="marine-quote"
-                className="ps-btn ps-btn--ghost"
-              >
-                Call {BRAND.phoneDisplay}
-              </PhoneLink>
-            </div>
+            {/* Social proof at the decision point rather than parked on
+                a reviews page. Verbatim and attributed, and the service
+                it names is read off the review record so it cannot be
+                mislabelled. */}
+            <blockquote className="mt-8 min-w-0 border-t border-rule-dark pt-7">
+              <span aria-hidden className="block h-px w-6 bg-cyan-500" />
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-spec-000">
+                {REVIEW.text}
+              </p>
+              <footer className="mt-5 flex flex-wrap items-baseline gap-x-6 gap-y-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em]">
+                <span className="text-spec-000">{REVIEW.name}</span>
+                <span className="text-ink-300">{REVIEW.service}</span>
+                <a
+                  href={BRAND.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-24 text-cyan-300 underline underline-offset-4"
+                >
+                  Read it on Google
+                </a>
+              </footer>
+            </blockquote>
+
+            <PhoneLink
+              placement="marine-quote"
+              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-dark bg-shop-060 px-5 py-5 transition-colors hover:border-cyan-500"
+            >
+              <span className="min-w-0">
+                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-300">
+                  Or call the shop
+                </span>
+                <span className="mt-1 block font-mono text-2xl tabular-nums text-spec-000">
+                  {BRAND.phoneDisplay}
+                </span>
+              </span>
+              <span className="h-px w-6 flex-none bg-cyan-500" aria-hidden />
+            </PhoneLink>
           </div>
 
           <div className="min-w-0 lg:col-span-7">

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
+import ServiceCards from "@/components/sections/ServiceCards";
 import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
@@ -13,7 +14,6 @@ import {
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceOrQuote,
   Section,
   SectionHead,
 } from "@/components/ui";
@@ -294,6 +294,12 @@ export default async function CityPage({
           </div>
 
           <div className="min-w-0 lg:col-span-6">
+            {/* Route and the exit are road strings, five words on some
+                towns, and right aligned mono they wrap badly on a 390px
+                screen. Those two rows take the prose layout and read left
+                aligned instead. The address and hours are not rows here:
+                the hero paragraph, the trust bar and the footer already
+                carry both, and a fourth copy on the same page is noise. */}
             <KeyValueList label={`The drive from ${c.name}`}>
               <KeyValueRow k="Distance" v={milesLong(c.miles)} />
               <KeyValueRow k="Drive time" v={`about ${driveTime(c.minutes)}`} />
@@ -302,16 +308,19 @@ export default async function CityPage({
                 v={`about ${driveTime(c.minutes * 2)}`}
                 tone="pewter"
               />
-              <KeyValueRow k="Route" v={c.route} />
+              <KeyValueRow k="Route" v={c.route} mono={false} layout="prose" />
               <KeyValueRow k="County" v={c.county} tone="pewter" />
-              <KeyValueRow k="Nearest exit" v={NEAREST_EXIT.label} />
+              <KeyValueRow
+                k="Nearest exit"
+                v={NEAREST_EXIT.label}
+                mono={false}
+                layout="prose"
+              />
               <KeyValueRow
                 k="From the exit"
                 v={milesLong(NEAREST_EXIT.miles)}
                 tone="pewter"
               />
-              <KeyValueRow k="Shop" v={BRAND.addressLine} />
-              <KeyValueRow k="Hours" v={BRAND.hoursShort} />
             </KeyValueList>
 
             <p className="mt-5 text-[0.8125rem] leading-relaxed text-ink-400">
@@ -387,28 +396,20 @@ export default async function CityPage({
           title={`Everything a vehicle from ${c.name} can come in for`}
           intro={
             <p>
-              None of the {spell(SERVICES.length)} publishes a price, because
-              size and the condition of the paint move the number more than
-              the name of the service does. Every row below goes to the form
-              with that service already filled in, and the number comes back
-              in writing before any work starts.
+              Every card below goes to the form with that service already
+              filled in, and the number comes back in writing before any
+              work starts. None of the {spell(SERVICES.length)} publishes a
+              price, because size and the condition of the paint move the
+              number more than the name of the service does.
             </p>
           }
         />
 
-        <KeyValueList className="mt-8" label="Services">
-          {SERVICES.map((s) => (
-            <KeyValueRow
-              key={s.id}
-              k={
-                <Link href={s.href} className="link-inline">
-                  {s.index} {s.name}
-                </Link>
-              }
-              v={<PriceOrQuote service={s.quoteKey} value={s.fromPrice} size="sm" />}
-            />
-          ))}
-        </KeyValueList>
+        {/* These were nine ruled rows whose right column repeated the same
+            quote link nine times, on all sixteen towns. The cards read the
+            same SERVICES constants and carry his own photos, and on a phone
+            they turn sideways instead of stacking nine deep. */}
+        <ServiceCards className="mt-8 md:mt-10" />
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href="/services/" tone="ghost" size="sm">

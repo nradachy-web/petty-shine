@@ -69,13 +69,19 @@ export default function WarrantiesPage() {
               </p>
             </div>
 
-            <div className="mt-8">
+            {/* Two ghost actions, not one. The call is for people who
+                already know what they want; the anchor walks everyone
+                else down to the form this page keeps promising. */}
+            <div className="mt-8 flex flex-wrap gap-3">
               <PhoneLink
                 placement="warranties-hero"
                 className="ps-btn ps-btn--ghost"
               >
                 Call {BRAND.phoneDisplay}
               </PhoneLink>
+              <Button href="#quote-form" tone="ghost">
+                Ask for the terms with your quote
+              </Button>
             </div>
           </div>
 
@@ -210,23 +216,26 @@ export default function WarrantiesPage() {
       <Section plane="shop" label="Paint protection film">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
+            {/* The headline leads with the promise. The reason the term is
+                absent from the page still gets said, in the intro, where it
+                reads as diligence rather than a refusal. */}
             <SectionHead
               size="md"
-              title="Film has no term on this page yet."
+              title="The film term goes in writing with your quote."
               intro={
                 <p>
-                  We install {PPF_FILM.brand} film. We are not printing a film
-                  warranty term here until it has been verified for the vehicle
-                  it applies to, because a term you cannot hold anyone to is
-                  worth nothing at a claim.
+                  We install {PPF_FILM.brand} film. We do not print a film
+                  warranty term on this page until it has been verified for
+                  the vehicle it applies to, because a term you cannot hold
+                  anyone to is worth nothing at a claim.
                 </p>
               }
             />
 
             <div className="ps-prose mt-6">
               <p>
-                Ask for it and it goes in writing with the quote, against the
-                film that is actually going on your car.
+                Ask for it and it comes back written against the film that is
+                actually going on your car.
               </p>
             </div>
 

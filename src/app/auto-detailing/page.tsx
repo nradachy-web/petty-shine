@@ -280,19 +280,15 @@ export default function AutoDetailingPage() {
                       ceramic, so a detailing package id would ride into
                       the URL and then be dropped on the floor.
 
-                      The visible wording stays QUOTE_CTA_LABEL, one
-                      wording sitewide, and the level name is appended
-                      for screen readers only, so five links on one page
-                      do not all announce themselves identically. */}
+                      The visible wording keeps QUOTE_CTA_LABEL as its
+                      stem and appends the level name after it, visibly.
+                      Five rows ending in the same five words read as a
+                      wall, and the name tells everyone which level the
+                      link prices, not only screen readers. */}
                   <PriceOrQuote
                     service={SERVICE.quoteKey}
                     value={pkg.fromPrice}
-                    quoteLabel={
-                      <>
-                        {QUOTE_CTA_LABEL}
-                        <span className="sr-only">, {pkg.name}</span>
-                      </>
-                    }
+                    quoteLabel={`${QUOTE_CTA_LABEL}, ${pkg.name}`}
                   />
                 </div>
 
@@ -376,8 +372,10 @@ export default function AutoDetailingPage() {
       </Section>
 
       {/* ---------------------------------------------------------------
-          The wash stage, on three vehicles that have nothing in common.
-          That pairing is the argument: the process does not change.
+          The wash stage on two vehicles that have nothing in common,
+          then a Mustang with its wheels off. The pairing says the
+          process does not change, and the wheel-off says how far past
+          a wash that process goes.
           --------------------------------------------------------------- */}
       <Section plane="shop" label="The work">
         <SectionHead
@@ -392,25 +390,35 @@ export default function AutoDetailingPage() {
           }
         />
 
-        <div className="mt-9 grid min-w-0 grid-cols-2 gap-5 md:mt-11 md:grid-cols-3 md:gap-6">
+        {/* Two wash plates, not three: the intro names a work truck and
+            a Lamborghini, and these are them. The 911 wash plate came
+            out to make room for the wheel-off below without the section
+            running five photos deep. */}
+        <div className="mt-9 grid min-w-0 grid-cols-2 gap-5 md:mt-11 md:gap-6">
           <Plate
             id="wash-f250-foam"
             ratio="4 / 3"
             caption="F-250 Super Duty"
-            sizes="(min-width: 768px) 24rem, 45vw"
+            sizes="(min-width: 768px) 30rem, 45vw"
           />
           <Plate
             id="wash-huracan-foam"
             ratio="4 / 3"
             caption="Huracan, decontamination wash"
-            sizes="(min-width: 768px) 24rem, 45vw"
+            sizes="(min-width: 768px) 30rem, 45vw"
           />
+        </div>
+
+        {/* The strongest process proof in the registry for this page: a
+            Mustang with its wheels off. Nobody pulls four wheels for a
+            car wash, so the photo makes the depth argument on its own.
+            Bleed cleared, and the caption says exactly what the photo
+            shows. */}
+        <div className="mt-5 md:mt-6">
           <Plate
-            id="wash-porsche-911"
-            ratio="4 / 3"
-            className="col-span-2 md:col-span-1"
-            caption="911, in the wash bay"
-            sizes="(min-width: 768px) 24rem, 100vw"
+            id="wheels-mustang"
+            bleed
+            caption="Mustang, wheels off for a full wheel-off detail"
           />
         </div>
 

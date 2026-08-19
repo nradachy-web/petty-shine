@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./flagship.css";
 
 import { QuoteLink } from "@/components/ui";
+import { RevealGroup } from "@/components/ui/Reveal";
 import { SERVICES, type ServiceLine } from "@/lib/constants";
 import { PHOTOS } from "@/lib/photos";
 import { asset } from "@/lib/asset";
@@ -77,7 +78,7 @@ export default function ServiceCards({
   className?: string;
 }) {
   return (
-    <ul className={cn("svc-grid", className)}>
+    <RevealGroup as="ul" className={cn("svc-grid", className)}>
       {services.map((s) => (
         <li key={s.id} className="svc-card">
           <CardMedia service={s} />
@@ -107,7 +108,7 @@ export default function ServiceCards({
           </div>
         </li>
       ))}
-    </ul>
+    </RevealGroup>
   );
 }
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
 import PhoneLink from "@/components/tracking/PhoneLink";
+import CoatingTiers from "@/components/sections/CoatingTiers";
 import TrustBar from "@/components/sections/TrustBar";
 import {
   Breadcrumbs,
@@ -496,23 +497,6 @@ export default function PricingPage() {
                 , which is worth checking before you book anywhere.
               </p>
             </div>
-          </div>
-
-          <div className="min-w-0 lg:col-span-7">
-            <KeyValueList label="What each coating tier is">
-              {COATINGS.map((coating) => {
-                const subtitle = subtitleOf(coating);
-                return (
-                  <KeyValueRow
-                    key={coating.id}
-                    k={subtitle ? `${coating.name}, ${subtitle}` : coating.name}
-                    note={`${coating.guarantee} guarantee`}
-                    v={coating.bestFor}
-                    mono={false}
-                  />
-                );
-              })}
-            </KeyValueList>
             <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">
               <QuoteLink service="ceramic" />
               <Link href="/ceramic-coating/" className="link-inline">
@@ -520,7 +504,28 @@ export default function PricingPage() {
               </Link>
             </div>
           </div>
+
+          {/* The one photograph in the tiers section. By this point the
+              reader has crossed thirteen prose rows without a visual
+              moment, and the coating claim above is exactly the kind a
+              photograph can carry. Framed, not bleed: this id has no
+              1600px rendition. */}
+          <div className="min-w-0 lg:col-span-7">
+            <Plate
+              id="coating-challenger-hellcat"
+              caption="Challenger SRT Hellcat Widebody after paint correction and ceramic coating"
+              sizes="(min-width: 1024px) 40rem, 100vw"
+            />
+          </div>
         </div>
+
+        {/* The three tiers side by side, replacing what was a three row
+            kv list of the same COATINGS. The compare answers "which one"
+            in one screen, and its grid needs the full section width: the
+            .tiers media query goes three up at a 900px viewport, so
+            inside a seven column cell the cards would crush. Each card
+            carries its own qualified quote link, so nothing follows it. */}
+        <CoatingTiers className="mt-10 md:mt-12" />
 
         {/* ---- EVERYTHING WITH NO LADDER OF LEVELS. One sentence each,
              saying what its number is actually made of. ---- */}

@@ -12,7 +12,7 @@ import { BRAND, NEAREST_EXIT } from "@/lib/constants";
 import { milesLong } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Request received",
+  title: "Request Received",
   description: "Your quote request has been sent to Petty Shine.",
   robots: { index: false, follow: false },
 };

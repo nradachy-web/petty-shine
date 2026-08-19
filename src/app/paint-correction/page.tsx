@@ -16,7 +16,7 @@ import { PriceOrQuote } from "@/components/ui/PriceFigure";
 import RuleLabel from "@/components/ui/RuleLabel";
 import Section, { PlanePanel, SectionHead } from "@/components/ui/Section";
 import { asset } from "@/lib/asset";
-import { PHOTOS } from "@/lib/photos";
+import { PHOTOS, type PhotoId } from "@/lib/photos";
 import {
   BRAND,
   CITIES,
@@ -195,6 +195,8 @@ function LevelPanel({
   tier,
   index,
   body,
+  quoteLabel,
+  photo,
 }: {
   plane: "sheet" | "shop";
   /* The two tiers that carry a subtitle. Typed as the two members rather
@@ -203,6 +205,14 @@ function LevelPanel({
   tier: typeof LEVEL_2 | typeof LEVEL_3;
   index: number;
   body: string;
+  /* Each level gets its own quote label. Two identical "Quoted on your
+     vehicle" links side by side read as one repeated element, and the
+     label is the last word each panel says. */
+  quoteLabel: string;
+  /* Optional proof photograph, framed, never bleed. Only the full
+     correction panel carries one: the sheet panel stays text-only so the
+     two planes keep their contrast. */
+  photo?: { id: PhotoId; caption: string };
 }) {
   return (
     <PlanePanel
@@ -218,9 +228,24 @@ function LevelPanel({
         <p>{body}</p>
       </div>
 
+      {photo ? (
+        <Plate
+          id={photo.id}
+          caption={photo.caption}
+          className="mt-7 max-w-sm"
+          sizes="(min-width: 1024px) 24rem, (min-width: 640px) 60vw, 100vw"
+        />
+      ) : null}
+
       <KeyValueList className="mt-7" label={`${tier.name} specification`}>
         <KeyValueRow k="Package" v={tier.name} />
-        <KeyValueRow k="Quoted on" v="Vehicle size and paint condition" />
+        {/* Sentence-shaped value, so no mono: right-aligned mono is for
+            figures, and this one is prose. */}
+        <KeyValueRow
+          k="Quoted on"
+          v="Vehicle size and paint condition"
+          mono={false}
+        />
       </KeyValueList>
 
       <div className="mt-7">
@@ -231,6 +256,7 @@ function LevelPanel({
           service={SERVICE.quoteKey}
           value={tier.fromPrice}
           size="lg"
+          quoteLabel={quoteLabel}
         />
       </div>
     </PlanePanel>
@@ -280,12 +306,18 @@ export default function PaintCorrectionPage() {
             tier={LEVEL_2}
             index={2}
             body="One polishing stage. The gloss comes up and the light defects go, which on most daily driven paint is the visible difference people are actually asking for."
+            quoteLabel="Price the enhancement"
           />
           <LevelPanel
             plane="shop"
             tier={LEVEL_3}
             index={3}
             body="It takes more than one stage, and it removes the defect rather than filling or hiding it. It is also what the nine year coating starts with."
+            quoteLabel="Price the full correction"
+            photo={{
+              id: "coating-supra",
+              caption: "White Supra after paint correction",
+            }}
           />
         </div>
       </Section>

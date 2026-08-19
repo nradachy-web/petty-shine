@@ -55,16 +55,29 @@ export function RevealGroup({
   children,
   className,
   id,
+  as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   id?: string;
+  /**
+   * The element the group renders as. A grid that is semantically a
+   * list stays a real <ul> or <ol> and still gets the stagger, instead
+   * of being wrapped in a div that would either break the markup or
+   * stagger a single child.
+   */
+  as?: "div" | "ul" | "ol" | "dl";
 }) {
-  const ref = useEnterOnce<HTMLDivElement>("data-ps-reveal");
+  const ref = useEnterOnce<HTMLElement>("data-ps-reveal");
   return (
-    <div id={id} ref={ref} className={cn("ps-reveal-group", className)}>
+    <Tag
+      id={id}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ref={ref as any}
+      className={cn("ps-reveal-group", className)}
+    >
       {children}
-    </div>
+    </Tag>
   );
 }
 

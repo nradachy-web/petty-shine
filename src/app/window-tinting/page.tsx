@@ -4,6 +4,7 @@ import Link from "next/link";
 import QuoteForm from "@/components/quote/QuoteForm";
 import { SpecificationPending } from "@/components/ppf";
 import CTABand from "@/components/sections/CTABand";
+import TownChips from "@/components/sections/TownChips";
 import TrustBar from "@/components/sections/TrustBar";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
@@ -13,7 +14,14 @@ import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
 import { PriceOrQuote } from "@/components/ui/PriceFigure";
 import Section, { SectionHead } from "@/components/ui/Section";
-import { BRAND, NC_TINT_LAW, NEAREST_EXIT, SERVICES } from "@/lib/constants";
+import {
+  BRAND,
+  CITIES,
+  NC_TINT_LAW,
+  NEAREST_EXIT,
+  REVIEWS,
+  SERVICES,
+} from "@/lib/constants";
 import { milesLong } from "@/lib/utils";
 
 /* ============================================================================
@@ -33,6 +41,13 @@ import { milesLong } from "@/lib/utils";
    ========================================================================== */
 
 const SERVICE = SERVICES.find((s) => s.id === "window-tinting")!;
+
+/* The one review about the process rather than the finish: quoting,
+   scheduling, final inspection, which is exactly what the form asks a
+   visitor to start. It was a detailing and coating job, and the footer
+   prints that service label verbatim, so it never reads as a tint job. */
+const PROCESS_REVIEW =
+  REVIEWS.find((r) => r.name === "Scott Fischer") ?? REVIEWS[0];
 
 /** What actually moves a tint number. None of it is how dark you want it,
     which is the thing most people assume and the thing the statute settles. */
@@ -99,9 +114,12 @@ export default function WindowTintingPage() {
                 Most tint questions turn out to be law questions. North
                 Carolina sets one standard for every window except the
                 windshield, and it does not get looser for the back glass. The
-                statute is printed further down this page with the citation on
-                every line, so you can check it against what any shop tells
-                you.
+                statute is{" "}
+                <a href="#nc-law" className="link-inline">
+                  printed further down this page
+                </a>{" "}
+                with the citation on every line, so you can check it against
+                what any shop tells you.
               </p>
               <p>
                 Tint is quoted on the vehicle, and the number goes to you in
@@ -110,14 +128,12 @@ export default function WindowTintingPage() {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              {/* The primary action, and it was missing. The hero ran two
-                  ghost buttons, so the first solid thing on the page was the
-                  submit inside the form near the foot of it. */}
+              {/* Two actions, one solid. A third button for the statute rode
+                  here for a while and wrapped the row on a phone, so the law
+                  link now sits inline in the paragraph that talks about the
+                  statute, which is where a reader is when they want it. */}
               <Button href="#quote" tone="cyan">
                 Get a price on your vehicle
-              </Button>
-              <Button href="#nc-law" tone="ghost">
-                Read the {BRAND.stateName} limits
               </Button>
               <PhoneLink
                 placement="window-tinting-hero"
@@ -320,15 +336,25 @@ export default function WindowTintingPage() {
               title="The film and the warranty, in writing."
               intro={
                 <p>
-                  We name the film and the terms behind it for your vehicle
-                  before the work starts, and we hand it to you in writing. We
-                  do not publish a warranty on this page that we have not
-                  verified.
+                  A tint warranty is easy to print and hard to check from the
+                  outside. Ours works the other way: we name the film and the
+                  terms behind it for your vehicle before the work starts, and
+                  we hand it to you in writing.
                 </p>
               }
             />
 
-            <SpecificationPending className="mt-7" />
+            {/* The caveat used to close the intro, which left the section
+                opening on a negative. It sits here instead, against the
+                pending rows it explains. The promise closes the intro. */}
+            <div className="ps-prose mt-6">
+              <p>
+                We do not publish a warranty on this page that we have not
+                verified.
+              </p>
+            </div>
+
+            <SpecificationPending className="mt-4" />
 
             <div className="ps-prose mt-6">
               <p>
@@ -370,8 +396,40 @@ export default function WindowTintingPage() {
               source="/window-tinting/"
               id="quote-form"
             />
+
+            {/* Social proof at the decision point, verbatim and attributed.
+                Chosen because it is about quoting and scheduling, which is
+                the step the form asks for. The footer prints the review's
+                own service label, so it does not read as a tint job. */}
+            <blockquote className="mt-9 min-w-0 border-t border-rule-light pt-7">
+              <span aria-hidden className="block h-px w-6 bg-cyan-500" />
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-ink-900">
+                {PROCESS_REVIEW.text}
+              </p>
+              <footer className="mt-5 flex flex-wrap items-baseline gap-x-6 gap-y-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em]">
+                <span className="text-ink-900">{PROCESS_REVIEW.name}</span>
+                <span className="text-ink-400">{PROCESS_REVIEW.service}</span>
+                <a
+                  href={BRAND.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-24 text-cyan-ink underline underline-offset-4"
+                >
+                  Read it on Google
+                </a>
+              </footer>
+            </blockquote>
           </div>
         </div>
+
+        {/* The measured town chips, under the form where somebody deciding
+            whether the drive is worth it actually is. One mono line of
+            context; the full table with miles and routes stays on /areas/. */}
+        <p className="mt-14 font-mono text-[0.6875rem] uppercase leading-relaxed tracking-[0.2em] text-ink-400">
+          Where the cars come from · {CITIES.length} towns, measured from the
+          shop door
+        </p>
+        <TownChips className="mt-5" />
       </Section>
     </>
   );

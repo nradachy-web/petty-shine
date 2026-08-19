@@ -306,6 +306,36 @@ export default function InteriorDetailingPage() {
           </div>
         </div>
 
+        {/* ---- The one photograph inside the ladder. The levels run long
+             as one text column, and a run that long needs a visual moment
+             before the scope talk. The old-car copy rides with it because
+             the photo is the proof of the sentence beside it. ---- */}
+        <div className="mt-11 grid min-w-0 gap-10 md:grid-cols-12 md:items-end md:gap-14">
+          <div className="min-w-0 md:col-span-7">
+            <Plate
+              id="interior-mustang-65"
+              caption="1965 Mustang, interior detail"
+              sizes="(min-width: 768px) 36rem, 100vw"
+            />
+          </div>
+          <div className="min-w-0 md:col-span-5">
+            <h2 className="ps-heading text-[1.3rem] md:text-[1.5rem]">
+              Old cars too
+            </h2>
+            <div className="ps-prose mt-4">
+              <p>
+                An old interior and a new one are the same job with different
+                tolerances. Both come off the same levels.
+              </p>
+            </div>
+            <div className="mt-7">
+              <Button href="/gallery/" tone="ghost" size="sm">
+                See more of the work
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* ---- What an interior detail is not. Said here, before the
              money, rather than at pickup. ---- */}
         <div className="mt-11 grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
@@ -386,35 +416,6 @@ export default function InteriorDetailingPage() {
           ctaLabel="Get a price"
           body="Send the year, make and model and tell us what the inside looks like now."
         />
-      </Section>
-
-      <Section plane="shop" label="The work">
-        <div className="grid min-w-0 gap-10 md:grid-cols-12 md:items-end md:gap-14">
-          <div className="min-w-0 md:col-span-7">
-            <Plate
-              id="interior-mustang-65"
-              caption="1965 Mustang, interior detail"
-              sizes="(min-width: 768px) 36rem, 100vw"
-            />
-          </div>
-          <div className="min-w-0 md:col-span-5">
-            <SectionHead
-              size="md"
-              title="Old cars too."
-              intro={
-                <p>
-                  An old interior and a new one are the same job with
-                  different tolerances. Both come off the same levels.
-                </p>
-              }
-            />
-            <div className="mt-7">
-              <Button href="/gallery/" tone="ghost" size="sm">
-                See more of the work
-              </Button>
-            </div>
-          </div>
-        </div>
       </Section>
 
       {/* ---------------------------------------------------------------

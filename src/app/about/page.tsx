@@ -69,8 +69,11 @@ const STEK = CREDENTIALS.find((c) => c.id === "stek")!;
 
 /** Link labels describing where each citation points. */
 const SOURCE_LABEL: Record<string, string> = {
-  gtechniq: "Look him up in Gtechniq's detailer directory",
-  stek: "Look him up in STEK USA's installer directory",
+  /* Short enough to sit on one line inside a ps-btn at 390px. The copy
+     around the button already says whose directory it is and what checking
+     it proves; a 40 character uppercase label wrapped to three lines. */
+  gtechniq: "Check the Gtechniq directory",
+  stek: "Check the STEK directory",
 };
 
 /** The service page each credential is the argument for. */

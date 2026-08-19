@@ -18,10 +18,18 @@ import { cn } from "@/lib/utils";
  * The internal links keep their descriptive anchors: town name plus
  * measured minutes is exactly what the town page answers.
  */
-export default function TownChips({ className }: { className?: string }) {
+export default function TownChips({
+  className,
+  slugs,
+}: {
+  className?: string;
+  /** limit to these town slugs, in CITIES order. Omit for all sixteen. */
+  slugs?: readonly string[];
+}) {
+  const towns = slugs ? CITIES.filter((c) => slugs.includes(c.slug)) : CITIES;
   return (
     <ul className={cn("towns", className)}>
-      {CITIES.map((c) => (
+      {towns.map((c) => (
         <li key={c.slug} className="min-w-0">
           <Link
             href={`/areas/${c.slug}/`}

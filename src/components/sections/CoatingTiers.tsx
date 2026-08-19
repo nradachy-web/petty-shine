@@ -4,6 +4,7 @@ import { KeyValueList, KeyValueRow } from "@/components/ui";
 import { PriceOrQuote } from "@/components/ui/PriceFigure";
 import { COATINGS, SERVICES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { RevealGroup } from "@/components/ui/Reveal";
 
 /**
  * THE THREE COATINGS, SIDE BY SIDE.
@@ -88,11 +89,11 @@ function TierCard({ coating }: { coating: Coating }) {
 
 export default function CoatingTiers({ className }: { className?: string }) {
   return (
-    <ol className={cn("tiers", className)}>
+    <RevealGroup as="ol" className={cn("tiers", className)}>
       {COATINGS.map((c) => (
         <TierCard key={c.id} coating={c} />
       ))}
-    </ol>
+    </RevealGroup>
   );
 }
 

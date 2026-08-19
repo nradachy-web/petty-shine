@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import CTABand from "@/components/sections/CTABand";
 import TrustBar from "@/components/sections/TrustBar";
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
@@ -213,8 +214,8 @@ export default function PaintlessDentRepairPage() {
           }
         />
 
-        <div className="mt-9 grid min-w-0 gap-10 lg:mt-11 lg:grid-cols-2 lg:gap-14">
-          <div className="min-w-0">
+        <div className="mt-9 grid min-w-0 gap-10 lg:mt-11 lg:grid-cols-12 lg:gap-10">
+          <div className="min-w-0 lg:col-span-4">
             <h3 className="ps-heading text-lg">Damage this suits</h3>
             <KeyValueList className="mt-5" label="Damage paintless repair suits">
               {SUITS.map((row) => (
@@ -223,7 +224,20 @@ export default function PaintlessDentRepairPage() {
             </KeyValueList>
           </div>
 
-          <div className="min-w-0">
+          {/* One photograph between the two lists, so this screen is not
+              eight prose rows deep. It is corrected paint, not dent work,
+              and the caption says so. What it shows is a panel read in
+              reflection, the same test both lists lean on. 960px source,
+              so it stays framed, never bleed. */}
+          <div className="min-w-0 lg:col-span-4 lg:self-center">
+            <Plate
+              id="correction-reflection"
+              caption="Corrected black paint holding straight reflections, the lines a dent would bend"
+              sizes="(min-width: 1024px) 22rem, 100vw"
+            />
+          </div>
+
+          <div className="min-w-0 lg:col-span-4">
             <h3 className="ps-heading text-lg">Where it stops</h3>
             <KeyValueList className="mt-5" label="Where paintless repair stops">
               {STOPS.map((row) => (
@@ -267,8 +281,17 @@ export default function PaintlessDentRepairPage() {
                 k="Price"
                 v={<PriceOrQuote service={SERVICE.quoteKey} value={null} />}
               />
-              <KeyValueRow k="Quoted on" v="The panel, and how deep the dent is" />
-              <KeyValueRow k="Paint" v="Factory paint stays on the car" />
+              {/* Sentence shaped values, so no mono and no right alignment. */}
+              <KeyValueRow
+                k="Quoted on"
+                v="The panel, and how deep the dent is"
+                mono={false}
+              />
+              <KeyValueRow
+                k="Paint"
+                v="Factory paint stays on the car"
+                mono={false}
+              />
               <KeyValueRow k="Shop" v={BRAND.addressLine} />
               <KeyValueRow k="Open" v={BRAND.hoursShort} />
             </KeyValueList>
@@ -344,6 +367,18 @@ export default function PaintlessDentRepairPage() {
             />
           </div>
         </div>
+
+        {/* The section above just taught the reflection photo. This line
+            asks for it while the instruction is still on screen, and the
+            quote link carries the visitor the rest of the way. Line
+            variant: the hero already holds this page's one solid button. */}
+        <CTABand
+          variant="line"
+          service={SERVICE.quoteKey}
+          ctaLabel="Get a price"
+          body="Take that reflection photo and send it with the year, make and model. We will come back with a number for the dent, in writing, before the car is here."
+          className="mt-12"
+        />
       </Section>
 
       <Section plane="sheet" label="Get a price" id="quote">

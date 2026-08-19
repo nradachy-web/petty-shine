@@ -214,6 +214,19 @@ const SHOWN = [
 
 const LADDER = SERVICES.filter((s) => SHOWN.includes(s.id));
 
+/**
+ * One label per price row. Six identical "Quoted on your vehicle" links
+ * read as one dead column; each link should name the thing it prices.
+ */
+const QUOTE_LABELS: Record<string, string> = {
+  "auto-detailing": "Price detailing",
+  "ceramic-coating": "Price a coating",
+  "paint-protection-film": "Price film coverage",
+  "paint-correction": "Price a correction",
+  "interior-detailing": "Price an interior",
+  "marine-detailing": "Price a boat detail",
+};
+
 /** A detailing review, because this page is mostly detailing photographs. */
 const PROOF = REVIEWS.find((r) => r.name === "Jacob Freeman")!;
 
@@ -281,13 +294,27 @@ export default function GalleryPage() {
                   k={`${g.index} ${g.title}`}
                   tone="cyan"
                   v={
-                    <a href={`#${g.slug}`} className="underline decoration-1 underline-offset-4">
+                    /* py-1 -my-1 grows the tap target past 24px without
+                       moving the row rhythm. */
+                    <a
+                      href={`#${g.slug}`}
+                      className="-my-1 inline-flex items-center py-1 underline decoration-1 underline-offset-4"
+                    >
                       {frameCount(g)} {frameCount(g) === 1 ? "frame" : "frames"}
                     </a>
                   }
                 />
               ))}
             </KeyValueList>
+
+            {/* A next step before 23 frames of scroll, for the visitor who
+                arrived already decided. Ghost, not cyan: the hero photo owns
+                this screen. */}
+            <div className="mt-7">
+              <Button href="/quote/" tone="ghost" size="sm">
+                Get a price
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -336,7 +363,7 @@ export default function GalleryPage() {
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
               size="md"
-              title="What the work above costs."
+              title="What this work costs."
               intro={
                 <p>
                   No car on this page cost the same as the one beside it. Size
@@ -365,6 +392,7 @@ export default function GalleryPage() {
                       service={s.quoteKey}
                       value={s.fromPrice}
                       size="sm"
+                      quoteLabel={QUOTE_LABELS[s.id]}
                     />
                   }
                 />

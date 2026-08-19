@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import TownChips from "@/components/sections/TownChips";
+import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
@@ -8,7 +10,7 @@ import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
 import Section, { SectionHead } from "@/components/ui/Section";
 import { BRAND, CITIES, NEAREST_EXIT } from "@/lib/constants";
-import { driveTimeShort, milesLong, milesShort } from "@/lib/utils";
+import { milesLong } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Contact and Directions",
@@ -19,8 +21,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact/" },
 };
 
-/** CITIES is already ordered by measured road distance from the shop door. */
-const NEARBY = CITIES.slice(0, 8);
+/** CITIES is already ordered by measured road distance from the shop door,
+    so the first eight slugs are the eight nearest towns. */
+const NEARBY_SLUGS = CITIES.slice(0, 8).map((c) => c.slug);
 
 export default function ContactPage() {
   return (
@@ -106,6 +109,12 @@ export default function ContactPage() {
         </div>
       </Section>
 
+      {/* Every value in this row comes out of constants, and both credentials
+          link into the manufacturer's own directory. A visitor on the contact
+          page is one step from calling, which is exactly when a credential
+          they can check themselves earns its keep. */}
+      <TrustBar plane="sheet" />
+
       <Section plane="shop" label="The shop">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
@@ -143,8 +152,9 @@ export default function ContactPage() {
               title="Measured, not estimated."
               intro={
                 <p>
-                  Road distance and drive time from the shop door, along the
-                  route people actually take.
+                  Drive time measured from the shop door, along the route
+                  people actually take. Miles and routes are on each
+                  town&rsquo;s own page.
                 </p>
               }
             />
@@ -156,16 +166,12 @@ export default function ContactPage() {
           </div>
 
           <div className="min-w-0 lg:col-span-7">
-            <KeyValueList label="Drive times from the shop">
-              {NEARBY.map((c) => (
-                <KeyValueRow
-                  key={c.slug}
-                  k={c.name}
-                  v={`${milesShort(c.miles)}, about ${driveTimeShort(c.minutes)}`}
-                  note={c.route}
-                />
-              ))}
-            </KeyValueList>
+            {/* The eight nearest towns as real links with the measured
+                minutes riding on each chip. The first build printed them
+                as unlinked key and value rows, which answered nothing a
+                click could not answer better; the full table with miles
+                and routes lives on /areas/ and on every town's own page. */}
+            <TownChips slugs={NEARBY_SLUGS} />
           </div>
         </div>
       </Section>

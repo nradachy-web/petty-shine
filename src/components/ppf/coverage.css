@@ -31,6 +31,46 @@
   min-width: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* THE PHONE KEEPS THE AREA NAMES. Under 700px the table scrolls
+   sideways, and without this the first swipe took the row labels off
+   screen with it, leaving four columns of anonymous marks. The label
+   column rides sticky on its own plane ground; the hint line above the
+   table only exists at widths where there is something to slide. */
+.cov-matrix__hint {
+  display: none;
+}
+@media (max-width: 699px) {
+  .cov-matrix__hint {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-family: var(--ps-font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .cov-table__corner,
+  .cov-table__area {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    width: 8.5rem;
+    max-width: 8.5rem;
+  }
+}
+@layer components {
+  .cov-matrix__hint {
+    color: var(--ps-quiet);
+  }
+  @media (max-width: 699px) {
+    .cov-table__corner,
+    .cov-table__area {
+      background: var(--ps-ground);
+    }
+  }
 }
 
 .cov-table {
@@ -42,7 +82,11 @@
 
 /* ---- header ---- */
 .cov-table__corner {
-  width: 30%;
+  /* Sized to the longest area label, not to a third of the page. At 30%
+     the label column took 430px of a 1440 shell for "Rear impact area"
+     and pushed the four package columns into the right half, opening a
+     dead gutter through the middle of the table. */
+  width: 13rem;
   padding: 0 1rem 0.9rem 0;
   font-family: var(--ps-font-mono);
   font-size: 0.6875rem;

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import StatBand from "@/components/sections/StatBand";
+import TrustBar from "@/components/sections/TrustBar";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
@@ -99,9 +101,19 @@ export default function AreasPage() {
               <KeyValueRow k="Hours" v={BRAND.hoursShort} />
             </KeyValueList>
 
+            {/* Before this the only actions on the page were the phone panel
+                and sixteen town links; the form sat unannounced at the bottom.
+                Same solid action and label every service and town page runs,
+                pointed at the form on this page. The one cyan spend here. */}
+            <div className="mt-8">
+              <Button href="#quote-form" tone="cyan">
+                Get a price on your vehicle
+              </Button>
+            </div>
+
             <PhoneLink
               placement="areas-index"
-              className="mt-8 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
+              className="mt-6 flex min-w-0 items-center justify-between gap-4 border border-rule-light bg-sheet-060 px-5 py-5 transition-colors hover:border-cyan-500"
             >
               <span className="min-w-0">
                 <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-400">
@@ -140,6 +152,19 @@ export default function AreasPage() {
         </div>
       </Section>
 
+      {/* The hero above is the longest unbroken run of kv rows on the site,
+          twenty two of them on a phone. The stat band breaks that run with a
+          display moment: the same four derived numbers the homepage opens
+          with, nothing typed by hand. */}
+      <Section plane="sheet" label="The record">
+        <StatBand />
+      </Section>
+
+      {/* Every value in this row comes out of constants, and both credentials
+          link into the manufacturer's own directory. This page had no trust
+          signals at all before it. */}
+      <TrustBar plane="sheet" />
+
       <Section plane="shop" label="The shop">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
@@ -164,10 +189,12 @@ export default function AreasPage() {
           </div>
 
           <div className="min-w-0 lg:col-span-7">
+            {/* coating-huracan is Randleman's own town page photo, so this
+                page spends a plate no town page uses. Framed, not bleed: a
+                960px source. No priority, it sits well below the fold. */}
             <Plate
-              id="coating-huracan"
-              priority
-              caption={`Inside the shop, ${BRAND.city} ${BRAND.state}`}
+              id="ppf-mclaren-gt"
+              caption={`McLaren GT inside the shop, ${BRAND.city} ${BRAND.state}`}
               sizes="(min-width: 1024px) 45rem, 100vw"
             />
           </div>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
+import ServiceCards from "@/components/sections/ServiceCards";
 import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
@@ -12,7 +12,6 @@ import {
   KeyValueList,
   KeyValueRow,
   Plate,
-  PriceOrQuote,
   Section,
   SectionHead,
 } from "@/components/ui";
@@ -51,6 +50,15 @@ import { spell, spellCap } from "../areas/[city]/facts";
    Nine identical quote links is the point, not a compromise. One wording,
    one behaviour, one arrow, so the page reads as a system rather than as
    nine improvisations. QuoteLink gives each one its own accessible name.
+
+   THIRD PASS. The rows became cards. Nine ruled text rows on a page that
+   sits on 29 real job photos was the index selling the work without ever
+   showing it. ServiceCards carries the same nine services, the same order,
+   the same one quote link each, and puts each service's own photograph on
+   its card. The three groups stay: they are the h2 structure the page ranks
+   on, and the blurbs are the only place the groups get explained. Each
+   group's grid runs full width because svc-grid is its own responsive
+   layout and its sizes attribute assumes container width.
    ========================================================================== */
 
 /** The two grouped entries in the site navigation, in menu order. */
@@ -112,40 +120,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services/" },
 };
 
-/** One row. The name and blurb are one big target, the quote link its own. */
-function ServiceRow({ s }: { s: ServiceLine }) {
-  return (
-    <li className="min-w-0 border-b border-rule-light">
-      <div className="grid min-w-0 gap-x-8 gap-y-2 py-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-        <Link
-          href={s.href}
-          className="group block min-w-0 py-3 sm:py-4"
-          aria-label={`${s.name}, ${s.blurb}`}
-        >
-          <span className="flex min-w-0 items-baseline gap-3">
-            <span className="font-mono text-[0.6875rem] tabular-nums tracking-[0.18em] text-ink-400 transition-colors group-hover:text-cyan-ink">
-              {s.index}
-            </span>
-            <span className="ps-heading min-w-0 text-[1.15rem] text-ink-900 underline decoration-rule-light decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-cyan-500 sm:text-[1.3rem]">
-              {s.name}
-            </span>
-          </span>
-          <span className="mt-2 block max-w-md text-[0.9375rem] leading-relaxed text-ink-600">
-            {s.blurb}
-          </span>
-        </Link>
-
-        <div className="pb-3 sm:pb-0 sm:text-right">
-          {/* The gate is in the component. It prints the figure when
-              PRICING_MODE is public and the tappable quote link when it is
-              not, and it is never a dead label either way. */}
-          <PriceOrQuote service={s.quoteKey} value={s.fromPrice} />
-        </div>
-      </div>
-    </li>
-  );
-}
-
 export default function ServicesPage() {
   return (
     <>
@@ -179,7 +153,7 @@ export default function ServicesPage() {
                 None of them carries a published price. What a job costs moves
                 with the size of the vehicle and the condition of the paint
                 far more than it moves with the name of the service, so every
-                row below goes to the form with that service already filled
+                card below goes to the form with that service already filled
                 in, and the number comes back in writing.
               </p>
             </div>
@@ -227,29 +201,24 @@ export default function ServicesPage() {
           THE NINE, IN THREE GROUPS.
           --------------------------------------------------------------- */}
       <Section plane="sheet" label="The list">
-        <div className="grid min-w-0 gap-12 lg:gap-16">
+        <div className="grid min-w-0 gap-14 lg:gap-20">
           {GROUPS.map((g) => (
-            <div
-              key={g.key}
-              className="grid min-w-0 gap-8 lg:grid-cols-12 lg:gap-14"
-            >
-              <div className="min-w-0 lg:col-span-4">
+            <div key={g.key} className="min-w-0">
+              <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
                 <h2 className="ps-display ps-display-md">{g.label}</h2>
-                <p className="mt-4 max-w-md text-[0.9375rem] leading-relaxed text-ink-600">
-                  {g.blurb}
-                </p>
-                <p className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-ink-400">
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-ink-400">
                   {spell(g.rows.length)} services
                 </p>
               </div>
+              <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-600">
+                {g.blurb}
+              </p>
 
-              <div className="min-w-0 lg:col-span-8">
-                <ul className="min-w-0 border-t border-rule-light">
-                  {g.rows.map((s) => (
-                    <ServiceRow key={s.id} s={s} />
-                  ))}
-                </ul>
-              </div>
+              {/* The cards carry the photos, the links and the quote asks.
+                  Full width, not beside the heading: svc-grid brings its own
+                  one, two, three column layout and its image sizes assume
+                  container width. */}
+              <ServiceCards services={g.rows} className="mt-7 md:mt-8" />
             </div>
           ))}
         </div>

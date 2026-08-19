@@ -76,6 +76,9 @@ function Mark({ on, added }: { on: boolean; added: boolean }) {
 export default function CoverageMatrix({ className }: { className?: string }) {
   return (
     <div className={cn("cov-matrix", className)}>
+      <p className="cov-matrix__hint" aria-hidden="true">
+        Slide for all four levels {"→"}
+      </p>
       <div className="cov-matrix__scroll">
         <table className="cov-table">
           <caption className="sr-only">

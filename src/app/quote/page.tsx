@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
@@ -48,6 +49,11 @@ export default function QuotePage() {
     <>
       <Breadcrumbs plane="sheet" trail={[{ label: "Get a quote", href: "/quote/" }]} />
 
+      {/* The one page every quote CTA on the site funnels into was the one
+          page with nothing backing the ask. The same hairline row the money
+          pages run: 4.9 from 47, both credentials, the town. */}
+      <TrustBar plane="sheet" />
+
       {/* ---------------------------------------------------------------
           THE FIRST FIELD IS THE POINT OF THIS PAGE.
 
@@ -83,10 +89,10 @@ export default function QuotePage() {
             <div className="ps-prose mt-6">
               <p>
                 {BRAND.name} is an auto detailing shop at {BRAND.street} in{" "}
-                {BRAND.city}, {BRAND.stateName}. Nothing on this site carries a
-                price, because the vehicle decides it. Send yours and we will
-                come back with a number for that one, in writing, before any
-                work starts.
+                {BRAND.city}, {BRAND.stateName}. Send the vehicle and what you
+                want done, and a number for that car comes back in writing
+                before any work starts. The vehicle decides the price, which is
+                why this site does not guess one for you.
               </p>
             </div>
           </div>
@@ -156,9 +162,12 @@ export default function QuotePage() {
           </div>
 
           <div className="min-w-0 lg:col-span-7">
+            {/* detail-jeep-teal has a real 1600px rendition, so it holds at
+                this column width. The C8 side profile it replaces is a 640px
+                source that went visibly soft at 45rem on a 2x screen. */}
             <Plate
-              id="coating-corvette-c8-side"
-              caption="Ceramic coating, Corvette C8"
+              id="detail-jeep-teal"
+              caption="Jeep Wrangler Rubicon, after a detail"
               sizes="(min-width: 1024px) 45rem, 100vw"
             />
           </div>
@@ -180,7 +189,12 @@ export default function QuotePage() {
                 </p>
               }
             />
-            <div className="mt-7">
+            {/* The copy above says "come back and send the vehicle", so the
+                row gives that journey a button instead of only the detour. */}
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Button href="#quote-form" tone="ghost" size="sm">
+                Send the vehicle
+              </Button>
               <Button href="/pricing/" tone="ghost" size="sm">
                 What moves the number
               </Button>

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 import QuoteForm from "@/components/quote/QuoteForm";
+import StatBand from "@/components/sections/StatBand";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Button from "@/components/ui/Button";
-import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
 import Section, { SectionHead } from "@/components/ui/Section";
 import { BRAND, REVIEWS, REVIEW_SUMMARY } from "@/lib/constants";
@@ -48,71 +48,92 @@ const COATING_JOBS = REVIEWS.filter((r) =>
 
 const NAME_HIM = REVIEWS.filter((r) => r.text.includes(BRAND.owner.split(" ")[0])).length;
 
+/**
+ * One review as a figure row. A shared function because the list below is
+ * split in two around a photo row, and two copies of this markup would
+ * drift apart.
+ */
+function ReviewFigure({ review }: { review: (typeof REVIEWS)[number] }) {
+  return (
+    <figure className="grid min-w-0 gap-4 border-t border-rule-dark py-8 md:grid-cols-12 md:gap-10 md:py-10">
+      <figcaption className="min-w-0 md:col-span-4">
+        <span className="block h-px w-6 bg-cyan-500" aria-hidden />
+        <span className="ps-heading mt-4 block text-lg text-spec-000">
+          {review.name}
+        </span>
+        <span className="mt-3 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-300">
+          {review.stars} of 5
+        </span>
+        <span className="mt-1 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-pewter">
+          {review.service}
+        </span>
+      </figcaption>
+
+      <blockquote className="min-w-0 md:col-span-8">
+        <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-spec-000">
+          {review.text}
+        </p>
+      </blockquote>
+    </figure>
+  );
+}
+
 export default function ReviewsPage() {
   return (
     <>
       <Breadcrumbs plane="sheet" trail={[{ label: "Reviews", href: "/reviews/" }]} />
 
       <Section plane="sheet" label="Reviews">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="min-w-0 lg:col-span-6">
-            <h1 className="ps-display ps-display-lg">What customers said</h1>
+        <h1 className="ps-display ps-display-lg">What customers said</h1>
 
-            <div className="ps-prose mt-6">
-              <p>
-                {BRAND.name} is an auto detailing and ceramic coating shop at{" "}
-                {BRAND.street} in {BRAND.city}, {BRAND.stateName}. Its Google
-                profile shows {REVIEW_SUMMARY.rating} from{" "}
-                {REVIEW_SUMMARY.count} reviews, read on {CHECKED}.
-              </p>
-              <p>
-                {spellCap(REVIEWS.length)} of those reviews are quoted on this
-                page, in full, with the spelling and the punctuation left
-                exactly as they were written. Nothing is trimmed to the good
-                part.
-              </p>
-              <p>
-                The rating is not ours. It is what the profile showed on that
-                date, and review counts move, so treat it as a reading rather
-                than a badge.
-              </p>
-            </div>
-
-            <div className="mt-8">
-              <a
-                href={BRAND.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ps-btn ps-btn--ghost ps-btn--sm"
-              >
-                Read them on Google
-              </a>
-            </div>
-          </div>
-
-          <div className="min-w-0 lg:col-span-6">
-            <KeyValueList capped label="Google profile">
-              <KeyValueRow
-                k="Rating"
-                v={`${REVIEW_SUMMARY.rating} out of 5`}
-                strong
-              />
-              <KeyValueRow k="Reviews" v={String(REVIEW_SUMMARY.count)} />
-              <KeyValueRow k="Source" v={REVIEW_SUMMARY.source} />
-              <KeyValueRow
-                k="Checked"
-                v={CHECKED}
-                tone="pewter"
-                note="Read off the profile, not calculated here"
-              />
-              <KeyValueRow
-                k="Quoted here"
-                v={`${REVIEWS.length} in full`}
-                tone="pewter"
-              />
-            </KeyValueList>
-          </div>
+        <div className="ps-prose mt-6">
+          <p>
+            {BRAND.name} is an auto detailing and ceramic coating shop at{" "}
+            {BRAND.street} in {BRAND.city}, {BRAND.stateName}. Its Google
+            profile shows {REVIEW_SUMMARY.rating} from{" "}
+            {REVIEW_SUMMARY.count} reviews, read on {CHECKED}.
+          </p>
+          <p>
+            {spellCap(REVIEWS.length)} of those reviews are quoted on this
+            page, in full, with the spelling and the punctuation left
+            exactly as they were written. Nothing is trimmed to the good
+            part.
+          </p>
+          <p>
+            The rating is not ours. It is what the profile showed on that
+            date, and review counts move, so treat it as a reading rather
+            than a badge.
+          </p>
         </div>
+
+        {/* Two ways forward, both ghost. The Google link is the proof; the
+            quote link keeps a visitor this page has already convinced from
+            having to leave the site to act on it. */}
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href={BRAND.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ps-btn ps-btn--ghost ps-btn--sm"
+          >
+            Read them on Google
+          </a>
+          <Button href="/quote/" tone="ghost" size="sm">
+            Get a price
+          </Button>
+        </div>
+
+        {/* These numbers used to sit here as five quiet kv rows, which is
+            the wrong volume for the page's strongest evidence. The band
+            prints the same rating and count at claim size, derived from
+            the same constants, so nothing can drift. The checked date
+            stays underneath because the rating is a reading, not a
+            badge. */}
+        <StatBand className="mt-12 md:mt-14" />
+
+        <p className="cta-meta mt-6">
+          Rating and count read off the Google profile, {CHECKED}
+        </p>
       </Section>
 
       <Section plane="shop" label="In their words">
@@ -138,30 +159,29 @@ export default function ReviewsPage() {
         </div>
 
         <div className="mt-10 min-w-0 border-b border-rule-dark">
-          {REVIEWS.map((review) => (
-            <figure
-              key={review.name}
-              className="grid min-w-0 gap-4 border-t border-rule-dark py-8 md:grid-cols-12 md:gap-10 md:py-10"
-            >
-              <figcaption className="min-w-0 md:col-span-4">
-                <span className="block h-px w-6 bg-cyan-500" aria-hidden />
-                <span className="ps-heading mt-4 block text-lg text-spec-000">
-                  {review.name}
-                </span>
-                <span className="mt-3 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-300">
-                  {review.stars} of 5
-                </span>
-                <span className="mt-1 block font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-pewter">
-                  {review.service}
-                </span>
-              </figcaption>
+          {REVIEWS.slice(0, 3).map((review) => (
+            <ReviewFigure key={review.name} review={review} />
+          ))}
 
-              <blockquote className="min-w-0 md:col-span-8">
-                <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-spec-000">
-                  {review.text}
-                </p>
-              </blockquote>
-            </figure>
+          {/* A breather after the third quote. Five rows of the same shape
+              read as one row repeated; two coated cars this page has not
+              shown yet break the run and put the work next to the words.
+              Both captions stay honest to the registry alt text. */}
+          <div className="grid min-w-0 gap-8 border-t border-rule-dark py-8 sm:grid-cols-2 md:gap-10 md:py-10">
+            <Plate
+              id="coating-challenger-hellcat"
+              caption="Challenger Hellcat Widebody, corrected and coated"
+              sizes="(min-width: 1024px) 36rem, (min-width: 640px) 46vw, 100vw"
+            />
+            <Plate
+              id="coating-corvette-c7"
+              caption="Corvette Grand Sport, coated in the shop"
+              sizes="(min-width: 1024px) 36rem, (min-width: 640px) 46vw, 100vw"
+            />
+          </div>
+
+          {REVIEWS.slice(3).map((review) => (
+            <ReviewFigure key={review.name} review={review} />
           ))}
         </div>
 

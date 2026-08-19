@@ -10,6 +10,7 @@ import {
   type PanelId,
 } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { RevealGroup } from "@/components/ui/Reveal";
 
 /**
  * THE COVERAGE LADDER, the home page's one glance version of the film
@@ -39,7 +40,7 @@ function addsLine(added: readonly PanelId[], isFirst: boolean): string {
 export default function CoverageLadder({ className }: { className?: string }) {
   return (
     <div className={cn("min-w-0", className)}>
-      <ol className="ladder">
+      <RevealGroup as="ol" className="ladder">
         {PPF_PACKAGES.map((p, i) => {
           const lead = p.id === PPF_DEFAULT_PACKAGE;
           return (
@@ -75,7 +76,7 @@ export default function CoverageLadder({ className }: { className?: string }) {
             </li>
           );
         })}
-      </ol>
+      </RevealGroup>
     </div>
   );
 }

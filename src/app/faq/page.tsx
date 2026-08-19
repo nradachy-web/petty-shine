@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+import TrustBar from "@/components/sections/TrustBar";
 import QuoteForm from "@/components/quote/QuoteForm";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
@@ -176,6 +177,14 @@ export default function FaqPage() {
         </div>
       </Section>
 
+      {/* The same hairline trust row the service pages run under their
+          heroes. A page of straight answers still has to establish who
+          is answering, and the rating and both credentials do that in
+          one row before the first claim lands. Pulled up into the
+          opening section's bottom padding, matching the service pages,
+          so it reads as part of the intro rather than a floating band. */}
+      <TrustBar plane="sheet" className="-mt-6 md:-mt-10" />
+
       {/* ---------------------------------------------------------- */}
 
       <Section plane="sheet" label="Ceramic coating">
@@ -223,6 +232,10 @@ export default function FaqPage() {
                           package={c.id}
                           value={c.fromPrice}
                           size="sm"
+                          /* Each row names its tier, because three rows
+                             printing the same words read as one link
+                             repeated three times. */
+                          quoteLabel={`Price the ${c.guarantee}`}
                         />
                       }
                     />
@@ -299,7 +312,6 @@ export default function FaqPage() {
         <div className="mt-10 grid min-w-0 gap-8 md:grid-cols-2">
           <Plate
             id="ppf-mclaren-gt"
-            priority
             caption="McLaren GT"
             sizes="(min-width: 768px) 32rem, 100vw"
           />
@@ -357,6 +369,16 @@ export default function FaqPage() {
                   specification.
                 </p>
               }
+            />
+            {/* The label column would otherwise run empty beside three
+                long answers. One photograph of the work itself fills it
+                and shows what "film" means before the limits are read. */}
+            <Plate
+              id="ppf-install-closeup"
+              className="mt-8 min-w-0"
+              ratio="4 / 3"
+              caption="Film squeegeed down on a black panel"
+              sizes="(min-width: 1024px) 20rem, 100vw"
             />
           </div>
           <div className="min-w-0 lg:col-span-8">
