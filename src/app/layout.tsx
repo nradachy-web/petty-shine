@@ -33,6 +33,11 @@ const display = Archivo({
   variable: "--font-display-raw",
   axes: ["wdth"],
   display: "swap",
+  /* Not preloaded, 2026-09-23. Preloaded at High priority it shared the
+     first second of bandwidth with the hero photograph, which is the LCP
+     element. The face still arrives through @font-face and swaps in; the
+     size adjusted fallback next/font generates keeps layout shift at zero. */
+  preload: false,
 });
 
 const body = Archivo({
@@ -40,6 +45,7 @@ const body = Archivo({
   variable: "--font-body-raw",
   axes: ["wdth"],
   display: "swap",
+  preload: false,
 });
 
 /**

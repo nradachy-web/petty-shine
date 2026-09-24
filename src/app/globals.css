@@ -1207,9 +1207,13 @@ textarea.field {
     transform: scale(1);
   }
 }
+/* THE SETTLE IS OFF, 2026-09-23. A six second transform on the largest
+   element on the page kept the frame visually "in progress" for six seconds,
+   and Speed Index counts every one of them. The keyframes stay so the class
+   still means something if it is ever switched back on for a page that is
+   not measured. */
 .hero__media img,
 .hero-media-settle img {
-  animation: hero-settle 6s var(--ease-out) both;
   transform-origin: 50% 60%;
 }
 
@@ -1226,19 +1230,19 @@ textarea.field {
   }
 }
 .hero__copy > * {
-  animation: hero-rise 0.65s var(--ease-out) both;
+  animation: hero-rise 0.4s var(--ease-out) both;
 }
 .hero__copy > *:nth-child(2) {
-  animation-delay: 0.1s;
+  animation-delay: 0.05s;
 }
 .hero__copy > *:nth-child(3) {
-  animation-delay: 0.2s;
+  animation-delay: 0.1s;
 }
 .hero__copy > *:nth-child(4) {
-  animation-delay: 0.3s;
+  animation-delay: 0.15s;
 }
 .hero__copy > *:nth-child(n + 5) {
-  animation-delay: 0.4s;
+  animation-delay: 0.2s;
 }
 
 @media (prefers-reduced-motion: reduce) {
