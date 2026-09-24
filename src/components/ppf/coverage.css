@@ -232,10 +232,14 @@
     background-color: var(--ps-accent);
   }
   .cov-mark--added .cov-mark__box {
-    /* first tier that adds this area: hollow, so the eye can see where a
-       package starts earning its money rather than only that it covers */
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px var(--ps-accent);
+    /* FILLED, with a ring, 2026-09-23. The first tier that adds an area used
+       to draw a hollow box, and a hollow box beside filled ones reads as
+       "not checked": Nick saw the fenders unticked on Full Front End and the
+       rockers, lower doors and rear impact areas unticked on Trackback. Every
+       covered cell is now a filled mark; the ring is the only thing that
+       says "added here". */
+    background-color: var(--ps-accent);
+    box-shadow: 0 0 0 2px var(--ps-ground), 0 0 0 3px var(--ps-accent);
   }
   .cov-mark--off .cov-mark__bar {
     background-color: var(--ps-rule);
@@ -261,8 +265,8 @@
     background-color: var(--ps-link);
   }
   .plane-sheet .cov-mark--added .cov-mark__box {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px var(--ps-link);
+    background-color: var(--ps-link);
+    box-shadow: 0 0 0 2px var(--ps-ground), 0 0 0 3px var(--ps-link);
   }
 }
 
@@ -303,8 +307,8 @@
     color: var(--ps-key);
   }
   .cov-mark__box--hollow {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px var(--ps-accent);
+    background-color: var(--ps-accent);
+    box-shadow: 0 0 0 2px var(--ps-ground), 0 0 0 3px var(--ps-accent);
   }
   .cov-matrix__dot,
   .cov-table__hit {
@@ -315,7 +319,8 @@
     background-color: transparent;
   }
   .plane-sheet .cov-mark__box--hollow {
-    box-shadow: inset 0 0 0 2px var(--ps-link);
+    background-color: var(--ps-link);
+    box-shadow: 0 0 0 2px var(--ps-ground), 0 0 0 3px var(--ps-link);
   }
   .plane-sheet .cov-matrix__dot,
   .plane-sheet .cov-table__hit {

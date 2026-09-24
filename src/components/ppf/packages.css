@@ -75,18 +75,17 @@
   list-style: none;
 }
 .ppk__panel {
-  position: relative;
-  padding-left: 1.1rem;
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  column-gap: 0.55rem;
+  align-items: start;
   font-size: 1rem;
   line-height: 1.55;
 }
-.ppk__panel::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.75em;
-  width: 0.55rem;
-  height: 1px;
+.ppk__check {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.3rem;
 }
 .ppk__terms {
   margin-top: 1.25rem;
@@ -128,14 +127,14 @@
   .ppk__terms {
     color: var(--ps-body);
   }
-  .ppk__panel::before {
-    background: var(--ps-rule);
+  .ppk__check {
+    color: var(--ps-key);
   }
   .ppk__panel.is-added {
     color: var(--ps-heading);
   }
-  .ppk__panel.is-added::before {
-    background: var(--ps-accent);
+  .ppk__panel.is-added .ppk__check {
+    color: var(--ps-accent);
   }
   .ppk__tel:hover {
     color: var(--ps-link);
