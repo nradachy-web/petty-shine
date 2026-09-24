@@ -139,7 +139,10 @@ export default function LandingHero({
           height={meta.h}
           alt=""
           loading="eager"
-          decoding="sync"
+          /* async, 2026-09-23: sync decoding ties the first frame to
+             decoding this AVIF on the main thread, and on a throttled phone
+             that is the one thing that can hold the whole first paint. */
+          decoding="async"
           fetchPriority="high"
         />
       </picture>
