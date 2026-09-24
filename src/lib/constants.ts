@@ -168,10 +168,14 @@ export const WEB3FORMS_KEY =
  * single highest value change this site makes to the ad account.
  */
 export const GADS = {
-  googleTagId: "", // AW-XXXXXXXXXX
+  /** Read from the account's own conversion actions on 2026-09-23. */
+  googleTagId: "AW-17861817709",
   ga4Id: "", // G-XXXXXXXXXX
   labels: {
-    quoteForm: "",
+    /** "Website Form Submission", the WEBPAGE action already in the account. */
+    quoteForm: "iHPFCKWMvZgcEO3qlsVC",
+    /** No website phone click action exists in the account yet. Create one
+        at launch and paste its label here; the tel: links no-op until then. */
     phoneClick: "",
   },
 } as const;

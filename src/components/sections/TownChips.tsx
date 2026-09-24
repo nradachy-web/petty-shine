@@ -34,12 +34,9 @@ export default function TownChips({
           <Link
             href={`/areas/${c.slug}/`}
             className="towns__chip"
-            aria-label={`${c.name}, ${c.minutes} minutes from the shop`}
           >
             {c.name}
-            <span className="towns__min" aria-hidden="true">
-              {c.minutes} min
-            </span>
+            <span className="towns__min">{c.minutes} min</span>
           </Link>
         </li>
       ))}

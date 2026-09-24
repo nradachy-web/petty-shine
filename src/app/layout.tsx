@@ -23,11 +23,15 @@ import { asset, IS_PREVIEW } from "@/lib/asset";
    the second one costs no extra download.
    ========================================================================== */
 
+/* ONE FILE, 2026-09-23. This used to also request the italic instance, a
+   second 100KB variable font preloaded on every page, and Lighthouse showed
+   the hero photograph queueing behind it. Archivo's italic is an oblique cut
+   (the roman slanted, not a redrawn italic), so letting the browser slant
+   the roman for .ps-display looks the same and costs nothing. */
 const display = Archivo({
   subsets: ["latin"],
   variable: "--font-display-raw",
   axes: ["wdth"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -310,19 +314,31 @@ export default function RootLayout({
             overlap cannot double count. See src/lib/gtag.ts. */}
         <CtaClickTracking />
 
-        {/* No gtag id, no Google script at all. See src/lib/gtag.ts. */}
+        {/* THE GOOGLE TAG LOADS ON THE FIRST INTERACTION, 2026-09-23.
+
+            gtag.js is 186KB and sets third party cookies, and loading it on
+            page load cost the preview 20 Best Practices points and a slice of
+            LCP for a script that has nothing to report until someone taps a
+            phone number or sends the form. So the dataLayer stub and the
+            config calls run now (any conversion fired early queues in
+            dataLayer, which is Google's own documented behaviour), and the
+            script itself is fetched on the first pointer, touch, key or
+            scroll. A tap on a tel: link is a pointerdown first, so the tag
+            is already loading when trackPhoneClick fires.
+
+            No gtag id, no script at all. See src/lib/gtag.ts. */}
         {GADS.googleTagId && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GADS.googleTagId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="gtag-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GADS.googleTagId}');${
-                GADS.ga4Id ? `gtag('config','${GADS.ga4Id}');` : ""
-              }`}
-            </Script>
-          </>
+          <script
+            id="gtag-lazy"
+            dangerouslySetInnerHTML={{
+              __html:
+                `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GADS.googleTagId}');${
+                  GADS.ga4Id ? `gtag('config','${GADS.ga4Id}');` : ""
+                }` +
+                `(function(){var d=false;function l(){if(d)return;d=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GADS.googleTagId}';document.head.appendChild(s);}` +
+                `['pointerdown','touchstart','keydown','scroll','mousemove'].forEach(function(e){addEventListener(e,l,{once:true,passive:true});});})();`,
+            }}
+          />
         )}
 
         {/* Modern Apex attribution rails, vendored at public/apex-attribution.js.

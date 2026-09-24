@@ -3,7 +3,6 @@ import Link from "next/link";
 import "./flagship.css";
 
 import { QuoteLink } from "@/components/ui";
-import { RevealGroup } from "@/components/ui/Reveal";
 import { SERVICES, type ServiceLine } from "@/lib/constants";
 import { PHOTOS } from "@/lib/photos";
 import { asset } from "@/lib/asset";
@@ -29,13 +28,13 @@ import { cn } from "@/lib/utils";
  * construction.
  */
 
-const CARD_SIZES = "(min-width: 1024px) 25rem, (min-width: 640px) 46vw, 100vw";
+const CARD_SIZES = "(min-width: 1024px) 25rem, (min-width: 640px) 46vw, 7.75rem";
 
-function CardMedia({ service }: { service: ServiceLine }) {
+function CardMedia({ service, n }: { service: ServiceLine; n: string }) {
   if (!service.photoId) {
     return (
       <div className="svc-card__media svc-card__type" aria-hidden="true">
-        <span className="svc-card__typeIndex">{service.index}</span>
+        <span className="svc-card__typeIndex" data-n={n} />
         <span className="svc-card__typeNote">
           Real photos only. This one has not been shot yet.
         </span>
@@ -78,14 +77,14 @@ export default function ServiceCards({
   className?: string;
 }) {
   return (
-    <RevealGroup as="ul" className={cn("svc-grid", className)}>
-      {services.map((s) => (
+    <ul className={cn("svc-grid", className)}>
+      {services.map((s, i) => (
         <li key={s.id} className="svc-card">
-          <CardMedia service={s} />
+          <CardMedia service={s} n={String(i + 1).padStart(2, "0")} />
           <div className="svc-card__body">
             <div className="svc-card__head">
               <span className="svc-card__index" aria-hidden="true">
-                {s.index}
+                {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="svc-card__name">
                 <Link href={s.href}>{s.name}</Link>
@@ -108,7 +107,7 @@ export default function ServiceCards({
           </div>
         </li>
       ))}
-    </RevealGroup>
+    </ul>
   );
 }
 

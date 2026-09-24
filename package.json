@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/audit-forbidden.mjs out",
+    "postbuild": "[ -n \"$CI\" ] || (rm -rf out.nosync && mv out out.nosync && ln -s out.nosync out)",
     "start": "next start",
     "lint": "eslint",
     "audit": "node scripts/audit-forbidden.mjs out",
@@ -13,7 +14,6 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",

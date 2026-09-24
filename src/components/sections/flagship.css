@@ -206,6 +206,9 @@
   gap: 1rem;
   padding: 1rem 1.1rem 0.85rem;
 }
+.svc-card__typeIndex::before {
+  content: attr(data-n);
+}
 .svc-card__typeIndex {
   font-family: var(--ps-font-display);
   font-weight: 700;

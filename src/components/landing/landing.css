@@ -1,0 +1,443 @@
+/* ============================================================
+   PETTY SHINE, the landing page vocabulary. Added 2026-09-23.
+
+   Owned by src/components/landing/. Every class is prefixed lp- so
+   it cannot collide with globals.css, primitives.css or flagship.css.
+
+   The brief: less busy, built for a paid click. One idea per band,
+   short copy, the form at the end of every page, nothing that needs
+   JavaScript to be read. Colour and text alignment sit inside
+   @layer components (the Tailwind v4 layer trap, see globals.css);
+   structure stays unlayered so it sticks.
+   ============================================================ */
+
+/* ---- checks: what you get ---------------------------------- */
+
+.lp-checks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.lp-check {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+  align-items: start;
+  min-width: 0;
+  padding-block: 1.05rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.lp-check__mark {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+}
+.lp-check__title {
+  font-family: var(--ps-font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+}
+.lp-check__body {
+  margin-top: 0.3rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: 34rem;
+}
+@layer components {
+  .lp-checks {
+    border-top-color: var(--ps-rule);
+  }
+  .lp-check {
+    border-bottom-color: var(--ps-rule);
+  }
+  .lp-check__mark {
+    color: var(--ps-link);
+  }
+  .lp-check__title {
+    color: var(--ps-heading);
+  }
+  .lp-check__body {
+    color: var(--ps-body);
+  }
+}
+@media (min-width: 768px) {
+  .lp-checks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+  }
+}
+
+/* ---- steps: how it works ----------------------------------- */
+
+.lp-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: lp-step;
+}
+.lp-step {
+  position: relative;
+  min-width: 0;
+  padding-top: 1rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+  counter-increment: lp-step;
+}
+.lp-step::before {
+  content: "0" counter(lp-step);
+  display: block;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.7rem;
+}
+.lp-step__title {
+  font-family: var(--ps-font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+.lp-step__body {
+  margin-top: 0.45rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+@layer components {
+  .lp-step {
+    border-top-color: var(--ps-rule);
+  }
+  .lp-step::before {
+    color: var(--ps-link);
+  }
+  .lp-step__title {
+    color: var(--ps-heading);
+  }
+  .lp-step__body {
+    color: var(--ps-body);
+  }
+}
+@media (min-width: 768px) {
+  .lp-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+
+/* ---- faq: details and summary, no JavaScript --------------- */
+
+.lp-faq {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top-width: 1px;
+  border-top-style: solid;
+  max-width: 48rem;
+}
+.lp-faq__item {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.lp-faq__q {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 3.25rem;
+  padding-block: 0.9rem;
+  cursor: pointer;
+  font-family: var(--ps-font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  list-style: none;
+}
+.lp-faq__q::-webkit-details-marker {
+  display: none;
+}
+.lp-faq__q::after {
+  content: "+";
+  flex: none;
+  font-family: var(--ps-font-mono);
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1;
+  transform: translateY(0.05em);
+}
+.lp-faq__item[open] .lp-faq__q::after {
+  content: "\2212";
+}
+.lp-faq__a {
+  padding-bottom: 1.1rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  max-width: 40rem;
+}
+@layer components {
+  .lp-faq {
+    border-top-color: var(--ps-rule);
+  }
+  .lp-faq__item {
+    border-bottom-color: var(--ps-rule);
+  }
+  .lp-faq__q {
+    color: var(--ps-heading);
+  }
+  .lp-faq__q::after {
+    color: var(--ps-link);
+  }
+  .lp-faq__a {
+    color: var(--ps-body);
+  }
+}
+
+/* ---- proof band --------------------------------------------- */
+
+.lp-proof {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+.lp-proof > * {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .lp-proof {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* ---- the review pulled beside the facts -------------------- */
+
+.lp-quote {
+  margin: 0;
+  min-width: 0;
+  padding-top: 1.5rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.lp-quote__tick {
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+}
+.lp-quote__text {
+  margin-top: 1.1rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 36rem;
+}
+.lp-quote__by {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+  margin-top: 1rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+@layer components {
+  .lp-quote {
+    border-top-color: var(--ps-rule);
+  }
+  .lp-quote__tick {
+    background: var(--ps-accent);
+  }
+  .lp-quote__text {
+    color: var(--ps-heading);
+  }
+  .lp-quote__by {
+    color: var(--ps-key);
+  }
+  .lp-quote__by strong {
+    color: var(--ps-heading);
+    font-weight: 500;
+  }
+}
+
+/* ---- chips: towns for this service, services in this town --- */
+
+.lp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lp-chips > li {
+  min-width: 0;
+}
+.lp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.85rem;
+  border-width: 1px;
+  border-style: solid;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: border-color 0.18s var(--ps-ease), color 0.18s var(--ps-ease);
+}
+.lp-chip__meta {
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+@layer components {
+  .lp-chip {
+    border-color: var(--ps-rule);
+    color: var(--ps-body);
+  }
+  .lp-chip__meta {
+    color: var(--ps-key);
+  }
+  .lp-chip:hover,
+  .lp-chip:focus-visible {
+    border-color: var(--ps-link);
+    color: var(--ps-heading);
+  }
+}
+
+/* ---- the town facts block ---------------------------------- */
+
+.lp-town {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+.lp-town > * {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .lp-town {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* ---- the close: form beside the phone ----------------------- */
+
+.lp-close {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+.lp-close > * {
+  min-width: 0;
+}
+.lp-call {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+  margin-top: 1.75rem;
+  padding: 1rem 1.25rem;
+  border-width: 1px;
+  border-style: solid;
+  text-decoration: none;
+  transition: border-color 0.18s var(--ps-ease);
+}
+.lp-call__k {
+  display: block;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.lp-call__n {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--ps-font-mono);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+.lp-call__tick {
+  flex: none;
+  width: 1.5rem;
+  height: 1px;
+}
+.lp-meta {
+  margin-top: 1.1rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+@layer components {
+  .lp-call {
+    border-color: var(--ps-rule);
+    background: var(--ps-panel);
+  }
+  .lp-call:hover {
+    border-color: var(--ps-accent);
+  }
+  .lp-call__k {
+    color: var(--ps-key);
+  }
+  .lp-call__n {
+    color: var(--ps-heading);
+  }
+  .lp-call__tick {
+    background: var(--ps-accent);
+  }
+  .lp-meta {
+    color: var(--ps-key);
+  }
+}
+@media (min-width: 1024px) {
+  .lp-close {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* ---- the work: three frames in a row ----------------------- */
+
+.lp-work {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lp-work > li {
+  min-width: 0;
+}
+@media (min-width: 640px) {
+  .lp-work {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}

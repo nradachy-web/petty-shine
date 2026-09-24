@@ -60,10 +60,11 @@ export default function Wordmark({
   return (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img
-      src={asset("/logo-petty-shine.png")}
-      srcSet={`${asset("/logo-petty-shine.png")} 1x, ${asset(
-        "/logo-petty-shine@2x.png"
-      )} 2x`}
+      src={asset("/logo-petty-shine-400.webp")}
+      srcSet={`${asset("/logo-petty-shine-250.webp")} 250w, ${asset(
+        "/logo-petty-shine-400.webp"
+      )} 400w`}
+      sizes={`${width}px`}
       width={width}
       height={height}
       alt={decorative ? "" : BRAND.name}

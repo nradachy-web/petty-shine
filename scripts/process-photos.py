@@ -95,7 +95,7 @@ def write_registry(manifest):
         "/** Largest rendition available for a photo. */",
         "export function photoSrc(id: PhotoId, width?: number): string {",
         "  const p = PHOTOS[id];",
-        "  const w = width && p.sizes.includes(width) ? width : p.sizes[p.sizes.length - 1];",
+        "  const w = width && (p.sizes as readonly number[]).includes(width) ? width : p.sizes[p.sizes.length - 1];",
         "  return `/photos/${id}-${w}.webp`;",
         "}",
         "",

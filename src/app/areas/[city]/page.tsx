@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
-import ServiceCards from "@/components/sections/ServiceCards";
+import "@/components/landing/landing.css";
 import TrustBar from "@/components/sections/TrustBar";
 import PhoneLink from "@/components/tracking/PhoneLink";
 import {
@@ -26,6 +26,7 @@ import {
   SERVICES,
   type City,
 } from "@/lib/constants";
+import { LANDING_TRACKS, townHref } from "@/lib/landing";
 import { drive, driveTime, milesLong } from "@/lib/utils";
 import type { PhotoId } from "@/lib/photos";
 import {
@@ -405,11 +406,21 @@ export default async function CityPage({
           }
         />
 
-        {/* These were nine ruled rows whose right column repeated the same
-            quote link nine times, on all sixteen towns. The cards read the
-            same SERVICES constants and carry his own photos, and on a phone
-            they turn sideways instead of stacking nine deep. */}
-        <ServiceCards className="mt-8 md:mt-10" />
+        {/* Six chips into the service-by-town pages, added 2026-09-23. Each
+            one is that service written for this town, with the measured drive
+            on it, instead of the generic service page. */}
+        <ul className="lp-chips mt-8 md:mt-10">
+          {LANDING_TRACKS.map((t) => (
+            <li key={t.id}>
+              <Link href={townHref(t, c)} className="lp-chip">
+                {t.noun} for {c.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-600">
+          Also interior detailing, curbed wheel repair and marine detailing, all quoted the same way.
+        </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href="/services/" tone="ghost" size="sm">

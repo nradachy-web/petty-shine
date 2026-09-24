@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 import { BRAND, CITIES } from "@/lib/constants";
+import { LANDING_TRACKS } from "@/lib/landing";
 
 /**
  * THE SITEMAP IS THE IA, WRITTEN DOWN.
@@ -77,6 +78,20 @@ const TOWNS: Entry[] = CITIES.map((c) => ({
 }));
 
 /**
+ * THE SERVICE BY TOWN PAGES, added 2026-09-23. Six paid services times
+ * sixteen measured towns, generated from the same two lists the route
+ * itself reads (src/app/[service]/[city]/page.tsx), so the sitemap and
+ * the build cannot disagree about which ninety six URLs exist.
+ */
+const SERVICE_TOWNS: Entry[] = LANDING_TRACKS.flatMap((t) =>
+  CITIES.map((c) => ({
+    path: `/${t.slug}/${c.slug}/`,
+    priority: 0.6,
+    freq: "monthly" as const,
+  }))
+);
+
+/**
  * The home page and the nine service pages, in the order the ad account
  * cares about them. Priority tracks real spend and real search demand, not
  * taste: film and coating carry the most money, detailing carries the most
@@ -100,7 +115,7 @@ const PAGES: Entry[] = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return [...LIVE, ...PAGES, ...TOWNS].map((s) => ({
+  return [...LIVE, ...PAGES, ...TOWNS, ...SERVICE_TOWNS].map((s) => ({
     url: `${BRAND.siteUrl}${s.path}`,
     lastModified: now,
     changeFrequency: s.freq,
