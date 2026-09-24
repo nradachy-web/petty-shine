@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
      type system, and a build that ships past it enforces nothing. The tree
      is clean under `npx tsc --noEmit` as of the integration pass. */
   typescript: { ignoreBuildErrors: false },
+  /* The stylesheet rides inside the HTML, 2026-09-23. Four small CSS files
+     cost one extra round trip before first paint on every page; inlined
+     they add about 18KB of HTML and remove the trip. */
+  experimental: { inlineCss: true },
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
 };
 
