@@ -1229,20 +1229,11 @@ textarea.field {
     transform: none;
   }
 }
+/* THE RISE IS OFF, 2026-09-23. PageSpeed's filmstrip showed the first
+   frames of the page blank and Speed Index counting every frame until the
+   copy finished fading in. The heading is on screen at first paint now. */
 .hero__copy > * {
-  animation: hero-rise 0.4s var(--ease-out) both;
-}
-.hero__copy > *:nth-child(2) {
-  animation-delay: 0.05s;
-}
-.hero__copy > *:nth-child(3) {
-  animation-delay: 0.1s;
-}
-.hero__copy > *:nth-child(4) {
-  animation-delay: 0.15s;
-}
-.hero__copy > *:nth-child(n + 5) {
-  animation-delay: 0.2s;
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

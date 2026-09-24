@@ -26,7 +26,11 @@ import { PHOTOS, type PhotoId } from "@/lib/photos";
    <picture>.
    ========================================================================== */
 
-const MOBILE_W = 800;
+/* Phones get a portrait cut of the same frame, made by scripts/process-photos.py's
+   companion step, at 720px wide: sharper than the 35% slice a landscape
+   file gives a portrait box, and about 30KB. */
+const MOBILE_W = 720;
+const MOBILE_SUFFIX = "m720";
 const WIDE_W = [1024, 1600] as const;
 const MOBILE_MQ = "(max-width: 767px)";
 const WIDE_MQ = "(min-width: 768px)";
@@ -81,7 +85,8 @@ export default function LandingHero({
   const meta = PHOTOS[photo];
   const sizes: readonly number[] = meta.sizes;
   const wide = WIDE_W.filter((w) => sizes.includes(w));
-  const mobileW = sizes.includes(MOBILE_W) ? MOBILE_W : wide[0] ?? sizes[sizes.length - 1];
+  const mobileSrc = (ext: "avif" | "webp") => asset(`/photos/${photo}-${MOBILE_SUFFIX}.${ext}`);
+  const mobileW = MOBILE_W;
   const wideSet = (ext: "avif" | "webp") => wide.map((w) => `${src(photo, w, ext)} ${w}w`).join(", ");
 
   if (process.env.NODE_ENV !== "production" && !isBleedCleared(photo)) {
@@ -101,7 +106,7 @@ export default function LandingHero({
         rel="preload"
         as="image"
         type="image/avif"
-        href={src(photo, mobileW, "avif")}
+        href={mobileSrc("avif")}
         media={MOBILE_MQ}
         fetchPriority="high"
       />
@@ -118,8 +123,8 @@ export default function LandingHero({
       ) : null}
 
       <picture className="hero__media">
-        <source type="image/avif" media={MOBILE_MQ} srcSet={src(photo, mobileW, "avif")} />
-        <source type="image/webp" media={MOBILE_MQ} srcSet={src(photo, mobileW, "webp")} />
+        <source type="image/avif" media={MOBILE_MQ} srcSet={mobileSrc("avif")} />
+        <source type="image/webp" media={MOBILE_MQ} srcSet={mobileSrc("webp")} />
         {wide.length > 0 ? (
           <>
             <source type="image/avif" srcSet={wideSet("avif")} sizes="100vw" />
