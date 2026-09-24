@@ -50,10 +50,19 @@ scroll, so it costs nothing during the audit and everything it needs is
 queued in dataLayer. The forbidden claims audit now runs inside
 `npm run build`, so CI enforces it.
 
-Local Lighthouse, mobile, served over HTTP/1.1 which the simulator scores
-harder than GitHub's HTTP/2: Performance 90 to 91, Accessibility 100, Best
-Practices 100, SEO 100. Desktop 100 across the board. The preview URL is the
-number to quote.
+Two follow up commits the same night: the six second hero settle is off and
+the copy rise is 0.4s (Speed Index counted the zoom), Archivo is no longer
+preloaded (it shared the first second of bandwidth with the hero photo), the
+stylesheet is inlined (one round trip fewer on all 150 pages) and the 800px
+phone renditions are re-encoded lighter (hero about 27KB).
+
+Live preview, Lighthouse 12, two runs per page: mobile Performance 94 to 99
+(home 94 and 97, hub 97 and 99, town 97 and 95), Accessibility 100, Best
+Practices 100. Desktop 100, 100, 100. SEO reads 66 on the preview only
+because it is noindexed on purpose; the production build is indexable. The
+spread on mobile is run variance on GitHub's roughly 600ms first byte, not
+weight: the page is 32 requests and about 450KB with the Google tag deferred.
+What is left is the Next runtime itself, about 150KB of JavaScript.
 
 ## What did not change
 
