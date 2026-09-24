@@ -30,7 +30,34 @@ import { cn } from "@/lib/utils";
 
 const CARD_SIZES = "(min-width: 1024px) 25rem, (min-width: 640px) 46vw, 7.75rem";
 
+const ART_WIDTHS = [480, 640, 800, 1024] as const;
+
 function CardMedia({ service, n }: { service: ServiceLine; n: string }) {
+  if (!service.photoId && service.artId) {
+    const id = service.artId;
+    const set = (ext: "avif" | "webp") =>
+      ART_WIDTHS.map((w) => `${asset(`/art/${id}-${w}.${ext}`)} ${w}w`).join(", ");
+    return (
+      <picture className="svc-card__media svc-card__media--art">
+        <source type="image/avif" srcSet={set("avif")} sizes={CARD_SIZES} />
+        <source type="image/webp" srcSet={set("webp")} sizes={CARD_SIZES} />
+        {/* Illustration, and it says so on the card. The card's heading
+            names the service; the tag is the only word the picture adds. */}
+        <img
+          src={asset(`/art/${id}-800.webp`)}
+          width={1376}
+          height={860}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <span className="svc-card__tag" aria-hidden="true">
+          Illustration
+        </span>
+      </picture>
+    );
+  }
+
   if (!service.photoId) {
     return (
       <div className="svc-card__media svc-card__type" aria-hidden="true">

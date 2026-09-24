@@ -23,7 +23,6 @@ import {
   DETAIL_PACKAGES,
   GTECHNIQ_FACTS,
   INTERIOR_PACKAGES,
-  NC_TINT_LAW,
   REVIEWS,
   SERVICES,
 } from "@/lib/constants";
@@ -113,7 +112,7 @@ const DRIVERS = [
   },
   {
     k: "The glass",
-    v: `Window tint is priced by how many windows there are and how far the back glass curves. It is not priced by how dark you want it, because ${NC_TINT_LAW.statute} holds every window except the windshield to the same standard.`,
+    v: "Window tint is priced by how many windows there are, how far the back glass curves, which film goes on, and whether old film has to come off first.",
   },
   {
     k: "The size of the damage, and where it sits",
@@ -157,8 +156,8 @@ const QUOTED_ON = [
   },
   {
     href: "/window-tinting/",
-    label: `Window tinting, and what ${NC_TINT_LAW.statute} allows`,
-    v: "The price comes off the window count and the shape of the glass. How dark it ends up is set by the statute, not by the price.",
+    label: "Window tinting, priced on the glass",
+    v: "The price comes off the window count, the shape of the glass and the film, laminate or ceramic.",
   },
   {
     href: "/paintless-dent-repair/",

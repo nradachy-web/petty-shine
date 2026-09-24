@@ -109,3 +109,28 @@ fact from PENDING_SPEC, but they no longer lean on the phrase.
 leading and a measure under 60 characters; chips and links are 44px tall;
 the film rows keep the picture at most seven twelfths of the row on desktop
 so the text column never runs under 24rem.
+
+## Later the same night: illustrations, the tint page, the hero crop
+
+**Two illustrated cards.** Paintless dent repair and window tinting had no
+honest job photo, so their cards ran the typographic placeholder. Each now
+carries a studio illustration in the same dark, close, product photography
+style as the film renders: a PDR rod against a ding read in a striped
+reflection board, and a squeegee on wet tinted glass. They live in
+`public/art/` outside the photo registry, so they never count as a job
+photo anywhere, and the card prints a small ILLUSTRATION tag in the corner.
+`ServiceLine.artId` is the switch.
+
+**Tint law is off the site.** Nick's call. The statute table, the windshield
+strip line, the 35 percent rows and every N.C.G.S. citation are gone from
+the tint hub, the tint track, the FAQ, the pricing page, the llms.txt and
+constants (NC_TINT_LAW is deleted). The tint page is now shaped like the
+Midwest Tint page Nick built: overview, why it matters, the common setups
+quoted on the glass, a five step process, why here, and the questions. No
+lifetime warranty, no prices, no film brand, because none of those is
+backed.
+
+**The hero crop.** At 1024 and up the focus moved from 42% to 70% and the
+band grew to 50rem (56rem above 1600px), so the Huracan sits whole with its
+floor reflection and the banner runs off the top instead of the car being
+cut at the splitter.

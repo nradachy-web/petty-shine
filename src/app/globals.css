@@ -1352,8 +1352,17 @@ textarea.field {
 }
 @media (min-width: 1024px) {
   .hero {
-    min-height: min(86svh, 45rem);
-    --hero-focus: 50% 42%;
+    /* Taller, and focused lower, 2026-09-23. At 42% the window kept the
+       banner and cut the car off at the splitter, which is the opposite of
+       what a hero on a detailing site should do. 70% keeps the whole car
+       and its floor reflection and lets the banner run off the top. */
+    min-height: min(88svh, 50rem);
+    --hero-focus: 50% 70%;
+  }
+}
+@media (min-width: 1600px) {
+  .hero {
+    min-height: min(88svh, 56rem);
   }
 }
 

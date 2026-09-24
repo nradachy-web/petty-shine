@@ -271,6 +271,14 @@ export interface ServiceLine {
    * service it sells.
    */
   photoId: import("./photos").PhotoId | null;
+  /**
+   * A studio illustration for a service that has no honest job photo yet,
+   * rendered and captioned as an illustration, never as a photograph of
+   * the shop's work. Files live in public/art/{artId}-{w}.{avif,webp} at
+   * 480, 640, 800 and 1024 wide, 16:10. Lives outside the photo registry
+   * on purpose, so it never counts as a job photo anywhere.
+   */
+  artId?: "art-pdr" | "art-tint";
 }
 
 export const SERVICES: ServiceLine[] = [
@@ -333,16 +341,18 @@ export const SERVICES: ServiceLine[] = [
     fromPrice: null,
     quoteKey: "pdr",
     photoId: null,
+    artId: "art-pdr",
   },
   {
     id: "window-tinting",
     index: "07",
     name: "Window Tinting",
     href: "/window-tinting/",
-    blurb: "Laminate and ceramic film, installed to the North Carolina limit.",
+    blurb: "Laminate and ceramic film, cut and fitted in the shop.",
     fromPrice: null,
     quoteKey: "tint",
     photoId: null,
+    artId: "art-tint",
   },
   {
     id: "wheel-repair",
@@ -811,56 +821,6 @@ export const PENDING_SPEC = {
     { key: "Warranty", value: "Confirmed for your vehicle before work begins" },
   ],
   note: "We do not publish a film warranty we have not verified for your vehicle. Ask us and we will confirm it for yours.",
-} as const;
-
-/* ============================================================
-   WINDOW TINT, and North Carolina law
-
-   Verified against G.S. 20-127. No prices published, no film brand
-   published, and deliberately NO warranty claim: his current site
-   promises "lifetime warranties" on films it never names, which is
-   unenforceable and moves the liability onto this site.
-   ============================================================ */
-
-export const NC_TINT_LAW = {
-  statute: "N.C.G.S. 20-127",
-  rows: [
-    {
-      key: "Every window except the windshield",
-      value: "At least 35% light transmission",
-      cite: "G.S. 20-127(b)(1)",
-    },
-    {
-      key: "Front, back and rear glass",
-      value: "Same 35% standard. North Carolina allows no darker rear glass.",
-      cite: "G.S. 20-127(b)(1)",
-    },
-    {
-      key: "Windshield",
-      value:
-        "Top strip only, no more than five inches down or below the AS1 line, whichever is longer",
-      cite: "G.S. 20-127(b)",
-    },
-    {
-      key: "Reflectivity",
-      value: "20% or less",
-      cite: "G.S. 20-127(b)(2)",
-    },
-    {
-      key: "Meter tolerance",
-      value:
-        "A window measuring above 32% on an approved meter is conclusively presumed legal",
-      cite: "G.S. 20-127(b)(1)",
-    },
-    {
-      key: "Clear UV film on the windshield",
-      value: "Expressly allowed, as long as it does not obstruct vision",
-      cite: "G.S. 20-127(b)",
-    },
-  ],
-  /** The myth worth killing on the page. */
-  myth:
-    "There is no darker allowance for rear glass in North Carolina. The 35% standard applies to every window on a passenger car except the windshield, and the windshield rules apply without exception.",
 } as const;
 
 /* ============================================================

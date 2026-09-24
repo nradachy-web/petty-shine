@@ -3,7 +3,6 @@ import {
   CITIES,
   CREDENTIALS,
   GTECHNIQ_FACTS,
-  NC_TINT_LAW,
   NEAREST_EXIT,
   PPF_FILM,
   PRICING_MODE,
@@ -173,9 +172,6 @@ function body(): string {
   );
   lines.push(
     "- No warranty is published on window tint, because no film line is published for it.",
-  );
-  lines.push(
-    `- ${NC_TINT_LAW.myth} The statute is ${NC_TINT_LAW.statute} and it is quoted line by line, with a citation on each row, at ${url("/window-tinting/")}.`,
   );
   lines.push(
     "- Paintless dent repair suits some damage and not other damage. Where the paint is already cracked or the metal is stretched, it is the wrong repair.",

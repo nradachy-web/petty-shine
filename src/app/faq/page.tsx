@@ -23,7 +23,6 @@ import {
   COATINGS,
   CREDENTIALS,
   GTECHNIQ_FACTS,
-  NC_TINT_LAW,
   NEAREST_EXIT,
   PENDING_SPEC,
   PPF_FILM,
@@ -464,48 +463,26 @@ export default function FaqPage() {
           <div className="min-w-0 lg:col-span-4">
             <SectionHead
               size="md"
-              title={`Tint and ${BRAND.stateName} law`}
+              title="Laminate or ceramic"
               intro={
                 <p>
-                  This is the single most common misunderstanding that walks in
-                  the door, so it gets the statute printed next to it.
+                  The one question every tint job starts with.
                 </p>
               }
             />
           </div>
           <div className="min-w-0 lg:col-span-8">
             <div className="grid min-w-0 gap-12">
-              <Question
-                id="rear-glass"
-                q={`Can the back glass be darker than the front in ${BRAND.stateName}?`}
-              >
+              <Question id="tint-film" q="Laminate or ceramic film?">
                 <Answer>
                   <p>
-                    <strong>No.</strong> {NC_TINT_LAW.myth}
-                  </p>
-                  <p>
-                    Plenty of states do allow darker glass behind the driver,
-                    which is where the idea comes from. {BRAND.stateName} is not
-                    one of them, and a film that is legal one state up is a
-                    ticket here. Everything we install goes on to the limit in{" "}
-                    {NC_TINT_LAW.statute} and no darker.
+                    Ceramic rejects more heat and costs more. Laminate is the
+                    value option and still cuts glare and fading. Tell us how
+                    the car is used and we will say which is worth the money
+                    on yours. The film and its terms are confirmed for your
+                    vehicle with your free quote.
                   </p>
                 </Answer>
-
-                <KeyValueList
-                  className="mt-6"
-                  label={`${NC_TINT_LAW.statute} limits`}
-                >
-                  {NC_TINT_LAW.rows.map((r) => (
-                    <KeyValueRow
-                      key={r.key}
-                      k={r.key}
-                      note={r.cite}
-                      v={r.value}
-                      mono={false}
-                    />
-                  ))}
-                </KeyValueList>
 
                 <div className="mt-7 flex flex-wrap items-center gap-6">
                   <Button href="/window-tinting/" tone="ghost" size="sm">

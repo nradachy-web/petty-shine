@@ -124,9 +124,12 @@ export interface ServiceLandingProps {
   detailLabel?: string;
   /** Paper by default. The film page runs its coverage renders on the dark plane. */
   detailPlane?: "sheet" | "shop";
+  /** False when the detail band carries its own process, so the three
+      generic steps do not repeat it. The questions still render. */
+  showSteps?: boolean;
 }
 
-export default function ServiceLanding({ track: t, city: c, detail, detailLabel, detailPlane = "sheet" }: ServiceLandingProps) {
+export default function ServiceLanding({ track: t, city: c, detail, detailLabel, detailPlane = "sheet", showSteps = true }: ServiceLandingProps) {
   const url = c ? townHref(t, c) : hubHref(t);
   const review = t.reviewName ? REVIEWS.find((r) => r.name === t.reviewName) ?? null : null;
   const faqs = c && t.townFaq ? [...t.faqs, t.townFaq(c)] : t.faqs;
@@ -293,17 +296,20 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
       ) : null}
 
       {/* 5. how it works, the questions, the towns */}
-      <Section plane={c ? "shop" : "sheet"} label="How it works">
-        <ol className="lp-steps">
-          {STEPS.map((s) => (
-            <li key={s.title} className="lp-step">
-              <h3 className="lp-step__title">{s.title}</h3>
-              <p className="lp-step__body">{s.body}</p>
-            </li>
-          ))}
-        </ol>
-
-        <DatumRule label="Questions" className="mb-6 mt-14 md:mt-16" />
+      <Section plane={c ? "shop" : "sheet"} label={showSteps || c ? "How it works" : "Questions"}>
+        {showSteps || c ? (
+          <>
+            <ol className="lp-steps">
+              {STEPS.map((s) => (
+                <li key={s.title} className="lp-step">
+                  <h3 className="lp-step__title">{s.title}</h3>
+                  <p className="lp-step__body">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+            <DatumRule label="Questions" className="mb-6 mt-14 md:mt-16" />
+          </>
+        ) : null}
         <Faq items={faqs} />
 
         {!c ? (
