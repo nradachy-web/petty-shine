@@ -8,7 +8,6 @@ import Button from "@/components/ui/Button";
 import KeyValueRow, { KeyValueList } from "@/components/ui/KeyValueRow";
 import Plate from "@/components/ui/Plate";
 import { PriceOrQuote } from "@/components/ui/PriceFigure";
-import { RevealGroup } from "@/components/ui/Reveal";
 import Section, { SectionHead } from "@/components/ui/Section";
 import { BRAND, REVIEWS, REVIEW_SUMMARY, SERVICES } from "@/lib/constants";
 import type { PhotoId } from "@/lib/photos";
@@ -239,7 +238,7 @@ const PROOF = REVIEWS.find((r) => r.name === "Jacob Freeman")!;
 function ContactSheet({ group }: { group: Group }) {
   if (group.frames.length === 0) return null;
   return (
-    <RevealGroup
+    <div
       className={[
         "mt-9 grid min-w-0 grid-cols-2 items-start gap-x-4 gap-y-7 sm:gap-5",
         group.cols === 3 ? "lg:grid-cols-3" : "",
@@ -257,7 +256,7 @@ function ContactSheet({ group }: { group: Group }) {
           }
         />
       ))}
-    </RevealGroup>
+    </div>
   );
 }
 

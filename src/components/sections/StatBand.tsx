@@ -3,7 +3,6 @@ import "./flagship.css";
 import { COATINGS, CREDENTIALS, REVIEW_SUMMARY } from "@/lib/constants";
 import { PHOTOS } from "@/lib/photos";
 import { cn } from "@/lib/utils";
-import { RevealGroup } from "@/components/ui/Reveal";
 
 /**
  * THE STAT BAND.
@@ -31,7 +30,7 @@ const PHOTO_COUNT = Object.keys(PHOTOS).length;
 
 export default function StatBand({ className }: { className?: string }) {
   return (
-    <RevealGroup as="dl" className={cn("stat-band", className)}>
+    <dl className={cn("stat-band", className)}>
       <div className="stat-cell">
         <dd className="stat-cell__n">
           {REVIEW_SUMMARY.rating}
@@ -68,7 +67,7 @@ export default function StatBand({ className }: { className?: string }) {
           Real jobs photographed on this site. None of it is stock
         </dt>
       </div>
-    </RevealGroup>
+    </dl>
   );
 }
 
