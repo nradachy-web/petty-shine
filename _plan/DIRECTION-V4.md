@@ -134,3 +134,22 @@ backed.
 band grew to 50rem (56rem above 1600px), so the Huracan sits whole with its
 floor reflection and the banner runs off the top instead of the car being
 cut at the splitter.
+
+## PageSpeed, the night's last pass
+
+Nick ran PageSpeed Insights: desktop 100, 100, 100; mobile 88 with LCP 3.6s
+and Speed Index 4.1s and a filmstrip blank for six of eight frames. A
+Lighthouse 13 trace of a matching slow run on the live host showed every
+resource finished by 330ms, the load event at 329ms, main thread work under
+half a second, and the first pixel at 2301ms: a two second paint hold, not a
+weight problem. It appeared in 2 of about 15 live runs and never in 12
+local runs, throttled or not, so it could not be forced or bisected.
+
+Everything that could hold a first frame is gone now: the hero copy fade,
+the hero settle, sync image decoding. The phone hero is a 720px portrait cut
+of the same frame (24 to 43KB) instead of a 35% slice of the landscape file,
+and Archivo rides the preload again so the display face is there at first
+paint rather than swapping in two seconds later. Live Lighthouse 13 mobile
+after that: 98, 97, 95 with observed first paint at 150 to 280ms. The PSI
+API is not enabled on the Google project this Mac holds a key for, so PSI
+itself has to be run from the browser.
