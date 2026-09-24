@@ -13,17 +13,17 @@ import { BRAND, SERVICES } from "@/lib/constants";
 import { spell } from "../areas/[city]/facts";
 
 export const metadata: Metadata = {
-  title: "Get a Quote",
+  title: "Get a Free Quote",
   /* 155 characters, inside what Google shows on a phone. */
   description:
-    "Send Petty Shine your vehicle and what you want done. Detailing, ceramic coating, paint protection film, tint and dent repair in Randleman, North Carolina.",
+    "Tell Petty Shine about your vehicle for a fast, free quote. Detailing, ceramic coating, paint protection film, tint and dent repair in Randleman, NC.",
   alternates: { canonical: "/quote/" },
 };
 
 const STEPS = [
-  { n: "01", text: "You send the vehicle and what you want done." },
-  { n: "02", text: "We come back with a price for that vehicle." },
-  { n: "03", text: "You pick a date and drop it off." },
+  { n: "01", text: "Tell us about your vehicle and what you want done." },
+  { n: "02", text: "We get back to you fast with a free quote." },
+  { n: "03", text: "Book your spot and drop it off in Randleman." },
 ];
 
 /**
@@ -47,7 +47,7 @@ const ALL_SERVICES = SERVICES;
 export default function QuotePage() {
   return (
     <>
-      <Breadcrumbs plane="sheet" trail={[{ label: "Get a quote", href: "/quote/" }]} />
+      <Breadcrumbs plane="sheet" trail={[{ label: "Free quote", href: "/quote/" }]} />
 
       {/* The one page every quote CTA on the site funnels into was the one
           page with nothing backing the ask. The same hairline row the money
@@ -89,10 +89,7 @@ export default function QuotePage() {
             <div className="ps-prose mt-6">
               <p>
                 {BRAND.name} is an auto detailing shop at {BRAND.street} in{" "}
-                {BRAND.city}, {BRAND.stateName}. Send the vehicle and what you
-                want done, and a number for that car comes back in writing
-                before any work starts. The vehicle decides the price, which is
-                why this site does not guess one for you.
+                {BRAND.city}, {BRAND.stateName}. Tell us about your vehicle and what you want done, and we will get back to you fast with a free, no pressure quote. The vehicle decides the price, which is why this site does not guess one for you.
               </p>
             </div>
           </div>
@@ -184,8 +181,7 @@ export default function QuotePage() {
                 <p>
                   These are the {spell(ALL_SERVICES.length)} services the shop
                   quotes. If you are not sure which one you want, open the page
-                  for it and read what the work actually is, then come back and
-                  send the vehicle.
+                  for it and read what the work actually is, then come back and ask for your free quote.
                 </p>
               }
             />
@@ -193,10 +189,10 @@ export default function QuotePage() {
                 row gives that journey a button instead of only the detour. */}
             <div className="mt-7 flex flex-wrap gap-3">
               <Button href="#quote-form" tone="ghost" size="sm">
-                Send the vehicle
+                Get a Free Quote
               </Button>
               <Button href="/pricing/" tone="ghost" size="sm">
-                What moves the number
+                What moves the price
               </Button>
             </div>
           </div>

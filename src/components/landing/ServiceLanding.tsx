@@ -46,18 +46,9 @@ import "./landing.css";
    ========================================================================== */
 
 const STEPS = [
-  {
-    title: "Send the vehicle",
-    body: "Year, make, model and what you want done. Photos help. The form takes a minute.",
-  },
-  {
-    title: "Get a number in writing",
-    body: "Size of the vehicle and condition of the paint decide the price, so it is quoted on your car and sent back to you before anything is scheduled.",
-  },
-  {
-    title: "Book the day",
-    body: "Drop it at the shop in Randleman. We tell you the pickup day up front and call if anything changes.",
-  },
+  { title: "Tell us about your vehicle", body: "Year, make, model and what you want done. It takes about a minute, and photos help." },
+  { title: "Get your free quote", body: "We price it for your vehicle and get back to you fast. No pressure, no surprises." },
+  { title: "Book your spot", body: "Pick a day that works, drop it off in Randleman, and drive away protected." },
 ] as const;
 
 const CHECK_PATH = "M20 6 9 17l-5-5";
@@ -131,9 +122,11 @@ export interface ServiceLandingProps {
   /** Hub pages only: the tiers, the coverage table, the statute. */
   detail?: ReactNode;
   detailLabel?: string;
+  /** Paper by default. The film page runs its coverage renders on the dark plane. */
+  detailPlane?: "sheet" | "shop";
 }
 
-export default function ServiceLanding({ track: t, city: c, detail, detailLabel }: ServiceLandingProps) {
+export default function ServiceLanding({ track: t, city: c, detail, detailLabel, detailPlane = "sheet" }: ServiceLandingProps) {
   const url = c ? townHref(t, c) : hubHref(t);
   const review = t.reviewName ? REVIEWS.find((r) => r.name === t.reviewName) ?? null : null;
   const faqs = c && t.townFaq ? [...t.faqs, t.townFaq(c)] : t.faqs;
@@ -236,7 +229,7 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel 
 
       {/* 4a. hub detail */}
       {!c && detail ? (
-        <Section plane="sheet" label={detailLabel}>
+        <Section plane={detailPlane} label={detailLabel}>
           {detail}
         </Section>
       ) : null}
@@ -334,16 +327,16 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel 
       </Section>
 
       {/* 6. the close */}
-      <Section plane={c ? "sheet" : "shop"} label="Get a price" id="quote">
+      <Section plane={c ? "sheet" : "shop"} label="Free quote" id="quote">
         <div className="lp-close">
           <div>
-            <h2 className="ps-display ps-display-lg">Send the vehicle. We will send a number back.</h2>
+            <h2 className="ps-display ps-display-lg">Get your free quote.</h2>
             <p className="ps-prose mt-5">
-              It goes straight to the shop. The year, make and model is enough to start, and the number comes back in writing before anything is scheduled.
+              Tell us about your vehicle and what you want done. We will get back to you fast with a free, no pressure quote. Prefer to talk? Call us.
             </p>
             <PhoneLink placement={`${t.slug}-close`} className="lp-call">
               <span className="min-w-0">
-                <span className="lp-call__k">Rather call</span>
+                <span className="lp-call__k">Prefer to call</span>
                 <span className="lp-call__n">{BRAND.phoneDisplay}</span>
               </span>
               <span className="lp-call__tick" aria-hidden="true" />

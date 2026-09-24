@@ -121,8 +121,7 @@ export default function MarineDetailingPage() {
                 the boat.
               </p>
               <p>
-                Nothing about the work needs the water, and you get the number
-                in writing before any of it starts.
+                Nothing about the work needs the water, and you get a free quote before any of it starts.
               </p>
             </div>
 
@@ -233,7 +232,7 @@ export default function MarineDetailingPage() {
             440px past the bottom of the column beside it. */}
         <div className="mt-9 grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14 md:mt-11">
           <div className="min-w-0 lg:col-span-6">
-            <h3 className="ps-heading text-lg">What moves the number</h3>
+            <h3 className="ps-heading text-lg">What moves the price</h3>
             <KeyValueList className="mt-5" label="What moves a marine price">
               {DRIVERS.map((row) => (
                 <KeyValueRow key={row.k} k={row.k} v={row.v} mono={false} />
@@ -326,7 +325,7 @@ export default function MarineDetailingPage() {
           className="mt-11"
           service={SERVICE.quoteKey}
           ctaLabel="Get the boat quoted"
-          body="Make, model and length is enough to start, and a line about the shape the hull is in gets the first number closer."
+          body="Make, model and length is enough to start, and a line about the shape the hull is in gets the quote closer to the mark."
         />
       </Section>
 
@@ -337,7 +336,7 @@ export default function MarineDetailingPage() {
           the hero lives down here now so each screen carries the
           number once.
           --------------------------------------------------------------- */}
-      <Section plane="shop" label="Get a price" id="quote">
+      <Section plane="shop" label="Free quote" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -413,7 +412,7 @@ export default function MarineDetailingPage() {
               lockService
               subject="boat"
               heading="Get the boat quoted"
-              intro="It goes straight to the shop. The more you put here, the closer the first number is."
+              intro="Tell us about the boat and we will get back to you fast."
               source="/marine-detailing/"
               id="quote-form"
             />

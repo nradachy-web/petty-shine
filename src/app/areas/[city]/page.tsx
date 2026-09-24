@@ -274,7 +274,7 @@ export default async function CityPage({
                 pointed at the form on this page. */}
             <div className="mt-8">
               <Button href="#quote" tone="cyan">
-                Get a price on your vehicle
+                Get a Free Quote
               </Button>
             </div>
 
@@ -398,10 +398,7 @@ export default async function CityPage({
           intro={
             <p>
               Every card below goes to the form with that service already
-              filled in, and the number comes back in writing before any
-              work starts. None of the {spell(SERVICES.length)} publishes a
-              price, because size and the condition of the paint move the
-              number more than the name of the service does.
+              filled in, and a free quote comes back fast. None of the {spell(SERVICES.length)} publishes a price, because size and the condition of the paint move the price more than the name of the service does.
             </p>
           }
         />
@@ -473,11 +470,11 @@ export default async function CityPage({
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get a price" rhythm="snug" id="quote">
+      <Section plane="sheet" label="Free quote" rhythm="snug" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-display ps-display-md">
-              Send the vehicle, get the number.
+              Tell us about your vehicle.
             </h2>
             <div className="ps-prose mt-5">
               <p>
@@ -507,8 +504,8 @@ export default async function CityPage({
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Get a price for your vehicle"
-              intro={`It goes straight to the shop. Year, make, model and what you want done is enough to start.`}
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source={cityHref(c)}
               id="quote-form"
             />

@@ -43,8 +43,7 @@ export default function ContactPage() {
                 repair, all done in that one building.
               </p>
               <p>
-                Call and talk it through, or send the vehicle through the form
-                and we will come back with a price for it.
+                Call and talk it through, or tell us about your vehicle through the form and we will get back to you fast with a free quote.
               </p>
             </div>
 
@@ -100,8 +99,8 @@ export default function ContactPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Send us the vehicle"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/contact/"
               id="quote-form"
             />

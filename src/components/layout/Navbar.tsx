@@ -344,7 +344,7 @@ export default function Navbar() {
 
             <span className="hidden xl:block">
               <Link href="/quote/" className="btn btn-sm btn-outline">
-                Get a quote
+                Free Quote
               </Link>
             </span>
 
@@ -460,7 +460,7 @@ export default function Navbar() {
 
             <div className="mt-8 grid gap-3">
               <Link href="/quote/" className="btn btn-primary btn-block btn-lg">
-                Get a quote
+                Free Quote
               </Link>
               <a
                 href={`tel:${BRAND.phoneTel}`}

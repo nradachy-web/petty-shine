@@ -79,12 +79,12 @@ function hoursLine(): string {
 const pricingBlock =
   PRICING_MODE === "private"
     ? [
-        `${BRAND.name} does not publish prices on this website. Every service is quoted on the vehicle it is being done to, because the size of the vehicle and the condition of the paint move the number far more than the name of the service does. The vehicle is looked at first, and the number goes to the customer in writing before any work starts.`,
+        `${BRAND.name} does not publish prices on this website. Every service is quoted on the vehicle it is being done to, because the size of the vehicle and the condition of the paint move the price far more than the name of the service does. The vehicle is looked at first, and the customer gets a free quote before any work starts.`,
         ``,
-        `To get a number, send the vehicle and the service through ${url("/quote/")}, or call ${BRAND.phoneDisplay}. ${url("/pricing/")} explains what moves the number on each service and what separates one tier from the next.`,
+        `To get a free quote, tell the shop about the vehicle and the service through ${url("/quote/")}, or call ${BRAND.phoneDisplay}. ${url("/pricing/")} explains what moves the price on each service and what separates one tier from the next.`,
       ].join("\n")
     : [
-        `${BRAND.name} publishes a starting price on the services that have one. A starting price is the floor for that work and not the final figure: the vehicle is looked at first, and the number goes to the customer in writing before any work starts. Prices are listed at ${url("/pricing/")}, and a quote on a specific vehicle comes from ${url("/quote/")}.`,
+        `${BRAND.name} publishes a starting price on the services that have one. A starting price is the floor for that work and not the final figure: the vehicle is looked at first, and the customer gets a free quote before any work starts. Prices are listed at ${url("/pricing/")}, and a quote on a specific vehicle comes from ${url("/quote/")}.`,
       ].join("\n");
 
 function body(): string {
@@ -166,7 +166,7 @@ function body(): string {
   lines.push("## What this shop does not claim");
   lines.push("");
   lines.push(
-    `- The film is ${PPF_FILM.brand} ${PPF_FILM.product}. No film warranty term is published here, because ${PPF_FILM.brand}'s own websites publish different numbers for it. The term is confirmed in writing for the vehicle before work begins.`,
+    `- The film is ${PPF_FILM.brand} ${PPF_FILM.product}. No film warranty term is published here, because ${PPF_FILM.brand}'s own websites publish different numbers for it. The term is confirmed for the vehicle before work begins.`,
   );
   lines.push(
     `- Paint protection film is a sacrificial layer. It takes the chip so the paint does not, and film that has taken a hit is film doing its job. Self healing works on light scratches, and ${PPF_FILM.brand}'s own FAQ says a scratch that goes through the topcoat will not heal.`,
@@ -188,9 +188,9 @@ function body(): string {
   /* ---------------------------------------------------------------- */
   lines.push("## Key pages");
   lines.push("");
-  lines.push(`- [Get a quote](${url("/quote/")}): the form, one vehicle at a time.`);
+  lines.push(`- [Get a free quote](${url("/quote/")}): the form, one vehicle at a time.`);
   lines.push(
-    `- [What it costs, and how we quote it](${url("/pricing/")}): what moves the number on each service.`,
+    `- [What it costs, and how we quote it](${url("/pricing/")}): what moves the price on each service.`,
   );
   lines.push(
     `- [Questions we get asked](${url("/faq/")}): the answers, including the ones that are not in the shop's favor.`,

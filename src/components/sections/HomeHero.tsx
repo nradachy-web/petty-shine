@@ -36,11 +36,11 @@ export default function HomeHero() {
         <>
           <p>
             Ceramic coating, paint protection film, paint correction and detailing in {BRAND.city},{" "}
-            {BRAND.stateName}. Gtechniq accredited, STEK authorized, and every job quoted on your vehicle in writing.
+            {BRAND.stateName}. Gtechniq accredited, STEK authorized, and a free quote for your vehicle in about a minute.
           </p>
         </>
       }
-      ctaLabel="Get a price"
+      ctaLabel="Get a Free Quote"
       ctaHref="#quote"
       phonePlacement="home-hero"
       ariaLabel={`${BRAND.name}, ${BRAND.city}, ${BRAND.stateName}`}

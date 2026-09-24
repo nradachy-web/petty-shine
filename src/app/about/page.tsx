@@ -203,7 +203,7 @@ export default function AboutPage() {
                   vehicle and a service is a smaller step than booking a job,
                   so it is the primary action here as it is everywhere. */}
               <Button href="/quote/" tone="cyan">
-                Get a price
+                Get a Free Quote
               </Button>
               <PhoneLink placement="about-hero" className="ps-btn ps-btn--ghost">
                 Call {BRAND.phoneDisplay}
@@ -301,8 +301,7 @@ export default function AboutPage() {
                 <p>
                   Most shops answer a price question with a phone number.
                   This one tells you what it can tell you up front, says
-                  which part depends on the vehicle, and puts the number in
-                  writing before anyone touches the car.
+                  which part depends on the vehicle, and gives you a clear quote before anyone touches the car.
                 </p>
               }
             />
@@ -317,11 +316,11 @@ export default function AboutPage() {
             <div className="border-t border-rule-light">
               {[
                 {
-                  h: "The vehicle gets looked at before it gets a number.",
-                  p: "Size and the condition of the paint are what move a price, and neither can be read off a make and model. So the quote comes after the walkthrough, and it is a real number rather than a range.",
+                  h: "The vehicle gets looked at before it gets quoted.",
+                  p: "Size and the condition of the paint are what move a price, and neither can be read off a make and model. So the quote comes after the walkthrough, and it is a real price rather than a range.",
                 },
                 {
-                  h: "The number goes to you in writing before work starts.",
+                  h: "You have your quote before work starts.",
                   p: "Nothing gets added to it in the bay. If something turns up under the dirt that changes the job, the conversation happens before the work does, not on the invoice at pickup.",
                 },
                 {
@@ -459,7 +458,7 @@ export default function AboutPage() {
                 <p>
                   The shop is at {BRAND.addressLine}, open {BRAND.hoursShort}.
                   Call and talk it through, or send the year, make and model
-                  through the form and we will come back with a number for it.
+                  through the form and we will get back to you fast with a free quote.
                 </p>
               }
             />
@@ -496,8 +495,8 @@ export default function AboutPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Get a price for your vehicle"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/about/"
               id="quote-form"
             />

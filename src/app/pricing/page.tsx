@@ -72,7 +72,7 @@ const REGISTRATION = GTECHNIQ_FACTS.guaranteeTerms.find(
 const DESCRIPTION =
   `What moves the price on a detail, a coating, film, tint or a dent at ` +
   `${BRAND.name} in ${BRAND.city}, ${BRAND.state}, what happens at the ` +
-  `walkthrough, and when you get the number.`;
+  `walkthrough, and how free quotes work.`;
 
 export const metadata: Metadata = {
   title: "Pricing: What It Costs and How We Quote It",
@@ -127,18 +127,18 @@ const DRIVERS = [
 const WALKTHROUGH = [
   {
     n: "01",
-    k: "You send the vehicle",
+    k: "Tell us about your vehicle",
     v: "Year, make, model, and what you want looked at. That is a smaller thing to do than booking a job, and it is all we need to start.",
   },
   {
     n: "02",
     k: "We look at it",
-    v: "Which level a vehicle actually needs comes off the paint, the glass or the interior in front of us. That is a look rather than a guess, and it is why the number is not on this page.",
+    v: "Which level a vehicle actually needs comes off the paint, the glass or the interior in front of us. That is a look rather than a guess, and it is why the price is not on this page.",
   },
   {
     n: "03",
-    k: "You get the number in writing",
-    v: "Before any work starts.",
+    k: "You get your free quote",
+    v: "Fast, and before any work starts.",
   },
   {
     n: "04",
@@ -158,7 +158,7 @@ const QUOTED_ON = [
   {
     href: "/window-tinting/",
     label: `Window tinting, and what ${NC_TINT_LAW.statute} allows`,
-    v: "The number comes off the window count and the shape of the glass. How dark it ends up is set by the statute, not by the price.",
+    v: "The price comes off the window count and the shape of the glass. How dark it ends up is set by the statute, not by the price.",
   },
   {
     href: "/paintless-dent-repair/",
@@ -178,10 +178,10 @@ const QUOTED_ON = [
 ];
 
 const CONTENTS = [
-  { id: "drivers", label: "What moves the number" },
+  { id: "drivers", label: "What moves the price" },
   { id: "walkthrough", label: "How the quote happens" },
   { id: "tiers", label: "What separates the tiers" },
-  { id: "quote", label: "Get a price" },
+  { id: "quote", label: "Free quote" },
 ];
 
 export default function PricingPage() {
@@ -209,15 +209,13 @@ export default function PricingPage() {
                 done to.
               </p>
               <p>
-                So this page is not a price list. It is what moves the number
+                So this page is not a price list. It is what moves the price
                 on each of those services, what actually separates one tier
                 from the next, and what happens when the vehicle is in front of
                 us.
               </p>
               <p>
-                You get the number in writing before any work starts. That is
-                the part worth knowing, and it is the part a starting price
-                never told you.
+                You get your quote before any work starts, free and with no pressure. That is the part worth knowing, and it is the part a starting price never told you.
               </p>
             </div>
 
@@ -247,7 +245,7 @@ export default function PricingPage() {
               />
               <KeyValueRow
                 k="You get it"
-                v="In writing, before any work starts"
+                v="Free, and before any work starts"
                 mono={false}
               />
               <KeyValueRow k="Shop" v={BRAND.addressLine} />
@@ -260,7 +258,7 @@ export default function PricingPage() {
                   thing it asks for has to be solid and it has to be the
                   vehicle. Everything else here is a ghost. */}
               <Button href="#quote" tone="cyan">
-                Get a price on your vehicle
+                Get a Free Quote
               </Button>
               <Button href="#walkthrough" tone="ghost">
                 How the quote happens
@@ -292,7 +290,7 @@ export default function PricingPage() {
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
-              title="What actually moves the number."
+              title="What actually moves the price."
               intro={
                 <p>
                   None of these are guesses. Each one is something we can see
@@ -304,8 +302,7 @@ export default function PricingPage() {
 
             <div className="ps-prose mt-6">
               <p>
-                A number given before anyone has looked at the vehicle is a
-                guess with a dollar sign in front of it. The honest version is
+                A price given before anyone has looked at the vehicle is a guess with a dollar sign in front of it. The honest version is
                 to say what the guess would be made of, and then go and look.
               </p>
             </div>
@@ -372,7 +369,7 @@ export default function PricingPage() {
                   at the bottom of this page and it goes straight to the shop.
                 </p>
                 <Button href="#quote" tone="ghost" size="sm">
-                  Send the vehicle
+                  Get a Free Quote
                 </Button>
               </div>
             </div>
@@ -555,11 +552,11 @@ export default function PricingPage() {
           The review sits beside it because the decision point is the
           only place proof is worth anything.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Get a price" id="quote">
+      <Section plane="sheet" label="Free quote" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
-              title="Get the real number."
+              title="Get the real quote, free."
               intro={
                 <p>
                   Tell us the year, make and model and what you want looked at.
@@ -616,8 +613,8 @@ export default function PricingPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Send us the vehicle"
-              intro="Pick the service, add the vehicle, and the number comes back from the shop."
+              heading="Get your free quote"
+              intro="Pick the service, add the vehicle, and we will get back to you fast."
               source="/pricing/"
               id="quote-form"
             />

@@ -281,8 +281,8 @@ export default function QuoteForm({
   package: packageProp,
   lockService = false,
   subject = "vehicle",
-  heading = "Get a price for your vehicle",
-  intro = "It goes straight to the shop. The more you put here, the closer the first number is.",
+  heading = "Get your free quote",
+  intro = "Tell us about your vehicle and we will get back to you fast.",
   source,
   id,
   className,
@@ -1017,7 +1017,7 @@ export default function QuoteForm({
                all, because then the plain POST works on its own. */
             disabled={status === "sending" || (!KEY_IS_SET && !hydrated)}
           >
-            {status === "sending" ? "Sending" : "Send the request"}
+            {status === "sending" ? "Sending" : "Get My Free Quote"}
           </Button>
         </div>
 

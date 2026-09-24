@@ -1,0 +1,157 @@
+/* ============================================================
+   THE FOUR COVERAGE LEVELS. Owned by PpfPackages.tsx.
+   Prefixed ppk-. Colour inside @layer components, structure
+   unlayered, the same split as every other file here.
+   ============================================================ */
+
+.ppks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+.ppk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  min-width: 0;
+  padding-block: 2.5rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.ppk:last-child {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.ppk > * {
+  min-width: 0;
+}
+.ppk__media {
+  margin: 0;
+}
+.ppk__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ppk__caption {
+  margin-top: 0.6rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.ppk__eyebrow {
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.ppk__name {
+  margin-top: 0.7rem;
+}
+.ppk__lead {
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 32rem;
+}
+.ppk__label {
+  margin-top: 1.5rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.ppk__panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1.5rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ppk__panel {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.ppk__panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.55rem;
+  height: 1px;
+}
+.ppk__terms {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  max-width: 30rem;
+}
+.ppk__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.75rem;
+  margin-top: 1.25rem;
+}
+.ppk__tel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--ps-font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+@layer components {
+  .ppk,
+  .ppk:last-child {
+    border-color: var(--ps-rule);
+  }
+  .ppk__caption,
+  .ppk__eyebrow,
+  .ppk__label,
+  .ppk__tel {
+    color: var(--ps-key);
+  }
+  .ppk__lead,
+  .ppk__panel,
+  .ppk__terms {
+    color: var(--ps-body);
+  }
+  .ppk__panel::before {
+    background: var(--ps-rule);
+  }
+  .ppk__panel.is-added {
+    color: var(--ps-heading);
+  }
+  .ppk__panel.is-added::before {
+    background: var(--ps-accent);
+  }
+  .ppk__tel:hover {
+    color: var(--ps-link);
+  }
+}
+@media (min-width: 1024px) {
+  .ppk {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 3.5rem;
+    align-items: center;
+    padding-block: 3rem;
+  }
+  .ppk--flip .ppk__media {
+    order: 2;
+  }
+  .ppk--flip .ppk__body {
+    order: 1;
+  }
+}

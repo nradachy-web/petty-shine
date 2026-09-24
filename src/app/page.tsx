@@ -28,7 +28,7 @@ import { longDate } from "@/lib/utils";
    ========================================================================== */
 
 const TITLE = `${BRAND.name} | Ceramic Coating, PPF and Detailing, ${BRAND.city} ${BRAND.state}`;
-const DESCRIPTION = `Ceramic coating, paint protection film, paint correction and auto detailing in ${BRAND.city}, ${BRAND.stateName}. ${CREDENTIALS[0].label}, ${CREDENTIALS[1].label}. Quoted on your vehicle.`;
+const DESCRIPTION = `Ceramic coating, paint protection film, paint correction and auto detailing in ${BRAND.city}, ${BRAND.stateName}. ${CREDENTIALS[0].label}, ${CREDENTIALS[1].label}. Free quotes, fast.`;
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -44,9 +44,9 @@ const REST = SERVICES.filter((s) => !PAID.includes(s));
 const LEAD_REVIEW = REVIEWS.find((r) => r.name === "Landon Brown") ?? REVIEWS[0];
 
 const STEPS = [
-  { title: "Send the vehicle", body: "Year, make, model and what you want done. Photos help. The form takes a minute." },
-  { title: "Get a number in writing", body: "Size of the vehicle and condition of the paint decide the price, so it is quoted on your car and sent back before anything is scheduled." },
-  { title: "Book the day", body: "Drop it at the shop in Randleman. We tell you the pickup day up front." },
+  { title: "Tell us about your vehicle", body: "Year, make, model and what you want done. It takes about a minute, and photos help." },
+  { title: "Get your free quote", body: "We price it for your vehicle and get back to you fast. No pressure, no surprises." },
+  { title: "Book your spot", body: "Pick a day that works, drop it off in Randleman, and drive away protected." },
 ] as const;
 
 const WORK = [
@@ -69,7 +69,7 @@ export default function HomePage() {
           title="What the shop does."
           intro={
             <p>
-              Every job is quoted on the vehicle in front of us and the number goes to you in writing before any work starts.
+              Every job is priced for your vehicle. Free quotes, fast, no pressure.
             </p>
           }
         />
@@ -171,16 +171,16 @@ export default function HomePage() {
         </p>
         <TownChips />
 
-        <DatumRule label="Get a price" className="mb-8 mt-14 md:mt-16" />
+        <DatumRule label="Free quote" className="mb-8 mt-14 md:mt-16" />
         <div id="quote" className="lp-close scroll-mt-24">
           <div>
-            <h2 className="ps-display ps-display-lg">Send the vehicle. We will send a number back.</h2>
+            <h2 className="ps-display ps-display-lg">Get your free quote.</h2>
             <p className="ps-prose mt-5">
-              It goes straight to the shop. The year, make and model is enough to start, and the number comes back in writing before anything is scheduled.
+              Tell us about your vehicle and what you want done. We will get back to you fast with a free, no pressure quote. Prefer to talk? Call us.
             </p>
             <PhoneLink placement="home-close" className="lp-call">
               <span className="min-w-0">
-                <span className="lp-call__k">Rather call</span>
+                <span className="lp-call__k">Prefer to call</span>
                 <span className="lp-call__n">{BRAND.phoneDisplay}</span>
               </span>
               <span className="lp-call__tick" aria-hidden="true" />

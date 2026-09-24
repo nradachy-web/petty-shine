@@ -221,7 +221,7 @@ export default function WarrantiesPage() {
                 reads as diligence rather than a refusal. */}
             <SectionHead
               size="md"
-              title="The film term goes in writing with your quote."
+              title="The film term comes with your quote."
               intro={
                 <p>
                   We install {PPF_FILM.brand} film. We do not print a film
@@ -272,7 +272,7 @@ export default function WarrantiesPage() {
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get it in writing">
+      <Section plane="sheet" label="Ask for the terms">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -280,9 +280,7 @@ export default function WarrantiesPage() {
               title="Ask us for the terms before you book."
               intro={
                 <p>
-                  Send the vehicle and what you want done. We will come back
-                  with a price and the guarantee that goes with it, in writing,
-                  before anything is scheduled.
+                  Tell us about your vehicle and what you want done. We will get back to you fast with a free quote and the guarantee that goes with it, before anything is scheduled.
                 </p>
               }
             />

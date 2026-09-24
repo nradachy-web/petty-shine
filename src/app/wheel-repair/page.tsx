@@ -184,8 +184,7 @@ function Hero() {
             <p>
               Nothing here has a published price. One scuffed face and four
               wheels going to a new color are not the same job, so we look at
-              the wheels before we put a number on them, and the number goes
-              to you in writing before any work starts.
+              the wheels before we quote them, and the quote is free and comes back fast.
             </p>
           </div>
 
@@ -293,7 +292,7 @@ export default function WheelRepairPage() {
           </div>
 
           <div className="min-w-0 lg:col-span-6">
-            <h3 className="ps-heading text-lg">What moves the number</h3>
+            <h3 className="ps-heading text-lg">What moves the price</h3>
             <KeyValueList className="mt-5" label="What moves a wheel repair price">
               {DRIVERS.map((row) => (
                 <KeyValueRow key={row.k} k={row.k} v={row.v} mono={false} />
@@ -361,7 +360,7 @@ export default function WheelRepairPage() {
           at a glance list that used to ride beside the old text hero
           lives here now, next to the form the facts support.
           --------------------------------------------------------------- */}
-      <Section plane="shop" label="Get a price" id="quote">
+      <Section plane="shop" label="Free quote" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
@@ -370,8 +369,7 @@ export default function WheelRepairPage() {
               intro={
                 <p>
                   How far the rash goes, whether it is one wheel or the set,
-                  and what finish the wheel started as. That is enough to come
-                  back with a number.
+                  and what finish the wheel started as. That is enough to come back with a free quote.
                 </p>
               }
             />

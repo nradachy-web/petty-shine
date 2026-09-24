@@ -171,11 +171,11 @@ export default function StickyCallBar() {
             /* A plain anchor, because this is a jump inside the current
                document and next/link would run it through the router. */
             <a href={formHash} className={quoteLabelCls}>
-              Get a quote
+              Free Quote
             </a>
           ) : (
             <Link href={servedQuoteHref} className={quoteLabelCls}>
-              Get a quote
+              Free Quote
             </Link>
           )}
         </div>

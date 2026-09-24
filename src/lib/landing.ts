@@ -122,10 +122,10 @@ const CERAMIC: LandingTrack = {
   proofPhoto: "coating-huracan",
   hub: {
     h1: "Protect your investment for up to *nine* years.",
-    lead: "Three Gtechniq coatings, three, five and nine year guarantees, applied by an accredited detailer in Randleman. Every job is quoted on your vehicle and put in writing before work starts.",
+    lead: "Three Gtechniq coatings, three, five and nine year guarantees, applied by an accredited detailer in Randleman. Free quotes for your vehicle, fast and with no pressure.",
     title: "Ceramic Coating in Randleman, NC",
     description:
-      "Ceramic coating in Randleman, North Carolina by a Gtechniq Accredited Detailer. Three coatings with 3, 5 and 9 year guarantees, each quoted on your vehicle.",
+      "Ceramic coating in Randleman, North Carolina by a Gtechniq Accredited Detailer. Three coatings with 3, 5 and 9 year guarantees. Free quotes for your vehicle.",
   },
   town: {
     h1: (c) => `Ceramic coating for ${c.name} drivers.`,
@@ -133,7 +133,7 @@ const CERAMIC: LandingTrack = {
       `Gtechniq coatings with three, five and nine year guarantees, applied in our Randleman shop for ${c.name} owners who want the paint protected and easy to keep clean.`,
     title: (c) => `Ceramic Coating for ${c.name}, NC`,
     description: (c) =>
-      `Ceramic coating for ${c.name}, NC drivers by a Gtechniq Accredited Detailer in Randleman. Three coatings, 3 to 9 year guarantees, quoted on your vehicle.`,
+      `Ceramic coating for ${c.name}, NC drivers by a Gtechniq Accredited Detailer in Randleman. Three coatings, 3 to 9 year guarantees, and free quotes.`,
   },
   checksHeading: "What a coating job includes.",
   checks: [
@@ -191,7 +191,7 @@ const CERAMIC: LandingTrack = {
     a: `Yes, coating work is done in the shop. ${c.name} is about ${c.minutes} minutes away on ${c.route}, and we will tell you the pickup day when we quote the job.`,
   }),
   quoteKey: "ceramic",
-  ctaLabel: "Get a price",
+  ctaLabel: "Get a Free Quote",
   related: ["paint-protection-film", "paint-correction", "auto-detailing"],
 };
 
@@ -205,10 +205,10 @@ const PPF: LandingTrack = {
   proofPhoto: "ppf-install-closeup",
   hub: {
     h1: "Protect your investment where the *road* hits first.",
-    lead: "Clear STEK film over the panels that take the damage, installed in Randleman by an Authorized STEK Installer. Four coverage levels, each quoted on your vehicle and put in writing before work starts.",
+    lead: "Clear STEK film over the panels that take the damage, installed in Randleman by an Authorized STEK Installer. Four coverage levels. Free quotes for your vehicle, fast.",
     title: "Paint Protection Film in Randleman, NC",
     description:
-      "Paint protection film in Randleman, North Carolina from an Authorized STEK Installer. Four coverage levels, drawn panel by panel, each quoted on your vehicle.",
+      "Paint protection film in Randleman, North Carolina from an Authorized STEK Installer. Four coverage levels, drawn panel by panel. Free quotes for your vehicle.",
   },
   town: {
     h1: (c) => `Paint protection film for ${c.name} drivers.`,
@@ -216,7 +216,7 @@ const PPF: LandingTrack = {
       `Clear STEK film over the panels that take rock chips and road grit, installed in our Randleman shop for ${c.name} owners who want the factory paint kept under it.`,
     title: (c) => `Paint Protection Film for ${c.name}, NC`,
     description: (c) =>
-      `Paint protection film for ${c.name}, NC drivers, installed by an Authorized STEK Installer in Randleman. Four coverage levels, quoted on your vehicle.`,
+      `Paint protection film for ${c.name}, NC drivers, installed by an Authorized STEK Installer in Randleman. Four coverage levels, and free quotes.`,
   },
   checksHeading: "The four coverage levels.",
   checks: [
@@ -241,8 +241,8 @@ const PPF: LandingTrack = {
       body: "Glossy 8 mil film, hydrophobic and stain resistant, self healing on light scratches with heat or hot water.",
     },
     {
-      title: "Film and terms in writing",
-      body: "Which STEK film goes on your vehicle and what backs it is settled in writing before any work starts.",
+      title: "Film and terms confirmed first",
+      body: "Which STEK film goes on your vehicle and what backs it is confirmed with you before any work starts.",
     },
   ],
   proofHeading: "Why an authorized installer matters.",
@@ -270,7 +270,7 @@ const PPF: LandingTrack = {
     },
     {
       q: "What is the warranty?",
-      a: "STEK backs its film. The exact term for the film on your vehicle goes in writing before work starts, because we do not publish a term we have not verified for your car.",
+      a: "STEK backs its film. The exact term for the film on your vehicle is confirmed with your quote, because we do not publish a term we have not verified for your car.",
     },
   ],
   townFaq: (c) => ({
@@ -278,7 +278,7 @@ const PPF: LandingTrack = {
     a: `It depends on the coverage level. We give you the drop off and pickup days with the quote. ${c.name} is about ${c.minutes} minutes from the shop on ${c.route}.`,
   }),
   quoteKey: "ppf",
-  ctaLabel: "Get a price",
+  ctaLabel: "Get a Free Quote",
   related: ["ceramic-coating", "paint-correction", "window-tinting"],
 };
 
@@ -292,7 +292,7 @@ const CORRECTION: LandingTrack = {
   proofPhoto: "correction-reflection",
   hub: {
     h1: "Swirls and scratches, cut out for *good*.",
-    lead: "Machine polishing that levels swirls, scratches, water spots and oxidation out of the clear coat instead of hiding them. Two levels, quoted on the paint in front of us and put in writing before work starts.",
+    lead: "Machine polishing that levels swirls, scratches, water spots and oxidation out of the clear coat instead of hiding them. Two levels, quoted on the paint in front of us. Free quotes, fast.",
     title: "Paint Correction in Randleman, NC",
     description:
       "Paint correction and machine buffing in Randleman, North Carolina. Two levels. Swirls, scratches, water spots and oxidation cut out of the clear coat for good.",
@@ -303,7 +303,7 @@ const CORRECTION: LandingTrack = {
       `Swirls, scratches and water spots polished out of the clear coat in our Randleman shop, for ${c.name} owners who want the gloss back before they protect it.`,
     title: (c) => `Paint Correction for ${c.name}, NC`,
     description: (c) =>
-      `Paint correction for ${c.name}, NC drivers. Swirls, scratches and oxidation polished out of the clear coat in Randleman. Two levels, quoted on your paint.`,
+      `Paint correction for ${c.name}, NC drivers. Swirls, scratches and oxidation polished out of the clear coat in Randleman. Two levels, and free quotes.`,
   },
   checksHeading: "What a correction includes.",
   checks: [
@@ -353,7 +353,7 @@ const CORRECTION: LandingTrack = {
     },
     {
       q: "How do I know which level I need?",
-      a: "Send photos taken in direct sun with the year, make and model. We will say which level the paint needs and put the number in writing.",
+      a: "Send photos taken in direct sun with the year, make and model. We will say which level the paint needs and get back to you fast with a free quote.",
     },
   ],
   townFaq: (c) => ({
@@ -361,7 +361,7 @@ const CORRECTION: LandingTrack = {
     a: `Yes. Correction is done in the Randleman shop, about ${c.minutes} minutes from ${c.name} on ${c.route}, and the car stays with us until the polish is finished.`,
   }),
   quoteKey: "correction",
-  ctaLabel: "Get a price",
+  ctaLabel: "Get a Free Quote",
   related: ["ceramic-coating", "auto-detailing", "paintless-dent-repair"],
 };
 
@@ -375,7 +375,7 @@ const PDR: LandingTrack = {
   proofPhoto: null,
   hub: {
     h1: "The dent comes out. The *paint* stays on.",
-    lead: "Door dings, hail and parking lot dents worked out from behind the panel in Randleman. Nothing filled, sanded or resprayed. Quoted on the dent, in writing, before the car is here.",
+    lead: "Door dings, hail and parking lot dents worked out from behind the panel in Randleman. Nothing filled, sanded or resprayed. Free quotes from a photo, before the car is here.",
     title: "Paintless Dent Repair in Randleman, NC",
     description:
       "Paintless dent repair in Randleman, North Carolina. Door dings, hail damage and parking lot dents worked out from behind the panel, factory paint left alone.",
@@ -431,8 +431,8 @@ const PDR: LandingTrack = {
       a: "Soft edged dents with whole paint usually come out clean. A crease stretches the metal. It can come a long way back, but it will not read as untouched.",
     },
     {
-      q: "How do I get a price?",
-      a: "Send the year, make and model with a photo of the dent taken at an angle in a reflection. We come back with a number in writing before the car is here.",
+      q: "How do I get a quote?",
+      a: "Send the year, make and model with a photo of the dent taken at an angle in a reflection. We get back to you fast with a free quote, before the car is here.",
     },
     {
       q: "Does it damage the paint?",
@@ -458,10 +458,10 @@ const DETAILING: LandingTrack = {
   proofPhoto: "wash-f250-foam",
   hub: {
     h1: "Five levels, from a wash to full *correction*.",
-    lead: "Auto detailing at 357 Branson Mill Road in Randleman. Five exterior levels, from a maintenance clean to full paint correction, each quoted on the vehicle and put in writing before work starts.",
+    lead: "Auto detailing at 357 Branson Mill Road in Randleman. Five exterior levels, from a maintenance clean to full paint correction, each quoted for the vehicle. Free quotes, fast.",
     title: "Car Detailing in Randleman, NC",
     description:
-      "Car detailing in Randleman, North Carolina. Five levels, from a maintenance clean to paint correction, with a Level 1 interior included. Quoted on your vehicle.",
+      "Car detailing in Randleman, North Carolina. Five levels, from a maintenance clean to paint correction, with a Level 1 interior included. Free quotes, fast.",
   },
   town: {
     h1: (c) => `Car detailing for ${c.name} drivers.`,
@@ -469,7 +469,7 @@ const DETAILING: LandingTrack = {
       `Five levels of exterior detailing with a Level 1 interior included, done in our Randleman shop for ${c.name} owners who want the whole car done and not only washed.`,
     title: (c) => `Car Detailing for ${c.name}, NC`,
     description: (c) =>
-      `Car detailing for ${c.name}, NC drivers. Five levels from a maintenance clean to paint correction, done in Randleman and quoted on your vehicle in writing.`,
+      `Car detailing for ${c.name}, NC drivers. Five levels from a maintenance clean to paint correction, done in Randleman, with free quotes, fast.`,
   },
   checksHeading: "The five levels.",
   checks: [
@@ -531,7 +531,7 @@ const DETAILING: LandingTrack = {
     a: `Yes, in the Randleman shop. ${c.name} is about ${c.minutes} minutes away on ${c.route}, and we will tell you the pickup time when we quote the job.`,
   }),
   quoteKey: "detailing",
-  ctaLabel: "Get a price",
+  ctaLabel: "Get a Free Quote",
   related: ["paint-correction", "ceramic-coating", "paintless-dent-repair"],
 };
 
@@ -545,7 +545,7 @@ const TINT: LandingTrack = {
   proofPhoto: null,
   hub: {
     h1: "Window tint, installed to the North Carolina *limit*.",
-    lead: "Laminate and ceramic film cut and fitted in Randleman, held to the light transmission standard in N.C.G.S. 20-127. The statute is printed on this page. Priced on your glass, in writing.",
+    lead: "Laminate and ceramic film cut and fitted in Randleman, held to the light transmission standard in N.C.G.S. 20-127. The statute is printed on this page. Free quotes, priced on your glass.",
     title: "Window Tinting in Randleman, NC",
     description:
       "Window tinting in Randleman, NC. Laminate and ceramic film installed to the N.C.G.S. 20-127 limit, the statute printed on the page, priced on your vehicle.",
@@ -556,7 +556,7 @@ const TINT: LandingTrack = {
       `Laminate and ceramic window film cut and fitted in our Randleman shop for ${c.name} drivers, to the standard North Carolina law sets for every window except the windshield.`,
     title: (c) => `Window Tinting for ${c.name}, NC`,
     description: (c) =>
-      `Window tinting for ${c.name}, NC drivers. Laminate and ceramic film fitted in Randleman to the N.C.G.S. 20-127 limit, priced on your glass, in writing.`,
+      `Window tinting for ${c.name}, NC drivers. Laminate and ceramic film fitted in Randleman to the N.C.G.S. 20-127 limit, priced on your glass. Free quotes.`,
   },
   checksHeading: "How the glass gets done.",
   checks: [
@@ -577,7 +577,7 @@ const TINT: LandingTrack = {
       body: "35 percent light transmission on every window except the windshield, and no darker allowance for the rear glass.",
     },
     {
-      title: "Film and terms in writing",
+      title: "Film and terms confirmed first",
       body: "We name the film and what backs it for your vehicle before work starts. We do not publish a warranty we have not verified.",
     },
   ],
@@ -602,7 +602,7 @@ const TINT: LandingTrack = {
     },
     {
       q: "What is the warranty?",
-      a: "We name the film and its terms for your vehicle in writing before work starts. We do not publish a warranty on this page that we have not verified.",
+      a: "We name the film and its terms for your vehicle before work starts. We do not publish a warranty on this page that we have not verified.",
     },
     {
       q: "What decides the price?",
@@ -614,7 +614,7 @@ const TINT: LandingTrack = {
     a: `Yes. We do not install darker than N.C.G.S. 20-127 allows, so the car is legal on the drive back to ${c.name} on ${c.route} and anywhere else in the state.`,
   }),
   quoteKey: "tint",
-  ctaLabel: "Get a price",
+  ctaLabel: "Get a Free Quote",
   related: ["paint-protection-film", "ceramic-coating", "auto-detailing"],
 };
 

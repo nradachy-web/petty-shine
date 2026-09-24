@@ -154,7 +154,7 @@ export default function ServicesPage() {
                 with the size of the vehicle and the condition of the paint
                 far more than it moves with the name of the service, so every
                 card below goes to the form with that service already filled
-                in, and the number comes back in writing.
+                in, and a free quote comes back fast.
               </p>
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function ServicesPage() {
       {/* ---------------------------------------------------------------
           THE ONE PRIMARY ACTION, with a real review sitting beside it.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Get a price" rhythm="snug">
+      <Section plane="sheet" label="Free quote" rhythm="snug">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-display ps-display-md">
@@ -367,8 +367,8 @@ export default function ServicesPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Get a price for your vehicle"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/services/"
               id="quote-form"
             />

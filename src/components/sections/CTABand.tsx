@@ -50,13 +50,13 @@ export interface CTABandProps {
    figure and needs to know they will not be ambushed at pickup.
    -------------------------------------------------------------------------- */
 
-const DEFAULT_TITLE = "Tell us the vehicle. We will tell you the number.";
+const DEFAULT_TITLE = "Ready to protect your investment?";
 
 const DEFAULT_BODY =
-  "What your vehicle costs depends on its size and the condition of the paint, so we look at it before we quote it. The number goes to you in writing before any work starts.";
+  "Tell us about your vehicle and what you want done. We will get back to you fast with a free, no pressure quote. Prefer to talk? Call us.";
 
 const LINE_BODY =
-  "Send us the year, make and model and we will come back with a number for it, in writing, before anything starts.";
+  "Tell us the year, make and model and we will get back to you fast with a free quote.";
 
 function quoteHref(service?: string, pkg?: string): string {
   if (!service) return "/quote/";
@@ -82,7 +82,7 @@ export default function CTABand({
   label = "Next step",
   title = DEFAULT_TITLE,
   body,
-  ctaLabel = "Get a price",
+  ctaLabel = "Get a Free Quote",
   service,
   package: pkg,
   id,

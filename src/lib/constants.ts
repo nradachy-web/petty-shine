@@ -91,7 +91,7 @@ export function publicMoney(value: number | null | undefined): string | null {
  * and it is a promise rather than a warning: the visitor is being told
  * what happens next, not told that something is missing.
  */
-export const QUOTE_CTA_LABEL = "Quoted on your vehicle";
+export const QUOTE_CTA_LABEL = "Get a free quote";
 
 /* ============================================================
    THE BUSINESS
@@ -808,9 +808,9 @@ export const PENDING_SPEC = {
   heading: "Specification pending",
   rows: [
     { key: "Film", value: "Confirmed at consultation" },
-    { key: "Warranty", value: "Confirmed in writing before work begins" },
+    { key: "Warranty", value: "Confirmed for your vehicle before work begins" },
   ],
-  note: "We do not publish a film warranty we have not verified for your vehicle. Ask us and we will put it in writing.",
+  note: "We do not publish a film warranty we have not verified for your vehicle. Ask us and we will confirm it for yours.",
 } as const;
 
 /* ============================================================

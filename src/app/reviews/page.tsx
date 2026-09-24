@@ -119,7 +119,7 @@ export default function ReviewsPage() {
             Read them on Google
           </a>
           <Button href="/quote/" tone="ghost" size="sm">
-            Get a price
+            Get a Free Quote
           </Button>
         </div>
 
@@ -241,8 +241,8 @@ export default function ReviewsPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Get a price for your vehicle"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/reviews/"
               id="quote-form"
             />

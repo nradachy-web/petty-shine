@@ -58,7 +58,7 @@ export default function NotFound() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/quote/" tone="cyan">
-                Get a price
+                Get a Free Quote
               </Button>
               <Button href="/" tone="ghost">
                 Back to the front

@@ -69,7 +69,7 @@ const SCOPE = [
   },
   {
     k: "Deep odor",
-    v: "Odor sitting on the surfaces and odor that has soaked into the foam under them are two different problems. Say which one you have when you send the vehicle and the first number will be closer.",
+    v: "Odor sitting on the surfaces and odor that has soaked into the foam under them are two different problems. Say which one you have when you ask for your quote and it will be closer to the mark.",
   },
   {
     k: "Sun damaged leather",
@@ -81,7 +81,7 @@ const SCOPE = [
 const DESCRIPTION =
   `Interior car detailing in ${BRAND.city}, ${BRAND.stateName}. ` +
   `${INTERIOR_PACKAGES.length} levels, from a deep clean to leather and vinyl ` +
-  `restoration. Quoted on your vehicle. Call ${BRAND.phoneDisplay}.`;
+  `restoration. Free quotes, fast. Call ${BRAND.phoneDisplay}.`;
 
 export const metadata: Metadata = {
   title: `Interior Car Detailing in ${BRAND.city}, ${BRAND.state}`,
@@ -137,7 +137,7 @@ export default function InteriorDetailingPage() {
                   ghost buttons, so the first solid thing on the page was the
                   submit inside the form near the foot of it. */}
               <Button href="#quote" tone="cyan">
-                Get a price on your vehicle
+                Get a Free Quote
               </Button>
               <Button href="#levels" tone="ghost">
                 See the {INTERIOR_PACKAGES.length} levels
@@ -413,25 +413,24 @@ export default function InteriorDetailingPage() {
           variant="line"
           className="mt-10"
           service={SERVICE.quoteKey}
-          ctaLabel="Get a price"
-          body="Send the year, make and model and tell us what the inside looks like now."
+          ctaLabel="Get a Free Quote"
+          body="Tell us the year, make and model and what the inside looks like now, and we will get back to you fast."
         />
       </Section>
 
       {/* ---------------------------------------------------------------
           One primary action, one solid cyan button: the form submit.
           --------------------------------------------------------------- */}
-      <Section plane="sheet" label="Get a price" id="quote">
+      <Section plane="sheet" label="Free quote" id="quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <SectionHead
-              title="Tell us the vehicle."
+              title="Tell us about your vehicle."
               intro={
                 <p>
                   Year, make and model, plus a line about what the inside looks
                   like now. Pets, smoke, spilled coffee and sun damaged leather
-                  all change the answer, so say so and the first number will be
-                  closer.
+                  all change the answer, so say so and your quote will be closer to the mark.
                 </p>
               }
             />
@@ -476,8 +475,8 @@ export default function InteriorDetailingPage() {
             <QuoteForm
               service={SERVICE.quoteKey}
               lockService
-              heading="Send us the vehicle"
-              intro="It goes straight to the shop. The more you put here, the closer the first number is."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/interior-detailing/"
               id="quote-form"
             />

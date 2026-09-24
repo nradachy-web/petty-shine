@@ -99,9 +99,9 @@ export default function ServiceCards({
                   different links. */}
               <QuoteLink
                 service={s.quoteKey}
-                ariaLabel={`Get a price, ${s.name}`}
+                ariaLabel={`Get a free quote, ${s.name}`}
               >
-                Get a price
+                Get a free quote
               </QuoteLink>
             </div>
           </div>

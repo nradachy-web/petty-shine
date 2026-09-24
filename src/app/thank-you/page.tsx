@@ -29,7 +29,7 @@ const NEXT_STEPS = [
        label and the note say that instead of promising figures. */
     href: "/pricing/",
     label: "See how we quote",
-    note: "What moves the number, and when you get it in writing.",
+    note: "What moves the price, and how the free quote works.",
   },
   {
     href: "/ceramic-coating/",

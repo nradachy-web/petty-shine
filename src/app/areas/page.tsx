@@ -107,7 +107,7 @@ export default function AreasPage() {
                 pointed at the form on this page. The one cyan spend here. */}
             <div className="mt-8">
               <Button href="#quote-form" tone="cyan">
-                Get a price on your vehicle
+                Get a Free Quote
               </Button>
             </div>
 
@@ -236,7 +236,7 @@ export default function AreasPage() {
         </div>
       </Section>
 
-      <Section plane="sheet" label="Get a price">
+      <Section plane="sheet" label="Free quote">
         <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="min-w-0 lg:col-span-5">
             <h2 className="ps-display ps-display-md">
@@ -247,8 +247,7 @@ export default function AreasPage() {
                 The drive is the one thing on this page we can measure without
                 seeing your vehicle. What the work costs depends on the size of
                 it and the shape the paint is in, so nothing on this site
-                carries a published price. Send us the vehicle and we will
-                price that one, in writing, before any work starts.
+                carries a published price. Tell us about your vehicle and we will get back to you fast with a free quote.
               </p>
               <p>
                 If your town is not on the list, call anyway. The list is what
@@ -259,8 +258,8 @@ export default function AreasPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Get a price for your vehicle"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Get your free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/areas/"
               id="quote-form"
             />

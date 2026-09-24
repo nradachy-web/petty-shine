@@ -234,7 +234,7 @@ export default function Footer() {
                   href="/quote/"
                   className="tap-24 text-cyan-300 transition-colors hover:text-cyan-500"
                 >
-                  Get a quote
+                  Free quote
                 </Link>
               </li>
             </ul>

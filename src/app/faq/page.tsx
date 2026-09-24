@@ -215,9 +215,7 @@ export default function FaqPage() {
                   </p>
                   <p>
                     What is fixed is which tier you are buying. Pick the
-                    guarantee you want out of the three below and we will
-                    price that tier on your vehicle, in writing, before any
-                    work starts.
+                    guarantee you want out of the three below and we will quote that tier for your vehicle, free and fast, before any work starts.
                   </p>
                 </Answer>
                 <KeyValueList className="mt-6" label="The three coating tiers">
@@ -569,9 +567,7 @@ export default function FaqPage() {
                   </p>
                   <p>
                     All {spell(SERVICES.length)} services are quoted on the
-                    vehicle instead. You get one number, it covers the work
-                    described next to it, and it is in writing before anyone
-                    touches the car. Nothing is added in the bay.
+                    vehicle instead. You get one clear quote, it covers the work described next to it, and you have it before anyone touches the car. Nothing is added in the bay.
                   </p>
                 </Answer>
                 <div className="mt-6">
@@ -651,8 +647,8 @@ export default function FaqPage() {
 
           <div className="min-w-0 lg:col-span-7">
             <QuoteForm
-              heading="Ask, or get a price"
-              intro="It goes straight to the shop. Year, make, model and what you want done is enough to start."
+              heading="Ask, or get a free quote"
+              intro="Tell us about your vehicle and we will get back to you fast."
               source="/faq/"
               id="quote-form"
             />
