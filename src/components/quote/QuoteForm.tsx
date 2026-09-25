@@ -61,6 +61,20 @@ import {
   WEB3FORMS_KEY,
 } from "@/lib/constants";
 import { trackQuoteSubmit } from "@/lib/gtag";
+
+declare global {
+  interface Window {
+    apexAttribution?: {
+      attach: (fields: {
+        name?: string;
+        email?: string;
+        phone?: string;
+        message?: string;
+        isTest?: boolean;
+      }) => unknown;
+    };
+  }
+}
 import VehicleSelect, { type VehicleValue } from "./VehicleSelect";
 
 /* ------------------------------------------------------------------ */
@@ -534,6 +548,23 @@ export default function QuoteForm({
         vehicle: vehicleString,
         name: values.name.trim(),
       });
+
+      // Additive copy to the Modern Apex lead ledger, only after Web3Forms
+      // confirmed the send. A no-op until the rails load (they need
+      // NEXT_PUBLIC_APEX_FORM_TOKEN at build time). ?apx_test=1 on the page
+      // marks the row as a rollout test. Never blocks or throws.
+      try {
+        const isTest = new URLSearchParams(window.location.search).get("apx_test") === "1";
+        const fields = {
+          name: values.name.trim(),
+          email: values.email.trim(),
+          phone: values.phone.trim(),
+          message: String(payload.message ?? ""),
+        };
+        window.apexAttribution?.attach(isTest ? { ...fields, isTest: true } : fields);
+      } catch {
+        /* attribution must never surface on the visitor's submit */
+      }
 
       router.push("/thank-you/");
     } catch (err) {

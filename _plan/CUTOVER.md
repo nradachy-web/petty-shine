@@ -293,6 +293,17 @@ export const GADS = {
       1.5 second repeat guard in `src/lib/gtag.ts` is what makes running both safe. Do not
       remove either one.
 
+
+### Portal lead copy (added 2026-09-25)
+
+Modern Apex minted Petty Shine's portal form token on 2026-09-25 (receipt
+`~/ads-fix-2026-09-25/petty/portal-formtoken.json`). At cutover, in the PRODUCTION build
+only, set repository variable `NEXT_PUBLIC_APEX_FORM_TOKEN` to that token. QuoteForm then
+copies each confirmed Web3Forms send to the portal with gclid, gbraid, wbraid and UTMs. Never
+set it while the site builds as the github.io preview. Verify with `?apx_test=1`, which stores
+the portal row as a test; the Web3Forms send is still real, so point that test at an agency
+inbox key or skip it.
+
 ---
 
 ## 8. Open questions that must be answered before launch

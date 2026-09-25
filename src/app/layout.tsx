@@ -355,10 +355,10 @@ export default function RootLayout({
 
             Set NEXT_PUBLIC_APEX_FORM_TOKEN to the per client form token Modern
             Apex issues and the rails wire themselves up at the next build. That
-            covers the heartbeat and tel: clicks on their own. FORM leads also
-            need QuoteForm to call window.apexAttribution.attach({name, email,
-            phone, message}) after its own Web3Forms post, which it does not do
-            today. Nothing here blocks the form either way. */}
+            covers the heartbeat and tel: clicks on their own. QuoteForm calls
+            window.apexAttribution.attach() after a confirmed Web3Forms send
+            (wired 2026-09-25). Set the token only for the production build at
+            cutover, never on the preview. Nothing here blocks the form. */}
         {APEX_FORM_TOKEN && (
           <Script
             src={asset("/apex-attribution.js")}
