@@ -19,8 +19,10 @@
  *         send_to: 'AW-1234567890/AbC-D_efGh12ijkLmn'
  *     Paste the part AFTER the slash. Pasting the whole thing also works,
  *     this file handles both.
- *     THIS IS THE ONE THAT MATTERS MOST. Account 668-110-4182 has no website
- *     form conversion today, so Smart Bidding is being fed map clicks.
+ *     THIS IS THE ONE THAT MATTERS MOST. Account 668-110-4182 measures no
+ *     website form today; its bidder counts only answered calls from the ads
+ *     (checked 2026-09-25). The label's action 7567525413 is SECONDARY until
+ *     about 30 days of verified data after launch.
  *
  *   GADS.labels.phoneClick  example "XyZ-1_abcDe34fghIjk"
  *     The conversion label for a click on a tel: link. Conversion action:
