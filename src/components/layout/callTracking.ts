@@ -2,8 +2,8 @@ import { trackPhoneClick } from "@/lib/gtag";
 
 /**
  * Click to call is the most valuable event this site produces. The live Ads
- * account has no website call conversion at all today, so the bidder is being
- * fed "someone looked at the map". This is the wire for the real one.
+ * account has no website call conversion at all today; its bidder counts only
+ * answered calls from the ads themselves. This is the wire for the website one.
  *
  * THERE IS EXACTLY ONE IMPLEMENTATION AND IT IS NOT THIS FILE.
  * Everything goes through trackPhoneClick in src/lib/gtag.ts, which is what

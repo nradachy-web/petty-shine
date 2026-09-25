@@ -1,5 +1,13 @@
 # Why Judson's calls fell off
 
+> **Correction, 2026-09-25 (measured in the live account):** cause 1 below is wrong. The
+> Google hosted local actions have `include_in_conversions_metric = false` and have never
+> counted in the Conversions column, lifetime (0 of 1,079 "other engagements" counted, for
+> example). Smart Bidding optimised only on "Calls from ads" (7468698927, 60 seconds or longer).
+> The real measurement gap is that no website form or website call is tracked. Causes 2 and 3
+> are unaffected by this correction.
+
+
 He texted on 2026-08-17: "seems like calls have fallen off the last 2 weeks."
 He is right, and it is not random. Pulled live from CID 668-110-4182 on 2026-08-17.
 

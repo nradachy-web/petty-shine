@@ -252,10 +252,15 @@ fails its own audit. That is intentional. Do not work around it.
 This is the highest value change the new site makes to the ad account, and it is
 independent of the DNS work. It can be done before cutover on the preview.
 
-Today account 668-110-4182 has **no website conversion action at all**. Every conversion
-it counts is a Google hosted engagement signal: map views, direction requests, other
-engagements, plus `AD_CALL`. Smart Bidding has been optimising toward "someone looked at
-the map" while $1,684 a month went out the door.
+Corrected 2026-09-25 from the live account. The bidder counts one action: "Calls from ads"
+(7468698927, answered 60 seconds or longer, one per click). All 29 conversions in the 60 days
+to 9/24 were those calls. The Google hosted local actions (map views, directions, other
+engagements) are excluded from the Conversions column and never steered bidding, so the
+earlier line here about optimising toward map looks was wrong. The real gap is the website:
+"Website Form Submission" 7567525413 and "Purchase" 7448527187 exist but never fired, because
+the old Duda site sends neither label. Both were set to SECONDARY on 2026-09-25. At launch the
+form label goes live while still secondary; promote 7567525413 to primary only after about 30
+days of verified data, and create any phone click action as secondary as well.
 
 Four values in `GADS` in `src/lib/constants.ts` turn tracking on. Until they are filled in
 the site loads no Google script at all and every tracking function no-ops, silently and on

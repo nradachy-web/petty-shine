@@ -162,10 +162,18 @@ export const WEB3FORMS_KEY =
 
 /**
  * Google tag + Ads conversion labels.
- * The live account (CID 668-110-4182) has NO website conversions today. Every
- * conversion action on it is a Google hosted engagement signal, so the bidder
- * is optimizing toward "someone looked at the map". Filling these in is the
- * single highest value change this site makes to the ad account.
+ * Measured in CID 668-110-4182 on 2026-09-25: the bidder counts one thing,
+ * "Calls from ads" (7468698927, answered 60 seconds or longer, one per click).
+ * All 29 conversions in the 60 days to 9/24 were those calls. The Google hosted
+ * local actions (map views, directions, other engagements) are excluded from
+ * the Conversions column and have never counted toward bidding. What the
+ * account cannot see is the website: no form or website call is measured.
+ * "Website Form Submission" (7567525413, label below) and "Purchase"
+ * (7448527187) never recorded a conversion because the old Duda site fires
+ * neither label; both were set to SECONDARY on 2026-09-25 so a new tag cannot
+ * jolt bidding. When this site launches and the form label is proven firing,
+ * promote 7567525413 to primary after about 30 days of data. Create any
+ * website phone click action as secondary too.
  */
 export const GADS = {
   /** Read from the account's own conversion actions on 2026-09-23. */
