@@ -167,3 +167,24 @@ Where they went: the film group in the gallery, a new "In the shop" gallery
 set, the home page work row, the film page hero and proof photo, the paint
 correction hero, and seven of the sixteen town pages. The GT3 RS and the 911
 are bleed cleared with portrait phone cuts.
+
+## September 28: Judson's website notes, applied
+
+His text of September 24, decoded from Messages in full: change the phone
+to (336) 799-4326; change "Trackback" to "Track Pack" on the film page; add
+that the shop is an Authorized LLumar Window Tint Installer; and an About
+page written by him under the headline "Built on a legacy. Driven by
+excellence."
+
+All four are on the site. The phone is on his contact card and on the
+enabled Google Ads call asset, so the recon's guess that it belonged to the
+old web vendor was wrong; 336-653-9199 is his mobile. LLumar's own Facebook
+page announced Petty Shine into its dealer network, so LLumar is the third
+credential, sourced to that post, and it comes off the audit's template
+leak list. The About page runs his copy as written; his two sentences on
+the Petty family are his wording, name nobody, and are the only mention on
+the site, which is exactly what the racing rule was waiting for.
+
+Still his to do: fire the old web company and hand over Squarespace DNS
+(he sent the login to Nick on the 28th). Note the separate Petty Shine
+Express site still shows the mobile number.
