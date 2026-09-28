@@ -75,7 +75,7 @@ const RULES = [
   },
   {
     id: "previous-client",
-    pattern: /\bHD Auto(motive)?\b|hdautodetailing|LLumar|System ?X|GeoShield/i,
+    pattern: /\bHD Auto(motive)?\b|hdautodetailing|System ?X|GeoShield/i,
     why: "Leftovers from the previous client's site. Petty Shine uses Gtechniq and STEK.",
   },
   {

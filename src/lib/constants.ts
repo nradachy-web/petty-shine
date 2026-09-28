@@ -107,27 +107,16 @@ export const BRAND = {
   taglineWords: ["Restore", "Protect", "Restyle", "Maintain"] as const,
 
   /**
-   * PHONE. Judson still confirms this before launch, but the evidence is
-   * lopsided and the default is set accordingly.
-   *
-   * 336-653-9199 appears on: the banner hanging in his own shop, Yelp,
-   * Nextdoor, YellowPages, Yahoo Local, BBB, STEK USA's installer directory,
-   * Gtechniq's accredited detailer directory, and his own websites from 2019
-   * through 2022. The two manufacturer directories matter most, because he
-   * registered those himself.
-   *
-   * 336-799-4326 appears only on the current Duda site and on two scraper
-   * directories that almost certainly pulled it from there. A number that
-   * exists only on the site his outside web company built is very likely
-   * THEIR call tracking number, which would stop working the day he leaves
-   * them, and would route his calls through a vendor he is leaving.
-   *
-   * So the default is his real number. Confirm before launch anyway: the
-   * click to call conversion is the most valuable thing this site produces.
+   * PHONE. Confirmed by Judson on 2026-09-24: "Change phone number to
+   * (336) 799-4326", the same number on the contact card he sent on
+   * 2026-09-23 and on the enabled Google Ads call asset. 336-653-9199 is
+   * his own mobile, which the shop banner and the directories still carry;
+   * the recon's guess that 799-4326 belonged to the old web vendor was
+   * wrong. If the number ever changes, change it here and nowhere else.
    */
-  phoneDisplay: "(336) 653-9199",
-  phoneTel: "+13366539199",
-  phoneRaw: "336-653-9199",
+  phoneDisplay: "(336) 799-4326",
+  phoneTel: "+13367994326",
+  phoneRaw: "336-799-4326",
 
   street: "357 Branson Mill Road",
   city: "Randleman",
@@ -199,6 +188,8 @@ export const GADS = {
 export const CREDENTIALS = [
   {
     id: "gtechniq",
+    maker: "Gtechniq",
+    short: "Coating",
     label: "Gtechniq Accredited Detailer",
     body: "Crystal Serum Ultra is professional application only. Gtechniq states it can only be applied by a Gtechniq Accredited Detailer, and the guarantee is void if anyone else applies it.",
     /** Source: Gtechniq Find A Detailer directory. Listing shows
@@ -208,12 +199,27 @@ export const CREDENTIALS = [
   },
   {
     id: "stek",
+    maker: "STEK",
+    short: "Film",
     label: "Authorized STEK Installer",
     body: "Listed in STEK USA's own installer directory as offering STEK clear paint protection film.",
     /** Source: https://www.stek-usa.com/installers/usa/nc/petty-shine/
      *  Tier shown is Authorized. Do NOT claim Black Label, that is a
      *  separate program he does not hold. */
     source: "https://www.stek-usa.com/installers/usa/nc/petty-shine/",
+  },
+  {
+    id: "llumar",
+    maker: "LLumar",
+    short: "Tint",
+    label: "Authorized LLumar Installer",
+    body: "Window tint is LLumar film. LLumar's own page announced Petty Shine completing its film training and joining its dealer network.",
+    /** Source: LLumar Films on Facebook, "Congratulations to PETTY SHINE
+     *  (Randleman, North Carolina) on completing our Paint Protection Film
+     *  training and becoming a valued member of our dealer network!"
+     *  Judson's note of 2026-09-24: "Add that we are also an Authorized
+     *  LLumar Window Tint Installer." */
+    source: "https://www.facebook.com/LLumarWindowFilm/posts/2177872212259566/",
   },
 ] as const;
 
@@ -356,7 +362,7 @@ export const SERVICES: ServiceLine[] = [
     index: "07",
     name: "Window Tinting",
     href: "/window-tinting/",
-    blurb: "Laminate and ceramic film, cut and fitted in the shop.",
+    blurb: "LLumar film, laminate or ceramic, cut and fitted in the shop.",
     fromPrice: null,
     quoteKey: "tint",
     photoId: null,
@@ -762,7 +768,7 @@ export const PPF_PACKAGES: PpfPackage[] = [
   {
     id: "full-front-trackback",
     order: 2,
-    name: "Full Front End with Trackback",
+    name: "Full Front End with Track Pack",
     panels: TRACKBACK,
     addedPanels: ["rocker", "lower-door", "rear-impact"],
     addsOver: "Full Front End",
@@ -784,7 +790,7 @@ export const PPF_PACKAGES: PpfPackage[] = [
       "trunk",
       "rear-bumper",
     ],
-    addsOver: "Full Front End with Trackback",
+    addsOver: "Full Front End with Track Pack",
     bestFor: "Every painted surface. Long term ownership and cars you intend to keep.",
   },
 ];
@@ -942,7 +948,7 @@ export const FORBIDDEN_CLAIMS = [
   },
   {
     pattern: "Richard Petty | NASCAR | Petty Enterprises | Petty's Garage | racing heritage | racing country",
-    why: "ON HOLD, NOT PROHIBITED. Updated 2026-08-18. Judson has told Nick directly that he is Richard Petty's grandson, so this is his own claim about his own family, not a marketing invention. It stays off the site only until he states the relationship in his own words, for two reasons. First, precision: the publicly documented grandchildren are Adam (d. 2000), Austin and Montgomery Lee through Kyle, Hanna and Maggie through Sharon, and Thad Moffitt through Rebecca, and no Judson appears anywhere public, so the degree may be great-nephew or cousin rather than grandson. In Randolph County this is the most fact-checkable sentence on the whole site and getting the generation wrong costs him credibility with exactly the customers he wants. Note that Richard Petty's own paternal grandfather was named Judson Ellsworth Petty, so the name genuinely recurs in that line. Second, permission: Richard Petty's name is actively licensed commercial property, and using it to sell services is Judson's relationship to spend, not ours. When he confirms, write it in his wording, keep it free of racing imagery, never name Petty's Garage or the Museum as a landmark, and never imply endorsement by Richard Petty or any Petty business.",
+    why: "RESOLVED 2026-09-24: Judson sent his own About page copy, which says he grew up in the Petty family surrounded by an automotive legacy and that the Petty name has always meant something in the automotive world. That wording, and only that wording, is on /about/. It names no person, no team, no track and no business, and nothing else on the site may go further than it. History of the rule: ON HOLD, NOT PROHIBITED. Updated 2026-08-18. Judson has told Nick directly that he is Richard Petty's grandson, so this is his own claim about his own family, not a marketing invention. It stays off the site only until he states the relationship in his own words, for two reasons. First, precision: the publicly documented grandchildren are Adam (d. 2000), Austin and Montgomery Lee through Kyle, Hanna and Maggie through Sharon, and Thad Moffitt through Rebecca, and no Judson appears anywhere public, so the degree may be great-nephew or cousin rather than grandson. In Randolph County this is the most fact-checkable sentence on the whole site and getting the generation wrong costs him credibility with exactly the customers he wants. Note that Richard Petty's own paternal grandfather was named Judson Ellsworth Petty, so the name genuinely recurs in that line. Second, permission: Richard Petty's name is actively licensed commercial property, and using it to sell services is Judson's relationship to spend, not ours. When he confirms, write it in his wording, keep it free of racing imagery, never name Petty's Garage or the Museum as a landmark, and never imply endorsement by Richard Petty or any Petty business.",
   },
   {
     pattern: "Level Cross",

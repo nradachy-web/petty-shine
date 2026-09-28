@@ -93,16 +93,16 @@ export default function HomePage() {
         <div className="lp-proof">
           <div>
             <SectionHead
-              title="Two credentials you can check before you call."
+              title="Three credentials you can check before you call."
               intro={
                 <p>
-                  Gtechniq and STEK each publish the shops they have approved. {BRAND.name} is on both lists at this address, and neither list is ours to edit.
+                  Gtechniq and STEK each publish the shops they have approved, and LLumar announced this shop into its dealer network. None of those pages is ours to edit.
                 </p>
               }
             />
             <KeyValueList className="mt-8" label="The record">
               {CREDENTIALS.map((c) => (
-                <KeyValueRow key={c.id} k={c.id === "gtechniq" ? "Coating" : "Film"} v={c.label} mono={false} />
+                <KeyValueRow key={c.id} k={c.short} v={c.label} mono={false} />
               ))}
               <KeyValueRow k="Reviews" v={`${REVIEW_SUMMARY.rating} from ${REVIEW_SUMMARY.count} on Google`} mono={false} />
               <KeyValueRow k="Shop" v={BRAND.addressLine} mono={false} />
@@ -111,7 +111,7 @@ export default function HomePage() {
               {CREDENTIALS.map((c) => (
                 <li key={c.id}>
                   <a href={c.source} target="_blank" rel="noopener noreferrer" className={`tap-24 ${MONO} text-cyan-300 underline-offset-4 hover:underline`}>
-                    Check the {c.id === "gtechniq" ? "Gtechniq" : "STEK"} listing
+                    Check the {c.maker} listing
                     <span className="sr-only"> for {c.label}. Opens in a new tab.</span>
                     <span aria-hidden="true"> {"↗"}</span>
                   </a>

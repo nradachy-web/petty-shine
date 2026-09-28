@@ -93,7 +93,7 @@ const SITE_DESCRIPTION = `Auto detailing, ceramic coating, paint protection film
    Randleman", so it names the business, the street, the town and both
    credentials in plain declarative sentences that survive being quoted with
    no page around them. Nothing in it may say anything the site does not. */
-const BUSINESS_DESCRIPTION = `${BRAND.name} is an auto detailing shop at ${BRAND.street} in ${BRAND.city}, ${BRAND.stateName}. It does auto detailing, paint correction, ceramic coating, paint protection film, window tinting, paintless dent repair, curbed wheel repair and marine detailing. It is a ${CREDENTIALS[0].label} and an ${CREDENTIALS[1].label}, both listed in the manufacturers' own installer directories. Every job is quoted for the vehicle itself, and the quote is free.`;
+const BUSINESS_DESCRIPTION = `${BRAND.name} is an auto detailing shop at ${BRAND.street} in ${BRAND.city}, ${BRAND.stateName}. It does auto detailing, paint correction, ceramic coating, paint protection film, window tinting, paintless dent repair, curbed wheel repair and marine detailing. It is a ${CREDENTIALS[0].label}, an ${CREDENTIALS[1].label} and an ${CREDENTIALS[2].label}, each confirmed by the manufacturer itself. Every job is quoted for the vehicle itself, and the quote is free.`;
 
 /** His own shop, his own banner, his own car. */
 const OG_ID = "coating-huracan" as const;

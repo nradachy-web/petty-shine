@@ -229,7 +229,7 @@ const PPF: LandingTrack = {
       body: "Adds the front fenders. The most common job in the shop, with no film line down the middle of the hood.",
     },
     {
-      title: "Full front end with trackback",
+      title: "Full front end with Track Pack",
       body: "Adds the rockers, lower doors and rear impact areas. For highway miles and anything low enough to pick up road spray.",
     },
     {
@@ -262,7 +262,7 @@ const PPF: LandingTrack = {
     },
     {
       q: "Which coverage level do I need?",
-      a: "Full front end is the most common job. Add trackback if you drive a lot of highway miles or the car sits low. Full vehicle is for cars you plan to keep for years.",
+      a: "Full front end is the most common job. Add the Track Pack if you drive a lot of highway miles or the car sits low. Full vehicle is for cars you plan to keep for years.",
     },
     {
       q: "Does the film self heal?",
@@ -539,24 +539,24 @@ const TINT: LandingTrack = {
   id: "window-tinting",
   slug: "window-tinting",
   noun: "Window tinting",
-  eyebrow: "Window tinting · Laminate and ceramic film",
+  eyebrow: "Window tinting · Authorized LLumar Installer",
   heroPhoto: "detail-jeep-teal",
   heroFocus: "50% 50%",
   proofPhoto: null,
   hub: {
     h1: "Block the heat. Keep your *cool*.",
-    lead: "Laminate and ceramic window film, cut and fitted in our Randleman shop. Ceramic blocks more heat and UV, stays color stable instead of fading purple, and never interferes with your phone or GPS. Free quotes, priced on your glass.",
+    lead: "LLumar window film, laminate or ceramic, cut and fitted in our Randleman shop by an Authorized LLumar Installer. Ceramic blocks more heat and UV, stays color stable instead of fading purple, and never interferes with your phone or GPS. Free quotes, priced on your glass.",
     title: "Window Tinting in Randleman, NC",
     description:
-      "Window tinting in Randleman, NC. Ceramic and laminate film cut and fitted in the shop for a cooler cabin, blocked UV and a cleaner look. Free quotes, fast.",
+      "Window tinting in Randleman, NC by an Authorized LLumar Installer. Ceramic and laminate film cut and fitted in the shop for a cooler cabin and blocked UV. Free quotes.",
   },
   town: {
     h1: (c) => `Window tinting for ${c.name} drivers.`,
     lead: (c) =>
-      `Ceramic and laminate window film cut and fitted in our Randleman shop for ${c.name} drivers who want a cooler cabin, blocked UV and a cleaner look.`,
+      `LLumar window film, ceramic or laminate, cut and fitted in our Randleman shop for ${c.name} drivers who want a cooler cabin, blocked UV and a cleaner look.`,
     title: (c) => `Window Tinting for ${c.name}, NC`,
     description: (c) =>
-      `Window tinting for ${c.name}, NC drivers. Ceramic and laminate film cut and fitted in Randleman for a cooler cabin and blocked UV. Free quotes, fast.`,
+      `Window tinting for ${c.name}, NC drivers. LLumar ceramic and laminate film cut and fitted in Randleman for a cooler cabin and blocked UV. Free quotes.`,
   },
   checksHeading: "Why it matters.",
   checks: [
@@ -581,15 +581,15 @@ const TINT: LandingTrack = {
       body: "Glass cleaned first, film cut to your exact glass, sharp edges, no haze, no bubbles.",
     },
     {
-      title: "Film and warranty confirmed for your vehicle",
-      body: "We name the film and what backs it with your free quote. We do not publish a warranty we have not verified.",
+      title: "LLumar film, warranty confirmed for your vehicle",
+      body: "Every tint job is LLumar film. Which line and what backs it is confirmed with your free quote.",
     },
   ],
   proofHeading: "Why here.",
   proofIntro:
-    "The same people who do the coating and film work do the tint, in the same shop, with full accountability on every job. Nothing is farmed out.",
+    "An Authorized LLumar Installer, announced into LLumar's dealer network by LLumar itself. The same people who do the coating and film work do the tint, in the same shop. Nothing is farmed out.",
   proofRows: [
-    { k: "Film", v: "Ceramic or laminate, chosen for your vehicle and your goals" },
+    { k: "Film", v: "LLumar, ceramic or laminate, chosen for your vehicle and your goals" },
     { k: "Installed by", v: "Our own team at 357 Branson Mill Road" },
     { k: "Back glass", v: "Heat shaped to the curve before it goes on" },
     { k: "Old film", v: "Removed and the glass cleaned before new film" },

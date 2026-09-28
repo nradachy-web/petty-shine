@@ -128,7 +128,7 @@ export const metadata: Metadata = {
   title: "About the Shop",
   /* 156 characters. The old one ran to 144 and spent a third of them on the
      street address, which the trust row and the footer both already carry. */
-  description: `${BRAND.owner} owns and runs ${BRAND.name} in ${BRAND.city}, ${BRAND.stateName}. ${CREDENTIALS[0].label} and ${CREDENTIALS[1].label}, listed in both directories.`,
+  description: `Founded by ${BRAND.owner} in 2016 in ${BRAND.city}, ${BRAND.stateName}. ${CREDENTIALS[0].label}, ${CREDENTIALS[1].label} and ${CREDENTIALS[2].label}, each confirmed by the maker.`,
   alternates: { canonical: "/about/" },
 };
 
@@ -180,21 +180,21 @@ export default function AboutPage() {
           <div className="hero__copy">
             <p className="hero__eyebrow">{EYEBROW}</p>
 
-            <h1 className="ps-display ps-display-xl hero__title">
-              {BRAND.owner} runs this shop.
+            {/* Judson's own headline, sent 2026-09-24, verbatim apart from the cyan word. */}
+            <h1 className="ps-display ps-display-lg hero__title">
+              Built on a legacy. Driven by <span className="hero__hl">excellence</span>.
             </h1>
 
             <div className="hero__prose">
               <p>
-                {BRAND.name} is an auto detailing shop at {BRAND.street} in{" "}
-                {BRAND.city}, {BRAND.stateName}. It does detailing, paint
-                correction, ceramic coating, paint protection film, window
-                tinting and dent repair, in one building, on one address.
+                {BRAND.name} was founded by {BRAND.owner} in 2016 with a simple
+                goal: do exceptional work and never compromise on quality.
               </p>
               <p>
-                Two manufacturers list it by name in their own installer
-                directories. Those listings are theirs, not ours, and you can
-                read both of them before you call anybody.
+                Gtechniq and STEK list the shop in their own installer
+                directories, and LLumar announced it into its dealer network.
+                Those pages are theirs, not ours, and you can read all three
+                before you call anybody.
               </p>
             </div>
 
@@ -283,6 +283,60 @@ export default function AboutPage() {
               </div>
             );
           })}
+        </div>
+      </Section>
+
+      {/* ---------------------------------------------------------------
+          THE STORY. Judson's own copy for this page, sent 2026-09-24, run
+          as written. This is the one place the family is mentioned, in his
+          words, and nothing on the site goes further than these sentences.
+          --------------------------------------------------------------- */}
+      <Section plane="shop" label="The story">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-5">
+            <SectionHead
+              title="Nearly a decade, one standard."
+              intro={
+                <p>
+                  Growing up in the Petty family, {FIRST_NAME} was surrounded by
+                  an automotive legacy built on craftsmanship, performance, and
+                  attention to detail. That same mentality became the
+                  foundation of {BRAND.name}.
+                </p>
+              }
+            />
+          </div>
+          <div className="min-w-0 lg:col-span-7">
+            <div className="ps-prose max-w-none lg:max-w-2xl">
+              <p>
+                What started as a passion for making vehicles look their
+                absolute best has grown into a professional automotive
+                protection and appearance shop specializing in paint protection
+                film, ceramic coatings, paint correction, window tinting, and
+                premium detailing.
+              </p>
+              <p>
+                We believe the difference is in the details. From the products
+                we choose to the preparation behind every installation, our
+                standard is simple: treat every vehicle as if it were our own
+                and deliver work we are proud to put the {BRAND.name} name on.
+              </p>
+              <p>
+                Nearly a decade later, that philosophy has not changed. Whether
+                we are protecting a brand new daily driver, restoring the finish
+                on a longtime favorite, or working on an exotic or collector
+                vehicle, every project receives the same level of care and
+                attention.
+              </p>
+              <p>
+                We do not aim to simply get the job done. We aim to do it right.
+              </p>
+              <p>
+                The Petty name has always meant something in the automotive
+                world. We intend to keep it that way.
+              </p>
+            </div>
+          </div>
         </div>
       </Section>
 
