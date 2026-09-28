@@ -207,7 +207,9 @@ function newId(): string {
  */
 export function trackQuoteSubmit(submission: QuoteSubmission): void {
   const record: StoredSubmission = { ...submission, id: newId(), counted: false };
-  fireQuoteConversion(record);
+  const isTest = new URLSearchParams(window.location.search).get("apx_test") === "1";
+  if (!isTest) fireQuoteConversion(record);
+  // Keep the receipt while preventing the thank-you page from counting tests.
   record.counted = true;
   writeStore(record);
 }
