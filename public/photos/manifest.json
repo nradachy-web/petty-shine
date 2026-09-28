@@ -179,18 +179,6 @@
    1600
   ]
  },
- "ppf-jeep-install": {
-  "src": "324578597_6071771552883768_3308799041153684981_n-8ac25e93.jpg",
-  "alt": "Paint protection film being installed on the hood of a black Jeep at Petty Shine",
-  "w": 1536,
-  "h": 2048,
-  "sizes": [
-   480,
-   640,
-   800,
-   1024
-  ]
- },
  "detail-jeep-orange": {
   "src": "328020684_1392964741441195_5120900014141226254_n.jpg",
   "alt": "Orange Jeep on 37s inside the Petty Shine shop after a full detail",
@@ -343,6 +331,123 @@
   "alt": "Black Ford Mustang with its wheels removed for a full wheel-off detail at Petty Shine",
   "w": 1920,
   "h": 1438,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-porsche-gt3rs": {
+  "src": "shop-porsche-gt3rs.jpg",
+  "alt": "Black Porsche 911 GT3 RS under the Petty Shine banner in the Randleman shop",
+  "w": 4032,
+  "h": 3024,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "ppf-porsche-911-stripe": {
+  "src": "ppf-porsche-911-stripe.jpg",
+  "alt": "Paint protection film being applied to the hood of a black Porsche 911 with a white stripe at Petty Shine",
+  "w": 1980,
+  "h": 3520,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-porsche-911": {
+  "src": "shop-porsche-911.jpg",
+  "alt": "Black Porsche 911 under the Petty Shine banner in the Randleman shop",
+  "w": 5712,
+  "h": 4284,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-cayman-gt4rs": {
+  "src": "shop-cayman-gt4rs.jpg",
+  "alt": "Black Porsche 718 Cayman GT4 RS inside the Petty Shine shop",
+  "w": 4032,
+  "h": 3024,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-mercedes-amg": {
+  "src": "shop-mercedes-amg.jpg",
+  "alt": "Black Mercedes-AMG with red calipers inside the Petty Shine shop",
+  "w": 5712,
+  "h": 4284,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-corvette-c6": {
+  "src": "shop-corvette-c6.jpg",
+  "alt": "Red Chevrolet Corvette C6 Z06 under the Petty Shine banner in the Randleman shop",
+  "w": 5712,
+  "h": 4284,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-cadillac-blackwing": {
+  "src": "shop-cadillac-blackwing.jpg",
+  "alt": "Grey Cadillac CT5-V Blackwing outside the Petty Shine shop in Randleman",
+  "w": 5712,
+  "h": 4284,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "ppf-mercedes-gls-install": {
+  "src": "ppf-mercedes-gls-install.jpg",
+  "alt": "Paint protection film being installed on the front of a black Mercedes-Benz GLS at Petty Shine",
+  "w": 4284,
+  "h": 5712,
+  "sizes": [
+   480,
+   640,
+   800,
+   1024,
+   1600
+  ]
+ },
+ "shop-corvette-c8-red": {
+  "src": "shop-corvette-c8-red.jpg",
+  "alt": "Red Chevrolet Corvette C8 under the Petty Shine banner in the Randleman shop",
+  "w": 5712,
+  "h": 4284,
   "sizes": [
    480,
    640,

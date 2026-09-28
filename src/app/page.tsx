@@ -50,9 +50,9 @@ const STEPS = [
 ] as const;
 
 const WORK = [
+  { id: "shop-porsche-gt3rs", caption: "Porsche 911 GT3 RS, in the shop" },
   { id: "coating-corvette-c8", caption: "Ceramic coating, Corvette C8" },
-  { id: "coating-g-wagon", caption: "Ceramic coating, Mercedes G-Class" },
-  { id: "coating-challenger-hellcat", caption: "Correction and coating, Hellcat" },
+  { id: "shop-mercedes-amg", caption: "Mercedes-AMG, in the shop" },
 ] as const;
 
 const MONO = "font-mono text-[0.6875rem] uppercase tracking-[0.18em]";

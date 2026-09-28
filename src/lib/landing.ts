@@ -200,9 +200,9 @@ const PPF: LandingTrack = {
   slug: "paint-protection-film",
   noun: "Paint protection film",
   eyebrow: "Paint protection film · Authorized STEK Installer",
-  heroPhoto: "coating-g-wagon",
-  heroFocus: "50% 46%",
-  proofPhoto: "ppf-install-closeup",
+  heroPhoto: "shop-porsche-911",
+  heroFocus: "50% 56%",
+  proofPhoto: "ppf-porsche-911-stripe",
   hub: {
     h1: "Protect your investment where the *road* hits first.",
     lead: "Clear STEK film over the panels that take the damage, installed in Randleman by an Authorized STEK Installer. Four coverage levels. Free quotes for your vehicle, fast.",
@@ -287,7 +287,7 @@ const CORRECTION: LandingTrack = {
   slug: "paint-correction",
   noun: "Paint correction",
   eyebrow: "Paint correction · Machine polishing",
-  heroPhoto: "detail-f250-black",
+  heroPhoto: "shop-porsche-gt3rs",
   heroFocus: "56% 50%",
   proofPhoto: "correction-reflection",
   hub: {

@@ -68,16 +68,16 @@ const CITY_PHOTO: Record<string, PhotoId> = {
   "julian-nc": "coating-corvette-c8",
   "archdale-nc": "detail-f250-black",
   "asheboro-nc": "coating-g-wagon",
-  "greensboro-nc": "detail-jeep-orange",
-  "high-point-nc": "wheels-mustang",
+  "greensboro-nc": "shop-porsche-gt3rs",
+  "high-point-nc": "shop-porsche-911",
   "trinity-nc": "coating-challenger-hellcat",
   "liberty-nc": "detail-raptor",
   "jamestown-nc": "coating-corvette-c7",
-  "thomasville-nc": "wash-porsche-911",
-  "kernersville-nc": "coating-supra",
-  "burlington-nc": "detail-mustang-65",
-  "lexington-nc": "coating-corvette-z06",
-  "winston-salem-nc": "coating-challenger-demon",
+  "thomasville-nc": "shop-corvette-c8-red",
+  "kernersville-nc": "shop-cayman-gt4rs",
+  "burlington-nc": "shop-cadillac-blackwing",
+  "lexington-nc": "shop-corvette-c6",
+  "winston-salem-nc": "shop-mercedes-amg",
 };
 
 /** Social proof beside the decision, rather than parked on /reviews/. */

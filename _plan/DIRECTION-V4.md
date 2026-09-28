@@ -153,3 +153,17 @@ paint rather than swapping in two seconds later. Live Lighthouse 13 mobile
 after that: 98, 97, 95 with observed first paint at 150 to 280ms. The PSI
 API is not enabled on the Google project this Mac holds a key for, so PSI
 itself has to be run from the browser.
+
+## September 28: Judson's photo update
+
+Judson texted Nick a screenshot of the gallery's "film going onto a Jeep
+hood" frame and asked for it to come off before launch, then sent ten
+photos "to scatter out". The Jeep frame is deleted from the registry and
+from public/photos. Nine of the ten are in the registry (the tenth was a
+phone screenshot of a video with a face in it, left out): two film installs
+(a Porsche 911 with a stripe, a Mercedes GLS) and seven cars in or outside
+the shop with no service claimed, under `shop-` slugs with neutral alt text.
+Where they went: the film group in the gallery, a new "In the shop" gallery
+set, the home page work row, the film page hero and proof photo, the paint
+correction hero, and seven of the sixteen town pages. The GT3 RS and the 911
+are bleed cleared with portrait phone cuts.

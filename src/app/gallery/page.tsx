@@ -94,15 +94,16 @@ const GROUPS: Group[] = [
     headline:
       "Film, going on.",
     intro:
-      "Two of these three frames are the install rather than the result, because film is a job you judge by the edges and the seams.",
+      "Three of these four frames are the install rather than the result, because film is a job you judge by the edges and the seams.",
     href: "/paint-protection-film/",
     hrefLabel: "What each coverage level covers",
     plate: { id: "ppf-install-closeup", caption: "Film squeegeed onto a black panel" },
     frames: [
+      { id: "ppf-porsche-911-stripe", caption: "Film going onto a Porsche 911 hood" },
+      { id: "ppf-mercedes-gls-install", caption: "Film going onto a Mercedes GLS" },
       { id: "ppf-mclaren-gt", caption: "McLaren GT, in the shop" },
-      { id: "ppf-jeep-install", caption: "Film going onto a Jeep hood" },
     ],
-    cols: 2,
+    cols: 3,
   },
   {
     slug: "paint-correction",
@@ -179,8 +180,29 @@ const GROUPS: Group[] = [
     cols: 3,
   },
   {
-    slug: "on-the-water",
+    slug: "in-the-shop",
     index: "07",
+    title: "In the shop",
+    headline:
+      "The latest set off the floor.",
+    intro:
+      "Sent over by Judson in September. Customers' cars under his banner, photographed on the day they were in.",
+    href: "/services/",
+    hrefLabel: "Everything the shop does",
+    lead: { id: "shop-porsche-gt3rs", caption: "Porsche 911 GT3 RS, in the shop" },
+    frames: [
+      { id: "shop-porsche-911", caption: "Porsche 911, in the shop" },
+      { id: "shop-cayman-gt4rs", caption: "Porsche Cayman GT4 RS" },
+      { id: "shop-mercedes-amg", caption: "Mercedes-AMG, in the shop" },
+      { id: "shop-corvette-c6", caption: "Corvette C6 Z06" },
+      { id: "shop-corvette-c8-red", caption: "Corvette C8, red" },
+      { id: "shop-cadillac-blackwing", caption: "Cadillac CT5-V Blackwing" },
+    ],
+    cols: 3,
+  },
+  {
+    slug: "on-the-water",
+    index: "08",
     title: "On the water",
     headline:
       "One boat, on its trailer.",

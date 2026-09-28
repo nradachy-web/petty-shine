@@ -34,6 +34,8 @@ export const BLEED_CLEARED = [
   "detail-jeep-teal",
   "detail-mustang-red",
   "wheels-mustang",
+  "shop-porsche-gt3rs",
+  "shop-porsche-911",
 ] as const satisfies readonly PhotoId[];
 
 export type BleedClearedId = (typeof BLEED_CLEARED)[number];

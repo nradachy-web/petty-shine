@@ -27,7 +27,6 @@ export const PHOTOS = {
   "detail-raptor": { w: 1440, h: 1083, sizes: [480, 640, 800, 1024], alt: "Red Ford F-150 Raptor after a full detail at Petty Shine" },
   "wash-huracan-foam": { w: 1284, h: 1011, sizes: [480, 640, 800, 1024], alt: "Lamborghini Huracan covered in foam during a decontamination wash at Petty Shine" },
   "coating-huracan": { w: 1920, h: 1440, sizes: [480, 640, 800, 1024, 1600], alt: "Blue Lamborghini Huracan under the Petty Shine banner after ceramic coating" },
-  "ppf-jeep-install": { w: 1536, h: 2048, sizes: [480, 640, 800, 1024], alt: "Paint protection film being installed on the hood of a black Jeep at Petty Shine" },
   "detail-jeep-orange": { w: 1920, h: 1440, sizes: [480, 640, 800, 1024, 1600], alt: "Orange Jeep on 37s inside the Petty Shine shop after a full detail" },
   "detail-f250-black": { w: 1920, h: 1440, sizes: [480, 640, 800, 1024, 1600], alt: "Black Ford F-250 Super Duty inside the Petty Shine shop after paint correction" },
   "coating-corvette-c8": { w: 1920, h: 1440, sizes: [480, 640, 800, 1024, 1600], alt: "Rapid Blue Chevrolet Corvette C8 after ceramic coating at Petty Shine in Randleman" },
@@ -41,6 +40,15 @@ export const PHOTOS = {
   "ppf-install-closeup": { w: 1440, h: 1197, sizes: [480, 640, 800, 1024], alt: "Paint protection film being squeegeed onto a black painted panel at Petty Shine" },
   "detail-mustang-red": { w: 1707, h: 1280, sizes: [480, 640, 800, 1024, 1600], alt: "Red Ford Mustang GT under the Petty Shine banner in the Randleman shop" },
   "wheels-mustang": { w: 1920, h: 1438, sizes: [480, 640, 800, 1024, 1600], alt: "Black Ford Mustang with its wheels removed for a full wheel-off detail at Petty Shine" },
+  "shop-porsche-gt3rs": { w: 4032, h: 3024, sizes: [480, 640, 800, 1024, 1600], alt: "Black Porsche 911 GT3 RS under the Petty Shine banner in the Randleman shop" },
+  "ppf-porsche-911-stripe": { w: 1980, h: 3520, sizes: [480, 640, 800, 1024, 1600], alt: "Paint protection film being applied to the hood of a black Porsche 911 with a white stripe at Petty Shine" },
+  "shop-porsche-911": { w: 5712, h: 4284, sizes: [480, 640, 800, 1024, 1600], alt: "Black Porsche 911 under the Petty Shine banner in the Randleman shop" },
+  "shop-cayman-gt4rs": { w: 4032, h: 3024, sizes: [480, 640, 800, 1024, 1600], alt: "Black Porsche 718 Cayman GT4 RS inside the Petty Shine shop" },
+  "shop-mercedes-amg": { w: 5712, h: 4284, sizes: [480, 640, 800, 1024, 1600], alt: "Black Mercedes-AMG with red calipers inside the Petty Shine shop" },
+  "shop-corvette-c6": { w: 5712, h: 4284, sizes: [480, 640, 800, 1024, 1600], alt: "Red Chevrolet Corvette C6 Z06 under the Petty Shine banner in the Randleman shop" },
+  "shop-cadillac-blackwing": { w: 5712, h: 4284, sizes: [480, 640, 800, 1024, 1600], alt: "Grey Cadillac CT5-V Blackwing outside the Petty Shine shop in Randleman" },
+  "ppf-mercedes-gls-install": { w: 4284, h: 5712, sizes: [480, 640, 800, 1024, 1600], alt: "Paint protection film being installed on the front of a black Mercedes-Benz GLS at Petty Shine" },
+  "shop-corvette-c8-red": { w: 5712, h: 4284, sizes: [480, 640, 800, 1024, 1600], alt: "Red Chevrolet Corvette C8 under the Petty Shine banner in the Randleman shop" },
 } as const satisfies Record<string, PhotoEntry>;
 
 export type PhotoId = keyof typeof PHOTOS;
