@@ -3,6 +3,9 @@
 Everything needed to take this build from the GitHub Pages preview to
 www.pettyshine.com, in the order it has to happen.
 
+**September 28 update:** Read [the current launch record](LAUNCH-2026-09-28.md)
+first. It supersedes the expiry, phone and setup assumptions below.
+
 ---
 
 ## READ THIS FIRST: the domain expires 2026-09-06

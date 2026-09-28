@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 # Two modes, both driven by repository variables so no code change is needed
 # to flip between them:
 #
-#   PREVIEW (now):  NEXT_PUBLIC_BASE_PATH = /petty-shine
+#   PREVIEW:       NEXT_PUBLIC_BASE_PATH = /petty-shine
 #                   CUSTOM_DOMAIN         = (unset)
 #                   -> https://nradachy-web.github.io/petty-shine/, noindex
 #
@@ -40,6 +40,22 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Validate publishing configuration
+        env:
+          BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH }}
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+          FORM_KEY: ${{ vars.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          FORM_TOKEN: ${{ vars.NEXT_PUBLIC_APEX_FORM_TOKEN }}
+        run: |
+          if [ -n "$BASE_PATH" ]; then
+            test -z "$CUSTOM_DOMAIN" || { echo "Preview must not use a custom domain"; exit 1; }
+            test -z "$FORM_TOKEN" || { echo "Preview must not send production lead attribution"; exit 1; }
+          else
+            test "$CUSTOM_DOMAIN" = "www.pettyshine.com" || { echo "Production requires the canonical domain"; exit 1; }
+            test -n "$FORM_KEY" && test "$FORM_KEY" != "REPLACE_WITH_WEB3FORMS_KEY" || { echo "Production requires a configured quote form"; exit 1; }
+            test -n "$FORM_TOKEN" || { echo "Production requires the portal lead token"; exit 1; }
+          fi
 
       - name: Build static site
         run: npm run build
