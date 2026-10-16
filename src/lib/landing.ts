@@ -47,6 +47,14 @@ export interface ProofRow {
   v: string;
 }
 
+export interface LandingPanel {
+  kind: "tint" | "swirl" | "water";
+  /** mono caps label on the band's datum rule */
+  label: string;
+  heading: string;
+  intro: string;
+}
+
 export interface LandingTrack {
   /** Same id as the SERVICES entry it sells. */
   id: TrackId;
@@ -104,6 +112,9 @@ export interface LandingTrack {
   quoteKey: string;
   /** The primary button. */
   ctaLabel: string;
+  /** The interactive band (src/components/fx/), on the hub and every town
+      page of the track. Tint shades, the swirl panel, the water panel. */
+  panel?: LandingPanel;
   /** Other tracks to cross link, in order. Two or three. */
   related: TrackId[];
 }
@@ -191,6 +202,12 @@ const CERAMIC: LandingTrack = {
     a: `Yes, coating work is done in the shop. ${c.name} is about ${c.minutes} minutes away on ${c.route}, and we will tell you the pickup day when we quote the job.`,
   }),
   quoteKey: "ceramic",
+  panel: {
+    kind: "water",
+    label: "Water on the panel",
+    heading: "Watch what a coating does to water.",
+    intro: "Coated paint pulls water into tight beads that roll off. Bare paint holds it in flat sheets that dry where they sit. Switch the surface, or drag across the panel to spray it.",
+  },
   ctaLabel: "Get a Free Quote",
   related: ["paint-protection-film", "paint-correction", "auto-detailing"],
 };
@@ -361,6 +378,12 @@ const CORRECTION: LandingTrack = {
     a: `Yes. Correction is done in the Randleman shop, about ${c.minutes} minutes from ${c.name} on ${c.route}, and the car stays with us until the polish is finished.`,
   }),
   quoteKey: "correction",
+  panel: {
+    kind: "swirl",
+    label: "Under the light",
+    heading: "See what a correction takes out.",
+    intro: "Swirl marks hide in normal light and show the moment a lamp hits the paint. Move the light across the panel, then step through the two levels.",
+  },
   ctaLabel: "Get a Free Quote",
   related: ["ceramic-coating", "auto-detailing", "paintless-dent-repair"],
 };
@@ -627,6 +650,12 @@ const TINT: LandingTrack = {
     a: `Yes, tint is done in the shop. ${c.name} is about ${c.minutes} minutes away on ${c.route}, and we give you a clear pickup time when you book.`,
   }),
   quoteKey: "tint",
+  panel: {
+    kind: "tint",
+    label: "Pick your shade",
+    heading: "See the shade before you book.",
+    intro: "Drag the slider or tap a shade. The lighter shades keep a factory look, and the darkest reads black from the outside.",
+  },
   ctaLabel: "Get a Free Quote",
   related: ["paint-protection-film", "ceramic-coating", "auto-detailing"],
 };

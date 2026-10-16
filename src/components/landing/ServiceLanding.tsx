@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import SwirlPanel from "@/components/fx/SwirlPanel";
+import TintPreview from "@/components/fx/TintPreview";
+import WaterPanel from "@/components/fx/WaterPanel";
 import LandingHero from "@/components/landing/LandingHero";
 import QuoteForm from "@/components/quote/QuoteForm";
 import ServiceSchema from "@/components/seo/ServiceSchema";
@@ -23,6 +26,7 @@ import {
   townHref,
   trackById,
   type LandingFaq,
+  type LandingPanel,
   type LandingTrack,
 } from "@/lib/landing";
 import { driveTime, milesLong } from "@/lib/utils";
@@ -38,8 +42,13 @@ import "./landing.css";
      3  proof         facts that trace to constants.ts, one review, one photo
      4  detail        hub pages only: the tiers, the coverage table, the law
         from town     town pages only: the measured drive and the nearby towns
+        try it        tint, correction and ceramic only: the interactive
+                      panel (src/components/fx/), on the hub and every town
      5  how it works  three steps, then the questions, then (hubs) the towns
      6  the close     the form beside the phone number
+
+   The planes alternate. A town page with a panel flips its last two bands
+   so the dark panel never sits beside the dark steps band.
 
    Every string comes from src/lib/landing.ts or constants.ts. Nothing is
    typed in here except the three steps, which are the same on every page.
@@ -65,6 +74,12 @@ function Check({ title, body }: { title: string; body: string }) {
       </div>
     </li>
   );
+}
+
+function Panel({ kind }: { kind: LandingPanel["kind"] }) {
+  if (kind === "tint") return <TintPreview />;
+  if (kind === "swirl") return <SwirlPanel />;
+  return <WaterPanel />;
 }
 
 function Faq({ items }: { items: LandingFaq[] }) {
@@ -295,8 +310,18 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
         </Section>
       ) : null}
 
+      {/* 4c. try it */}
+      {t.panel ? (
+        <Section plane="shop" label={t.panel.label}>
+          <SectionHead align="split" title={t.panel.heading} intro={<p>{t.panel.intro}</p>} />
+          <div className="mt-8 md:mt-10">
+            <Panel kind={t.panel.kind} />
+          </div>
+        </Section>
+      ) : null}
+
       {/* 5. how it works, the questions, the towns */}
-      <Section plane={c ? "shop" : "sheet"} label={showSteps || c ? "How it works" : "Questions"}>
+      <Section plane={c && !t.panel ? "shop" : "sheet"} label={showSteps || c ? "How it works" : "Questions"}>
         {showSteps || c ? (
           <>
             <ol className="lp-steps">
@@ -333,7 +358,7 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
       </Section>
 
       {/* 6. the close */}
-      <Section plane={c ? "sheet" : "shop"} label="Free quote" id="quote">
+      <Section plane={c && !t.panel ? "sheet" : "shop"} label="Free quote" id="quote">
         <div className="lp-close">
           <div>
             <h2 className="ps-display ps-display-lg">Get your free quote.</h2>

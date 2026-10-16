@@ -1,0 +1,806 @@
+/* ============================================================
+   PETTY SHINE, the three interactive panels. Added 2026-10-15.
+
+   Owned by src/components/fx/. Every class is prefixed fx- so it
+   cannot collide with globals.css, primitives.css or landing.css.
+
+   The panels came from the Refresh My Ride and Jake's builds and
+   are restyled to the Build Sheet here: hard edges, 1px rules,
+   Archivo caps for controls, IBM Plex Mono for labels, and cyan
+   only as a stroke, a small mark, or the one solid button (the
+   panel's own call to action). A selected control is marked by a
+   cyan stroke, never a cyan fill.
+
+   They live on the shop plane only. Colour sits inside
+   @layer components (the Tailwind v4 layer trap, see
+   globals.css); structure stays unlayered so it sticks.
+   ============================================================ */
+
+/* ---- shared: frame, tag, hint, note, the panel's button ------ */
+
+.fx-frame {
+  overflow: hidden;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.fx-tag {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.3rem 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  font-family: var(--ps-font-mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.fx-hint {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-width: 1px;
+  border-style: solid;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ps-ease);
+}
+
+[data-touched] .fx-hint {
+  opacity: 0;
+}
+
+.fx-note {
+  max-width: 52rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.fx-note__k {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.fx-cta {
+  justify-self: start;
+  white-space: nowrap;
+}
+
+@layer components {
+  .fx-frame {
+    border-color: var(--ps-rule);
+    background: var(--ps-panel);
+  }
+  .fx-tag,
+  .fx-hint {
+    border-color: var(--ps-rule);
+    background: rgb(10 11 9 / 0.72);
+    color: var(--ps-key);
+  }
+  .fx-note {
+    color: var(--ps-body);
+  }
+  .fx-note__k {
+    color: var(--ps-key);
+  }
+}
+
+/* ---- the segmented choice: a sliding cyan outline ------------ */
+
+.fx-seg {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  min-width: 0;
+  padding: 3px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.fx-seg__thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--n));
+  border-width: 1px;
+  border-style: solid;
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 0.42s var(--ps-ease);
+}
+
+/* the datum tick: the first 24px of the thumb's top edge, solid */
+.fx-seg__thumb::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 1.5rem;
+  height: 2px;
+}
+
+.fx-seg button {
+  position: relative;
+  z-index: 1;
+  min-height: 2.75rem;
+  padding: 0 0.6rem;
+  border: 0;
+  background: none;
+  font-family: var(--ps-font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s var(--ps-ease);
+}
+
+.fx-seg button:focus-visible {
+  outline: 2px solid var(--ps-accent);
+  outline-offset: -2px;
+}
+
+@layer components {
+  .fx-seg {
+    border-color: var(--ps-rule);
+    background: var(--ps-ground);
+  }
+  .fx-seg__thumb {
+    border-color: var(--ps-accent);
+    background: var(--ps-band);
+  }
+  .fx-seg__thumb::before {
+    background: var(--ps-accent);
+  }
+  .fx-seg button {
+    color: var(--ps-key);
+  }
+  .fx-seg button:hover,
+  .fx-seg button[aria-pressed="true"] {
+    color: var(--ps-heading);
+  }
+}
+
+@media (forced-colors: active) {
+  .fx-seg button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+/* ---- the canvas panels: swirl and water ---------------------- */
+
+.fx-sw,
+.fx-wa {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+}
+
+.fx-canvas {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-width: 1px;
+  border-style: solid;
+}
+
+@media (min-width: 768px) {
+  .fx-canvas {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* on a laptop the panel and its controls share one screen */
+@media (min-width: 1024px) {
+  .fx-canvas {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    max-height: min(62svh, 38.75rem);
+  }
+}
+
+.fx-canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+
+.fx-bar {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.fx-bar > * {
+  min-width: 0;
+}
+
+.fx-bar__note {
+  min-height: 4.8em;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 480px) {
+  .fx-bar__note {
+    min-height: 3.2em;
+  }
+}
+
+/* phones: the surface choice gets the full width, the two buttons share the last row */
+.fx-bar--water {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.fx-bar--water .fx-seg,
+.fx-bar--water .fx-bar__note {
+  grid-column: 1 / -1;
+}
+
+.fx-bar--water .fx-seg {
+  grid-row: 1;
+}
+
+.fx-bar--water .fx-bar__note {
+  grid-row: 2;
+}
+
+.fx-bar--water .fx-cta {
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.fx-bar--water .fx-rinse {
+  grid-row: 3;
+  grid-column: 2;
+  justify-self: start;
+  white-space: nowrap;
+}
+
+.fx-rinse__long {
+  display: none;
+}
+
+/* the narrowest phones: the rinse button takes its own row */
+@media (max-width: 379px) {
+  .fx-bar--water .fx-rinse {
+    grid-row: 4;
+    grid-column: 1;
+  }
+}
+
+@media (min-width: 560px) {
+  .fx-rinse__long {
+    display: inline;
+  }
+
+  .fx-rinse__short {
+    display: none;
+  }
+
+  .fx-bar--water {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .fx-bar--water .fx-seg {
+    grid-column: 1;
+  }
+
+  .fx-bar--water .fx-rinse {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .fx-bar--water .fx-cta {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 960px) {
+  .fx-bar--swirl {
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr) auto;
+    gap: 1.5rem 2rem;
+  }
+
+  .fx-bar--swirl .fx-cta {
+    justify-self: end;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fx-bar--water {
+    grid-template-columns: minmax(0, 18rem) auto minmax(0, 1fr) auto;
+    gap: 1.5rem;
+  }
+
+  .fx-bar--water .fx-seg,
+  .fx-bar--water .fx-rinse,
+  .fx-bar--water .fx-bar__note,
+  .fx-bar--water .fx-cta {
+    grid-row: 1;
+    grid-column: auto;
+  }
+
+  .fx-bar--water .fx-cta {
+    justify-self: end;
+  }
+}
+
+@layer components {
+  .fx-canvas {
+    border-color: var(--ps-rule);
+  }
+  /* what shows before the canvas draws, and when script is off */
+  .fx-canvas--swirl,
+  .fx-canvas--water {
+    background: linear-gradient(#151814, #0a0b09 55%, #050605);
+  }
+  .fx-bar__note {
+    color: var(--ps-body);
+  }
+}
+
+/* ---- the tint shade preview ---------------------------------- */
+
+.fx-tv {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.fx-tv__stage {
+  position: relative;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  aspect-ratio: 2000 / 1053;
+}
+
+.fx-tv__stage picture {
+  grid-area: 1 / 1;
+  height: 100%;
+}
+
+.fx-tv__stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fx-tv__film {
+  opacity: 0;
+  transition: opacity 0.45s var(--ps-ease);
+}
+
+.fx-tv__read {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.fx-tv__viewing {
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.fx-tv__read strong {
+  grid-area: 1 / 2;
+  font-family: var(--ps-font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* slider and choices */
+.fx-tv__controls {
+  --gap: 0.35rem;
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem 0.75rem 0;
+}
+
+/* The slider's resting points sit over the centres of the choices. */
+.fx-tv__range {
+  --thumb: 1.5rem;
+  width: auto;
+  height: var(--thumb);
+  margin: 0 calc((100% - (var(--n) - 1) * var(--gap)) / (2 * var(--n)) - var(--thumb) / 2);
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+
+/* the track runs from clear glass to the darkest film, in the site's own neutrals */
+.fx-tv__range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(90deg, #e8e4d8, #9aa5aa 32%, #2c302a 70%, #0a0b09);
+  box-shadow: 0 0 0 1px #2c302a;
+}
+
+.fx-tv__range::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(90deg, #e8e4d8, #9aa5aa 32%, #2c302a 70%, #0a0b09);
+  box-shadow: 0 0 0 1px #2c302a;
+}
+
+.fx-tv__range::-webkit-slider-thumb {
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((4px - var(--thumb)) / 2);
+  border: 2px solid #00c1f3;
+  border-radius: 0;
+  background: #e8e4d8;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.fx-tv__range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  border: 2px solid #00c1f3;
+  border-radius: 0;
+  background: #e8e4d8;
+}
+
+.fx-tv__picker {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: var(--gap);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fx-tv__opt {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  min-width: 0;
+  min-height: 3.25rem;
+  padding: 0.5rem 0.15rem;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ps-ease), background-color 0.18s var(--ps-ease);
+}
+
+/* the datum tick on the chosen shade */
+.fx-tv__opt::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 1.5rem;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.18s var(--ps-ease);
+}
+
+.fx-tv__opt:has(input:checked)::before {
+  opacity: 1;
+}
+
+.fx-tv__opt input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fx-tv__name {
+  font-family: var(--ps-font-display);
+  font-size: clamp(0.75rem, 1.1vw + 0.45rem, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.fx-tv__lab {
+  display: none;
+  font-family: var(--ps-font-mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.fx-tv__opt:has(input:focus-visible) {
+  outline: 2px solid var(--ps-accent);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .fx-tv__opt:has(input:checked) {
+    outline: 3px solid Highlight;
+    outline-offset: -3px;
+  }
+}
+
+/* what the shade is, and the way to ask for it */
+.fx-tv__foot {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 1rem;
+  padding: 1.1rem 0.75rem 1rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.fx-tv__info {
+  display: grid;
+  min-width: 0;
+}
+
+.fx-tv__card {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  min-width: 0;
+}
+
+.fx-tv__title {
+  font-family: var(--ps-font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.fx-tv__body {
+  max-width: 34rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.fx-tv__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  margin: 0.2rem 0 0;
+}
+
+.fx-tv__meta div {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.fx-tv__meta dt {
+  font-family: var(--ps-font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.fx-tv__meta dd {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--ps-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* five small bars, the first --v of them lit */
+.fx-meter {
+  width: 3.4rem;
+  height: 0.45rem;
+}
+
+/* one shade shows at a time: its glass, its name and its card */
+.fx-tv__read strong,
+.fx-tv__card {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--ps-ease), visibility 0.3s;
+}
+
+.fx-tv__read strong {
+  grid-area: 1 / 2;
+}
+
+.fx-tv:has(input[value="clear"]:checked) [data-stop="clear"],
+.fx-tv:has(input[value="light"]:checked) [data-stop="light"],
+.fx-tv:has(input[value="medium"]:checked) [data-stop="medium"],
+.fx-tv:has(input[value="dark"]:checked) [data-stop="dark"],
+.fx-tv:has(input[value="limo"]:checked) [data-stop="limo"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fx-tv:has(input[value="light"]:checked) .fx-tv__film {
+  opacity: 0.3;
+}
+
+.fx-tv:has(input[value="medium"]:checked) .fx-tv__film {
+  opacity: 0.55;
+}
+
+.fx-tv:has(input[value="dark"]:checked) .fx-tv__film {
+  opacity: 0.8;
+}
+
+.fx-tv:has(input[value="limo"]:checked) .fx-tv__film {
+  opacity: 1;
+}
+
+@layer components {
+  .fx-tv__stage {
+    background: var(--ps-ground);
+  }
+  .fx-tv__read {
+    border-color: var(--ps-rule);
+    background: rgb(10 11 9 / 0.78);
+  }
+  .fx-tv__viewing {
+    color: var(--ps-key);
+  }
+  .fx-tv__read strong {
+    color: var(--ps-heading);
+  }
+  .fx-tv__opt {
+    border-color: var(--ps-rule);
+    background: var(--ps-ground);
+    color: var(--ps-body);
+  }
+  .fx-tv__opt::before {
+    background: var(--ps-accent);
+  }
+  .fx-tv__opt:hover {
+    border-color: var(--plane-border-strong, #9aa5aa);
+  }
+  .fx-tv__opt:has(input:checked) {
+    border-color: var(--ps-accent);
+    background: var(--ps-band);
+    color: var(--ps-heading);
+  }
+  .fx-tv__lab {
+    color: var(--ps-key);
+  }
+  .fx-tv__foot {
+    border-top-color: var(--ps-rule);
+  }
+  .fx-tv__title {
+    color: var(--ps-heading);
+  }
+  .fx-tv__body {
+    color: var(--ps-body);
+  }
+  .fx-tv__meta dt {
+    color: var(--ps-key);
+  }
+  .fx-tv__meta dd {
+    color: var(--ps-heading);
+  }
+  .fx-meter {
+    background:
+      repeating-linear-gradient(90deg, transparent 0 0.56rem, var(--ps-panel) 0.56rem 0.71rem),
+      linear-gradient(90deg, var(--ps-accent) calc(var(--v) * 20%), rgb(232 228 216 / 0.14) 0);
+  }
+}
+
+/* on a phone the picture runs edge to edge, so the car is as large as it can be */
+@media (max-width: 639px) {
+  .fx-tv > .fx-frame {
+    margin-inline: calc(-1 * var(--ps-gutter, 1.25rem));
+    border-inline-width: 0;
+  }
+
+  .fx-tv__controls,
+  .fx-tv__foot {
+    padding-inline: var(--ps-gutter, 1.25rem);
+  }
+}
+
+@media (min-width: 640px) {
+  .fx-tv__read {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .fx-tag {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .fx-tv__controls {
+    --gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 1.25rem 1.25rem 0;
+  }
+
+  .fx-tv__opt {
+    min-height: 4rem;
+  }
+
+  .fx-tv__lab {
+    display: block;
+  }
+
+  .fx-tv__foot {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .fx-tv__foot .fx-cta {
+    justify-self: end;
+  }
+}
+
+/* On a laptop the picture and its controls share one screen: the picture
+   gives up some wall and floor, never the car. */
+@media (min-width: 1024px) {
+  .fx-tv > .fx-frame {
+    container-type: inline-size;
+  }
+
+  /* 40cqi keeps the wheels and the roof in frame at the shortest; 52.65cqi
+     is the picture's own ratio, so it never grows past it */
+  .fx-tv__stage {
+    aspect-ratio: auto;
+    height: clamp(40cqi, min(56svh, 39rem), 52.65cqi);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-seg__thumb,
+  .fx-tv__film,
+  .fx-tv__read strong,
+  .fx-tv__card {
+    transition: none;
+  }
+}
