@@ -53,6 +53,10 @@ export interface LandingPanel {
   label: string;
   heading: string;
   intro: string;
+  /** "top" puts the band straight under the hero instead of after the
+      proof and detail bands. Judson asked on 2026-11-24 for the tint shades
+      to sit closer to the top of the page. */
+  placement?: "top";
 }
 
 export interface LandingTrack {
@@ -652,6 +656,7 @@ const TINT: LandingTrack = {
   quoteKey: "tint",
   panel: {
     kind: "tint",
+    placement: "top",
     label: "Pick your shade",
     heading: "See the shade before you book.",
     intro: "Drag the slider or tap a shade. The lighter shades keep a factory look, and the darkest reads black from the outside.",

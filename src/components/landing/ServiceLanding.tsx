@@ -43,12 +43,15 @@ import "./landing.css";
      4  detail        hub pages only: the tiers, the coverage table, the law
         from town     town pages only: the measured drive and the nearby towns
         try it        tint, correction and ceramic only: the interactive
-                      panel (src/components/fx/), on the hub and every town
+                      panel (src/components/fx/), on the hub and every town.
+                      A panel with placement "top" (tint) renders straight
+                      under the hero instead, as band 1b.
      5  how it works  three steps, then the questions, then (hubs) the towns
      6  the close     the form beside the phone number
 
-   The planes alternate. A town page with a panel flips its last two bands
-   so the dark panel never sits beside the dark steps band.
+   The planes alternate. A town page with a late panel keeps its last two
+   bands as they are, a town page without one flips them, and any page with
+   a top panel flips them too, so no two bands of the same plane touch.
 
    Every string comes from src/lib/landing.ts or constants.ts. Nothing is
    typed in here except the three steps, which are the same on every page.
@@ -164,6 +167,18 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
     : t.hub.lead;
   const description = c ? t.town.description(c) : t.hub.description;
   const schemaName = c ? `${t.noun} for ${c.name}, ${BRAND.state}` : `${t.noun} in ${BRAND.city}, ${BRAND.state}`;
+  const topPanel = t.panel?.placement === "top";
+  /* Bands 5 and 6 swap planes when no late panel sits between them and the
+     band before: a town page without a panel, or any page with a top panel. */
+  const flipClose = topPanel || (Boolean(c) && !t.panel);
+  const panelBand = t.panel ? (
+    <Section plane="shop" label={t.panel.label}>
+      <SectionHead align="split" title={t.panel.heading} intro={<p>{t.panel.intro}</p>} />
+      <div className="mt-8 md:mt-10">
+        <Panel kind={t.panel.kind} />
+      </div>
+    </Section>
+  ) : null;
 
   return (
     <>
@@ -188,6 +203,9 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
         ariaLabel={`${schemaName}, ${BRAND.name}`}
         phoneDisplay={BRAND.phoneDisplay}
       />
+
+      {/* 1b. try it, when the track wants it first */}
+      {topPanel ? panelBand : null}
 
       {/* 2. what you get */}
       <Section plane="sheet" label="What you get">
@@ -311,17 +329,10 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
       ) : null}
 
       {/* 4c. try it */}
-      {t.panel ? (
-        <Section plane="shop" label={t.panel.label}>
-          <SectionHead align="split" title={t.panel.heading} intro={<p>{t.panel.intro}</p>} />
-          <div className="mt-8 md:mt-10">
-            <Panel kind={t.panel.kind} />
-          </div>
-        </Section>
-      ) : null}
+      {!topPanel ? panelBand : null}
 
       {/* 5. how it works, the questions, the towns */}
-      <Section plane={c && !t.panel ? "shop" : "sheet"} label={showSteps || c ? "How it works" : "Questions"}>
+      <Section plane={flipClose ? "shop" : "sheet"} label={showSteps || c ? "How it works" : "Questions"}>
         {showSteps || c ? (
           <>
             <ol className="lp-steps">
@@ -358,7 +369,7 @@ export default function ServiceLanding({ track: t, city: c, detail, detailLabel,
       </Section>
 
       {/* 6. the close */}
-      <Section plane={c && !t.panel ? "sheet" : "shop"} label="Free quote" id="quote">
+      <Section plane={flipClose ? "sheet" : "shop"} label="Free quote" id="quote">
         <div className="lp-close">
           <div>
             <h2 className="ps-display ps-display-lg">Get your free quote.</h2>
